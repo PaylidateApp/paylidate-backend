@@ -9,6 +9,11 @@ use App\User;
 use App\Wallet;
 use Auth;
 
+/**
+ * @group  Authentication management
+ *
+ * APIs for Authenticating users
+ */
 class AuthController extends Controller
 {
     /**

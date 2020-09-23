@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Payment;
 use Auth;
 
+/**
+ * @group  Payment management
+ *
+ * APIs for Payment
+ */
 class PaymentController extends Controller
 {
     /**

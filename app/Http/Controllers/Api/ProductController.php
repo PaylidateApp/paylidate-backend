@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use App\Product;
 use Auth;
 
+/**
+ * @group  Product management
+ *
+ * APIs for Producs
+ */
 class ProductController extends Controller
 {
     /**
