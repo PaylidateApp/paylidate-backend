@@ -20,6 +20,13 @@ class AuthController extends Controller
      * @param  [string] password_confirmation
      * @return [string] message
      */
+
+    /**
+     * @OA\post(
+     *     path="/projects",
+     *     @OA\Response(response="200", description="Display a listing of projects.")
+     * )
+     */
     public function signup(Request $request)
     {
 
