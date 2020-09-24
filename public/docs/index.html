@@ -58,7 +58,9 @@
 <pre><code class="language-bash">curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
+    -H "Accept: application/json" \
+    -d '{"email":"vero","password":"blanditiis","remember_me":true}'
+</code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/login"
 );
@@ -68,24 +70,64 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "email": "vero",
+    "password": "blanditiis",
+    "remember_me": true
+}
+
 fetch(url, {
     method: "POST",
     headers: headers,
+    body: body
 })
     .then(response =&gt; response.json())
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
 <p><code>POST api/login</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>required</td>
+<td>the email of the user</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>required</td>
+<td>the users prefered password</td>
+</tr>
+<tr>
+<td><code>remember_me</code></td>
+<td>boolean</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
 <!-- END_c3fa189a6c95ca36ad6ac4791a873d23 -->
 <!-- START_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 <h2>Create user</h2>
+<p>the user signup routs</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
+    -H "Accept: application/json" \
+    -d '{"name":"dolorem","email":"omnis","phone":"hic","password":"accusamus","password_confirmation":"qui"}'
+</code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/signup"
 );
@@ -95,14 +137,66 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "name": "dolorem",
+    "email": "omnis",
+    "phone": "hic",
+    "password": "accusamus",
+    "password_confirmation": "qui"
+}
+
 fetch(url, {
     method: "POST",
     headers: headers,
+    body: body
 })
     .then(response =&gt; response.json())
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
 <p><code>POST api/signup</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>required</td>
+<td>the full name of the user</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>required</td>
+<td>the email of the user , this value is unige</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>string</td>
+<td>required</td>
+<td>the valide phone number of the user, this value is unige</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>string</td>
+<td>required</td>
+<td>the users prefered password</td>
+</tr>
+<tr>
+<td><code>password_confirmation</code></td>
+<td>string</td>
+<td>required</td>
+<td>the confirmation password. must be thesame as the password</td>
+</tr>
+</tbody>
+</table>
 <!-- END_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 <!-- START_5a7fab33595a7b2f9beeee8b8c494f92 -->
 <h2>api/signup/activate/{token}</h2>
@@ -139,6 +233,7 @@ fetch(url, {
 <!-- END_5a7fab33595a7b2f9beeee8b8c494f92 -->
 <!-- START_00e7e21641f05de650dbe13f242c6f2c -->
 <h2>Logout user (Revoke the token)</h2>
+<p><br><small style="padding: 1px 9px 2px;font-weight: bold;white-space: nowrap;color: #ffffff;-webkit-border-radius: 9px;-moz-border-radius: 9px;border-radius: 9px;background-color: #3a87ad;">Requires authentication</small></p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>

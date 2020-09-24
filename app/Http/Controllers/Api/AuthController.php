@@ -19,10 +19,15 @@ class AuthController extends Controller
     /**
      * Create user
      *
-     * @param  [string] name
-     * @param  [string] email
-     * @param  [string] password
-     * @param  [string] password_confirmation
+     * the user signup routs
+     * 
+     * @bodyParam name string required the full name of the user
+     * @bodyParam email string required the email of the user , this value is unige
+     * @bodyParam phone string required the valide phone number of the user, this value is unige
+     * @bodyParam password string required the users prefered password
+     * @bodyParam password_confirmation string required the confirmation password. must be thesame as the password
+     * 
+     * 
      * @return [string] message
      */   
     public function signup(Request $request)
@@ -81,9 +86,10 @@ class AuthController extends Controller
     /**
      * Login user and create token
      *
-     * @param  [string] email
-     * @param  [string] password
-     * @param  [boolean] remember_me
+     * @bodyParam email string required the email of the user
+     * @bodyParam password string required the users prefered password
+     * @bodyParam  remember_me boolean 
+     * 
      * @return [string] access_token
      * @return [string] token_type
      * @return [string] expires_at
@@ -130,7 +136,9 @@ class AuthController extends Controller
 
     /**
      * Logout user (Revoke the token)
-     *
+     * 
+     * @authenticated
+     * 
      * @return [string] message
      */
     public function logout(Request $request)
@@ -146,6 +154,8 @@ class AuthController extends Controller
     /**
      * Get the authenticated User
      *
+     * @authenticated
+     * 
      * @return [json] user object
      */
     public function user(Request $request)
@@ -158,6 +168,14 @@ class AuthController extends Controller
         ]);
     }
 
+
+    /**
+     * User Activation
+     *
+     * * @urlParam  token string required the token sent to the users email address
+     * 
+     * @return [json] user object
+     */
     public function signupActivate($token)
     {
         $user = User::where('activation_token', $token)->first();
@@ -167,6 +185,7 @@ class AuthController extends Controller
                 'message' => 'This activation token is invalid.'
             ], 404);
         }
+        
         $user->active = true;
         $user->activation_token = '';
         $user->save();

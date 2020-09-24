@@ -33,7 +33,9 @@ APIs for Authenticating users
 curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
+    -H "Accept: application/json" \
+    -d '{"email":"vero","password":"blanditiis","remember_me":true}'
+
 ```
 
 ```javascript
@@ -46,9 +48,16 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "email": "vero",
+    "password": "blanditiis",
+    "remember_me": true
+}
+
 fetch(url, {
     method: "POST",
     headers: headers,
+    body: body
 })
     .then(response => response.json())
     .then(json => console.log(json));
@@ -59,11 +68,19 @@ fetch(url, {
 ### HTTP Request
 `POST api/login`
 
-
+#### Body Parameters
+Parameter | Type | Status | Description
+--------- | ------- | ------- | ------- | -----------
+    `email` | string |  required  | the email of the user
+        `password` | string |  required  | the users prefered password
+        `remember_me` | boolean |  optional  | 
+    
 <!-- END_c3fa189a6c95ca36ad6ac4791a873d23 -->
 
 <!-- START_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 ## Create user
+
+the user signup routs
 
 > Example request:
 
@@ -71,7 +88,9 @@ fetch(url, {
 curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
+    -H "Accept: application/json" \
+    -d '{"name":"dolorem","email":"omnis","phone":"hic","password":"accusamus","password_confirmation":"qui"}'
+
 ```
 
 ```javascript
@@ -84,9 +103,18 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "name": "dolorem",
+    "email": "omnis",
+    "phone": "hic",
+    "password": "accusamus",
+    "password_confirmation": "qui"
+}
+
 fetch(url, {
     method: "POST",
     headers: headers,
+    body: body
 })
     .then(response => response.json())
     .then(json => console.log(json));
@@ -97,7 +125,15 @@ fetch(url, {
 ### HTTP Request
 `POST api/signup`
 
-
+#### Body Parameters
+Parameter | Type | Status | Description
+--------- | ------- | ------- | ------- | -----------
+    `name` | string |  required  | the full name of the user
+        `email` | string |  required  | the email of the user , this value is unige
+        `phone` | string |  required  | the valide phone number of the user, this value is unige
+        `password` | string |  required  | the users prefered password
+        `password_confirmation` | string |  required  | the confirmation password. must be thesame as the password
+    
 <!-- END_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 
 <!-- START_5a7fab33595a7b2f9beeee8b8c494f92 -->
@@ -147,6 +183,7 @@ fetch(url, {
 <!-- START_00e7e21641f05de650dbe13f242c6f2c -->
 ## Logout user (Revoke the token)
 
+<br><small style="padding: 1px 9px 2px;font-weight: bold;white-space: nowrap;color: #ffffff;-webkit-border-radius: 9px;-moz-border-radius: 9px;border-radius: 9px;background-color: #3a87ad;">Requires authentication</small>
 > Example request:
 
 ```bash

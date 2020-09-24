@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "51b44d15-c069-4653-a7ca-fd4f0368a9ce",
+        "_postman_id": "4e9756df-3f53-4ba5-b074-777b53bbe792",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "[]"
+                            "raw": "{\n    \"email\": \"vero\",\n    \"password\": \"blanditiis\",\n    \"remember_me\": true\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,9 +61,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "[]"
+                            "raw": "{\n    \"name\": \"dolorem\",\n    \"email\": \"omnis\",\n    \"phone\": \"hic\",\n    \"password\": \"accusamus\",\n    \"password_confirmation\": \"qui\"\n}"
                         },
-                        "description": "",
+                        "description": "the user signup routs",
                         "response": []
                     }
                 },
