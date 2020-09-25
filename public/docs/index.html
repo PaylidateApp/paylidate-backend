@@ -59,7 +59,7 @@
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"vero","password":"blanditiis","remember_me":true}'
+    -d '{"email":"ad","password":"ab","remember_me":false}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/login"
@@ -71,9 +71,9 @@ let headers = {
 };
 
 let body = {
-    "email": "vero",
-    "password": "blanditiis",
-    "remember_me": true
+    "email": "ad",
+    "password": "ab",
+    "remember_me": false
 }
 
 fetch(url, {
@@ -126,7 +126,7 @@ fetch(url, {
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"dolorem","email":"omnis","phone":"hic","password":"accusamus","password_confirmation":"qui"}'
+    -d '{"name":"qui","email":"dolorem","phone":"quisquam","password":"quis","password_confirmation":"sint"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/signup"
@@ -138,11 +138,11 @@ let headers = {
 };
 
 let body = {
-    "name": "dolorem",
-    "email": "omnis",
-    "phone": "hic",
-    "password": "accusamus",
-    "password_confirmation": "qui"
+    "name": "qui",
+    "email": "dolorem",
+    "phone": "quisquam",
+    "password": "quis",
+    "password_confirmation": "sint"
 }
 
 fetch(url, {
@@ -199,7 +199,10 @@ fetch(url, {
 </table>
 <!-- END_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 <!-- START_5a7fab33595a7b2f9beeee8b8c494f92 -->
-<h2>api/signup/activate/{token}</h2>
+<h2>User Activation</h2>
+<ul>
+<li>@urlParam  token string required the token sent to the users email address</li>
+</ul>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -267,6 +270,7 @@ fetch(url, {
 <!-- END_00e7e21641f05de650dbe13f242c6f2c -->
 <!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
 <h2>Get the authenticated User</h2>
+<p><br><small style="padding: 1px 9px 2px;font-weight: bold;white-space: nowrap;color: #ffffff;-webkit-border-radius: 9px;-moz-border-radius: 9px;border-radius: 9px;background-color: #3a87ad;">Requires authentication</small></p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>

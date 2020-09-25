@@ -34,7 +34,7 @@ curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"vero","password":"blanditiis","remember_me":true}'
+    -d '{"email":"ad","password":"ab","remember_me":false}'
 
 ```
 
@@ -49,9 +49,9 @@ let headers = {
 };
 
 let body = {
-    "email": "vero",
-    "password": "blanditiis",
-    "remember_me": true
+    "email": "ad",
+    "password": "ab",
+    "remember_me": false
 }
 
 fetch(url, {
@@ -89,7 +89,7 @@ curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"dolorem","email":"omnis","phone":"hic","password":"accusamus","password_confirmation":"qui"}'
+    -d '{"name":"qui","email":"dolorem","phone":"quisquam","password":"quis","password_confirmation":"sint"}'
 
 ```
 
@@ -104,11 +104,11 @@ let headers = {
 };
 
 let body = {
-    "name": "dolorem",
-    "email": "omnis",
-    "phone": "hic",
-    "password": "accusamus",
-    "password_confirmation": "qui"
+    "name": "qui",
+    "email": "dolorem",
+    "phone": "quisquam",
+    "password": "quis",
+    "password_confirmation": "sint"
 }
 
 fetch(url, {
@@ -137,7 +137,10 @@ Parameter | Type | Status | Description
 <!-- END_90f45d502fd52fdc0b289e55ba3c2ec6 -->
 
 <!-- START_5a7fab33595a7b2f9beeee8b8c494f92 -->
-## api/signup/activate/{token}
+## User Activation
+
+* @urlParam  token string required the token sent to the users email address
+
 > Example request:
 
 ```bash
@@ -229,6 +232,7 @@ fetch(url, {
 <!-- START_2b6e5a4b188cb183c7e59558cce36cb6 -->
 ## Get the authenticated User
 
+<br><small style="padding: 1px 9px 2px;font-weight: bold;white-space: nowrap;color: #ffffff;-webkit-border-radius: 9px;-moz-border-radius: 9px;border-radius: 9px;background-color: #3a87ad;">Requires authentication</small>
 > Example request:
 
 ```bash

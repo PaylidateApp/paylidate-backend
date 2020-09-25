@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "4e9756df-3f53-4ba5-b074-777b53bbe792",
+        "_postman_id": "b5c25d7a-1a51-49ee-b2ca-318cac9cb962",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"vero\",\n    \"password\": \"blanditiis\",\n    \"remember_me\": true\n}"
+                            "raw": "{\n    \"email\": \"ad\",\n    \"password\": \"ab\",\n    \"remember_me\": false\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,14 +61,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"dolorem\",\n    \"email\": \"omnis\",\n    \"phone\": \"hic\",\n    \"password\": \"accusamus\",\n    \"password_confirmation\": \"qui\"\n}"
+                            "raw": "{\n    \"name\": \"qui\",\n    \"email\": \"dolorem\",\n    \"phone\": \"quisquam\",\n    \"password\": \"quis\",\n    \"password_confirmation\": \"sint\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
                     }
                 },
                 {
-                    "name": "api\/signup\/activate\/{token}",
+                    "name": "User Activation",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -91,7 +91,7 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "",
+                        "description": "* @urlParam  token string required the token sent to the users email address",
                         "response": []
                     }
                 },
