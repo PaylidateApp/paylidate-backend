@@ -21,6 +21,7 @@ class CreateProductsTable extends Migration
             $table->string('product_number')->nullable();
             $table->double('price', 15, 8)->nullable()->default(0.00);
             $table->integer('quantity')->unsigned()->nullable()->default(0);
+            $table->string('type')->nullable();
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

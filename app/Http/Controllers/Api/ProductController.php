@@ -48,6 +48,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+        $input['user_id'] = Auth::user()->id;
         $product = Product::create($input);
         return response()->json([
             'status' => 'success',
