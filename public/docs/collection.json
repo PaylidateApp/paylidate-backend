@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "1873576d-4403-45f5-8a95-83179875d538",
+        "_postman_id": "ac5c3a1c-709f-471e-9dde-94f28cb6a0a0",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"recusandae\",\n    \"password\": \"deserunt\",\n    \"remember_me\": false\n}"
+                            "raw": "{\n    \"email\": \"alias\",\n    \"password\": \"corrupti\",\n    \"remember_me\": false\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"laudantium\",\n    \"email\": \"ut\",\n    \"phone\": \"unde\",\n    \"password\": \"omnis\",\n    \"password_confirmation\": \"dignissimos\"\n}"
+                            "raw": "{\n    \"name\": \"omnis\",\n    \"email\": \"ullam\",\n    \"phone\": \"nulla\",\n    \"password\": \"vitae\",\n    \"password_confirmation\": \"soluta\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -150,6 +150,34 @@
                         "description": "",
                         "response": []
                     }
+                },
+                {
+                    "name": "Update user",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/user\/update",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"voluptas\",\n    \"email\": \"omnis\",\n    \"phone\": \"itaque\"\n}"
+                        },
+                        "description": "",
+                        "response": []
+                    }
                 }
             ]
         },
@@ -186,7 +214,35 @@
                     }
                 },
                 {
-                    "name": "Display the specified resource.",
+                    "name": "Create Product",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/payment",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"product_id\": \"et\",\n    \"quantity\": 9,\n    \"type\": \"quos\",\n    \"status\": true,\n    \"expires\": \"voluptatem\",\n    \"description\": \"et\"\n}"
+                        },
+                        "description": "the payment creation",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Get Single Payment",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -214,35 +270,7 @@
                     }
                 },
                 {
-                    "name": "Show the form for editing the specified resource.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/payment\/:payment\/edit",
-                            "query": []
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Update the specified resource in storage.",
+                    "name": "Update a Specified Payment",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -263,14 +291,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "[]"
+                            "raw": "{\n    \"quantity\": 7,\n    \"type\": \"dolores\",\n    \"status\": false,\n    \"expires\": \"sed\",\n    \"description\": \"dolorem\"\n}"
                         },
                         "description": "",
                         "response": []
                     }
                 },
                 {
-                    "name": "Remove the specified resource from storage.",
+                    "name": "Delete the specified product.",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -353,9 +381,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"non\",\n    \"product_number\": \"ex\",\n    \"price\": \"velit\",\n    \"quantity\": 18,\n    \"description\": \"velit\"\n}"
+                            "raw": "{\n    \"name\": \"ipsam\",\n    \"product_number\": \"quam\",\n    \"price\": \"sunt\",\n    \"quantity\": 20,\n    \"description\": \"id\"\n}"
                         },
-                        "description": "the pproduct creation",
+                        "description": "The Product creation",
                         "response": []
                     }
                 },
@@ -409,7 +437,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"quod\",\n    \"product_number\": \"recusandae\",\n    \"price\": 338872284.36428636,\n    \"description\": \"id\",\n    \"quantity\": 14\n}"
+                            "raw": "{\n    \"name\": \"explicabo\",\n    \"product_number\": \"perferendis\",\n    \"price\": 2642.11,\n    \"description\": \"velit\",\n    \"quantity\": 11\n}"
                         },
                         "description": "",
                         "response": []
@@ -439,7 +467,7 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "",
+                        "description": "* @urlParam  id string required the id of the product",
                         "response": []
                     }
                 }
@@ -624,6 +652,208 @@
                             "protocol": "http",
                             "host": "localhost",
                             "path": "api\/transaction\/:transaction",
+                            "query": []
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "User Account Management",
+            "description": "\nAPIs for User Account Management",
+            "item": [
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Show the form for creating a new resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account\/create",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Store a newly created resource in storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account\/:account",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Show the form for editing the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account\/:account\/edit",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Update the specified resource in storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account\/:account",
+                            "query": []
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Remove the specified resource from storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/account\/:account",
                             "query": []
                         },
                         "method": "DELETE",

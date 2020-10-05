@@ -39,7 +39,7 @@ class ProductController extends Controller
     /**
      * Create Product
      *
-     * the pproduct creation
+     * The Product creation
      * 
      * @bodyParam name string required 
      * @bodyParam product_number string 
@@ -120,7 +120,8 @@ class ProductController extends Controller
     /**
      * Delete the specified product.
      *
-     * @param  int  $id
+     ** @urlParam  id string required the id of the product
+     
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

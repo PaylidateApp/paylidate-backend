@@ -25,7 +25,7 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $Payment
+            'data' => $Payment->load('product')
         ]);
     }
 
@@ -41,18 +41,20 @@ class PaymentController extends Controller
 
    
     /**
-     * Create Payment
+     * Create Product
      *
+     * the payment creation
      * 
-     * @bodyParam name string required the full name of the user
-     * @bodyParam price string required 
-     * @bodyParam quantity int required 
-     * @bodyParam type string  
-     * @bodyParam description 
+     * @bodyParam product_id string required 
+     * @bodyParam quantity int string 
+     * @bodyParam type string required  either make-payment/receive-payment 
+     * @bodyParam status boolean true for paid false un-paid,  false by default 
+     * @bodyParam expires string expires in a week by default
+     * @bodyParam description string
      * 
      * 
-     * @return \Illuminate\Http\Response
-     */   
+     * @return [string] message
+     */     
     public function store(Request $request)
     {
         $input = $request->all();
@@ -66,10 +68,11 @@ class PaymentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get Single Payment
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @urlParam id string required
+     * 
+     * @return [json] user object
      */
     public function show($id)
     {
@@ -77,28 +80,35 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $Payment
+            'data' => $Payment->load('product')
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    // /**
+    //  * Show the form for editing the specified resource.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function edit($id)
+    // {
+    //     //
+    // }
 
     /**
-     * Update the specified resource in storage.
+     * Update a Specified Payment
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * 
+     * @urlParam  id string required the id of the payment
+     * 
+     * @bodyParam quantity int string 
+     * @bodyParam type string required  either make-payment/receive-payment 
+     * @bodyParam status boolean true for paid false un-paid,  false by default 
+     * @bodyParam expires string expires in a week by default
+     * @bodyParam description string
+     * 
+     * @return [string] message
+     */ 
     public function update(Request $request, $id)
     {
         $input = $request->all();
@@ -111,13 +121,18 @@ class PaymentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified product.
      *
-     * @param  int  $id
+     * @urlParam  id string required the id of the payment
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $payment = Payment::where('id', $id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $payment
+        ]);
     }
 }

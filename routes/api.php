@@ -34,6 +34,7 @@ Route::namespace('Api')->group(function () {
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
+        Route::post('user/update', 'AuthController@update');
 
         // Route::resource('users', 'UsersController');
         // Route::post('user/avatar', 'UsersController@avatar');
@@ -43,5 +44,6 @@ Route::namespace('Api')->group(function () {
         Route::resource('product', 'ProductController');
         Route::resource('payment', 'PaymentController');
         Route::resource('transaction', 'TransactionController');
+        Route::resource('account', 'UserAccountController');
     });
 });

@@ -59,7 +59,7 @@
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"recusandae","password":"deserunt","remember_me":false}'
+    -d '{"email":"alias","password":"corrupti","remember_me":false}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/login"
@@ -71,8 +71,8 @@ let headers = {
 };
 
 let body = {
-    "email": "recusandae",
-    "password": "deserunt",
+    "email": "alias",
+    "password": "corrupti",
     "remember_me": false
 }
 
@@ -126,7 +126,7 @@ fetch(url, {
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"laudantium","email":"ut","phone":"unde","password":"omnis","password_confirmation":"dignissimos"}'
+    -d '{"name":"omnis","email":"ullam","phone":"nulla","password":"vitae","password_confirmation":"soluta"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/signup"
@@ -138,11 +138,11 @@ let headers = {
 };
 
 let body = {
-    "name": "laudantium",
-    "email": "ut",
-    "phone": "unde",
-    "password": "omnis",
-    "password_confirmation": "dignissimos"
+    "name": "omnis",
+    "email": "ullam",
+    "phone": "nulla",
+    "password": "vitae",
+    "password_confirmation": "soluta"
 }
 
 fetch(url, {
@@ -302,6 +302,73 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>GET api/user</code></p>
 <!-- END_2b6e5a4b188cb183c7e59558cce36cb6 -->
+<!-- START_86c0dd6f359bad9ecc9205dab5245583 -->
+<h2>Update user</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "http://localhost/api/user/update" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"name":"voluptas","email":"omnis","phone":"itaque"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/user/update"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "voluptas",
+    "email": "omnis",
+    "phone": "itaque"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/user/update</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>required</td>
+<td>the full name of the user</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>required</td>
+<td>the email of the user , this value is unige</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>string</td>
+<td>required</td>
+<td>the valide phone number of the user, this value is unige</td>
+</tr>
+</tbody>
+</table>
+<!-- END_86c0dd6f359bad9ecc9205dab5245583 -->
 <h1>Payment management</h1>
 <p>APIs for Payment</p>
 <!-- START_6cd4ec602ffcd199483fb2d8cf889109 -->
@@ -337,8 +404,95 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>GET api/payment</code></p>
 <!-- END_6cd4ec602ffcd199483fb2d8cf889109 -->
+<!-- START_deb129964c28500a2815c8b001f0bc2e -->
+<h2>Create Product</h2>
+<p>the payment creation</p>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "http://localhost/api/payment" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"product_id":"et","quantity":9,"type":"quos","status":true,"expires":"voluptatem","description":"et"}'
+</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/payment"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "product_id": "et",
+    "quantity": 9,
+    "type": "quos",
+    "status": true,
+    "expires": "voluptatem",
+    "description": "et"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/payment</code></p>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>product_id</code></td>
+<td>string</td>
+<td>required</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>integer</td>
+<td>optional</td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>required</td>
+<td>either make-payment/receive-payment</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>boolean</td>
+<td>optional</td>
+<td>true for paid false un-paid,  false by default</td>
+</tr>
+<tr>
+<td><code>expires</code></td>
+<td>string</td>
+<td>optional</td>
+<td>expires in a week by default</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
+<!-- END_deb129964c28500a2815c8b001f0bc2e -->
 <!-- START_aeb6c4fefc495ba68a89a66aba3e16d6 -->
-<h2>Display the specified resource.</h2>
+<h2>Get Single Payment</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -369,49 +523,35 @@ fetch(url, {
 }</code></pre>
 <h3>HTTP Request</h3>
 <p><code>GET api/payment/{payment}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>string required</td>
+</tr>
+</tbody>
+</table>
 <!-- END_aeb6c4fefc495ba68a89a66aba3e16d6 -->
-<!-- START_a02e3979ccef21ba038f54196fc7904b -->
-<h2>Show the form for editing the specified resource.</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost/api/payment/1/edit" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/payment/1/edit"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<blockquote>
-<p>Example response (401):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "Unauthenticated."
-}</code></pre>
-<h3>HTTP Request</h3>
-<p><code>GET api/payment/{payment}/edit</code></p>
-<!-- END_a02e3979ccef21ba038f54196fc7904b -->
 <!-- START_8fe8c1a6fa82ee2c6fb262561ef7f8df -->
-<h2>Update the specified resource in storage.</h2>
+<h2>Update a Specified Payment</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X PUT \
     "http://localhost/api/payment/1" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
+    -H "Accept: application/json" \
+    -d '{"quantity":7,"type":"dolores","status":false,"expires":"sed","description":"dolorem"}'
+</code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/payment/1"
 );
@@ -421,18 +561,86 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "quantity": 7,
+    "type": "dolores",
+    "status": false,
+    "expires": "sed",
+    "description": "dolorem"
+}
+
 fetch(url, {
     method: "PUT",
     headers: headers,
+    body: body
 })
     .then(response =&gt; response.json())
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
 <p><code>PUT api/payment/{payment}</code></p>
 <p><code>PATCH api/payment/{payment}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>string required the id of the payment</td>
+</tr>
+</tbody>
+</table>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>quantity</code></td>
+<td>integer</td>
+<td>optional</td>
+<td>string</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>string</td>
+<td>required</td>
+<td>either make-payment/receive-payment</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>boolean</td>
+<td>optional</td>
+<td>true for paid false un-paid,  false by default</td>
+</tr>
+<tr>
+<td><code>expires</code></td>
+<td>string</td>
+<td>optional</td>
+<td>expires in a week by default</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
 <!-- END_8fe8c1a6fa82ee2c6fb262561ef7f8df -->
 <!-- START_1f6934fb97f903c5b274700ae2174e3b -->
-<h2>Remove the specified resource from storage.</h2>
+<h2>Delete the specified product.</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -457,6 +665,23 @@ fetch(url, {
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
 <p><code>DELETE api/payment/{payment}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>string required the id of the payment</td>
+</tr>
+</tbody>
+</table>
 <!-- END_1f6934fb97f903c5b274700ae2174e3b -->
 <h1>Product management</h1>
 <p>APIs for Product</p>
@@ -495,7 +720,7 @@ fetch(url, {
 <!-- END_dc538d69a8586a7a3c36d4393cee42e6 -->
 <!-- START_2d62ba7cf16a7d6db447375e13e86c34 -->
 <h2>Create Product</h2>
-<p>the pproduct creation</p>
+<p>The Product creation</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -503,7 +728,7 @@ fetch(url, {
     "http://localhost/api/product" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"non","product_number":"ex","price":"velit","quantity":18,"description":"velit"}'
+    -d '{"name":"ipsam","product_number":"quam","price":"sunt","quantity":20,"description":"id"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/product"
@@ -515,11 +740,11 @@ let headers = {
 };
 
 let body = {
-    "name": "non",
-    "product_number": "ex",
-    "price": "velit",
-    "quantity": 18,
-    "description": "velit"
+    "name": "ipsam",
+    "product_number": "quam",
+    "price": "sunt",
+    "quantity": 20,
+    "description": "id"
 }
 
 fetch(url, {
@@ -615,7 +840,7 @@ fetch(url, {
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"quod","product_number":"recusandae","price":338872284.36428636,"description":"id","quantity":14}'
+    -d '{"name":"explicabo","product_number":"perferendis","price":2642.11,"description":"velit","quantity":11}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/product/1"
@@ -627,11 +852,11 @@ let headers = {
 };
 
 let body = {
-    "name": "quod",
-    "product_number": "recusandae",
-    "price": 338872284.36428636,
-    "description": "id",
-    "quantity": 14
+    "name": "explicabo",
+    "product_number": "perferendis",
+    "price": 2642.11,
+    "description": "velit",
+    "quantity": 11
 }
 
 fetch(url, {
@@ -702,6 +927,9 @@ fetch(url, {
 <!-- END_682327ab9f9deab00b7c603486ad935a -->
 <!-- START_587b06cc0dc038b2e049f3a1baa2593b -->
 <h2>Delete the specified product.</h2>
+<ul>
+<li>@urlParam  id string required the id of the product</li>
+</ul>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -943,6 +1171,222 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>DELETE api/transaction/{transaction}</code></p>
 <!-- END_83b7136d851d7223a080c124169741f7 -->
+<h1>User Account Management</h1>
+<p>APIs for User Account Management</p>
+<!-- START_becd2474bdae2d3b678148120ff54292 -->
+<h2>Display a listing of the resource.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost/api/account" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/account</code></p>
+<!-- END_becd2474bdae2d3b678148120ff54292 -->
+<!-- START_bd346fadf35959845ae3be58f4db14c9 -->
+<h2>Show the form for creating a new resource.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost/api/account/create" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account/create"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/account/create</code></p>
+<!-- END_bd346fadf35959845ae3be58f4db14c9 -->
+<!-- START_8e41604b8817eca37cb034e144f5ff33 -->
+<h2>Store a newly created resource in storage.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X POST \
+    "http://localhost/api/account" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>POST api/account</code></p>
+<!-- END_8e41604b8817eca37cb034e144f5ff33 -->
+<!-- START_1f6f7be70ceebafe69329fb7d344c91a -->
+<h2>Display the specified resource.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost/api/account/1" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account/1"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/account/{account}</code></p>
+<!-- END_1f6f7be70ceebafe69329fb7d344c91a -->
+<!-- START_c58eca53b89feecd884d232994c0c33e -->
+<h2>Show the form for editing the specified resource.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X GET \
+    -G "http://localhost/api/account/1/edit" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account/1/edit"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<blockquote>
+<p>Example response (401):</p>
+</blockquote>
+<pre><code class="language-json">{
+    "message": "Unauthenticated."
+}</code></pre>
+<h3>HTTP Request</h3>
+<p><code>GET api/account/{account}/edit</code></p>
+<!-- END_c58eca53b89feecd884d232994c0c33e -->
+<!-- START_ebff0653e600c488fc331d410a101317 -->
+<h2>Update the specified resource in storage.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X PUT \
+    "http://localhost/api/account/1" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account/1"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "PUT",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>PUT api/account/{account}</code></p>
+<p><code>PATCH api/account/{account}</code></p>
+<!-- END_ebff0653e600c488fc331d410a101317 -->
+<!-- START_fff037991817542a80c7e20070ff00e0 -->
+<h2>Remove the specified resource from storage.</h2>
+<blockquote>
+<p>Example request:</p>
+</blockquote>
+<pre><code class="language-bash">curl -X DELETE \
+    "http://localhost/api/account/1" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"</code></pre>
+<pre><code class="language-javascript">const url = new URL(
+    "http://localhost/api/account/1"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "DELETE",
+    headers: headers,
+})
+    .then(response =&gt; response.json())
+    .then(json =&gt; console.log(json));</code></pre>
+<h3>HTTP Request</h3>
+<p><code>DELETE api/account/{account}</code></p>
+<!-- END_fff037991817542a80c7e20070ff00e0 -->
 <h1>general</h1>
 <!-- START_0c068b4037fb2e47e71bd44bd36e3e2a -->
 <h2>Authorize a client to access the user&#039;s account.</h2>

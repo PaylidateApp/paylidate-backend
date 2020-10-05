@@ -197,4 +197,30 @@ class AuthController extends Controller
             'data' => $user->load('wallet')
         ]);
     }
+
+
+    /**
+     * Update user
+     *
+     * 
+     * @bodyParam name string required the full name of the user
+     * @bodyParam email string required the email of the user , this value is unige
+     * @bodyParam phone string required the valide phone number of the user, this value is unige    
+     * 
+     * 
+     * @return [string] message
+     */   
+    public function update(Request $request)
+    {
+        $input = $request->all();
+        $id = Auth::user()->id;
+        $user = User::where('id', $id)->update($input);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'User updated',
+            'data' => $user->load('wallet'),
+        ]);
+        
+    }
 }
