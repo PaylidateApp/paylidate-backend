@@ -59,7 +59,7 @@
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"ad","password":"ab","remember_me":false}'
+    -d '{"email":"veniam","password":"commodi","remember_me":false}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/login"
@@ -71,8 +71,8 @@ let headers = {
 };
 
 let body = {
-    "email": "ad",
-    "password": "ab",
+    "email": "veniam",
+    "password": "commodi",
     "remember_me": false
 }
 
@@ -126,7 +126,7 @@ fetch(url, {
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"qui","email":"dolorem","phone":"quisquam","password":"quis","password_confirmation":"sint"}'
+    -d '{"name":"alias","email":"aut","phone":"beatae","password":"blanditiis","password_confirmation":"architecto"}'
 </code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/signup"
@@ -138,11 +138,11 @@ let headers = {
 };
 
 let body = {
-    "name": "qui",
-    "email": "dolorem",
-    "phone": "quisquam",
-    "password": "quis",
-    "password_confirmation": "sint"
+    "name": "alias",
+    "email": "aut",
+    "phone": "beatae",
+    "password": "blanditiis",
+    "password_confirmation": "architecto"
 }
 
 fetch(url, {
@@ -519,9 +519,9 @@ fetch(url, {
 <p><code>DELETE api/payment/{payment}</code></p>
 <!-- END_1f6934fb97f903c5b274700ae2174e3b -->
 <h1>Product management</h1>
-<p>APIs for Producs</p>
+<p>APIs for Product</p>
 <!-- START_dc538d69a8586a7a3c36d4393cee42e6 -->
-<h2>Display a listing of the resource.</h2>
+<h2>Get all Products.</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -553,68 +553,9 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>GET api/product</code></p>
 <!-- END_dc538d69a8586a7a3c36d4393cee42e6 -->
-<!-- START_dacecdb40d12cd7c191a4cb9036946f8 -->
-<h2>Show the form for creating a new resource.</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost/api/product/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/product/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<blockquote>
-<p>Example response (401):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "Unauthenticated."
-}</code></pre>
-<h3>HTTP Request</h3>
-<p><code>GET api/product/create</code></p>
-<!-- END_dacecdb40d12cd7c191a4cb9036946f8 -->
-<!-- START_2d62ba7cf16a7d6db447375e13e86c34 -->
-<h2>Store a newly created resource in storage.</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X POST \
-    "http://localhost/api/product" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/product"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<h3>HTTP Request</h3>
-<p><code>POST api/product</code></p>
-<!-- END_2d62ba7cf16a7d6db447375e13e86c34 -->
 <!-- START_1fcbf5d495e6ada99ea017e9ae32b380 -->
-<h2>Display the specified resource.</h2>
+<h2>Get Single Product</h2>
+<p>@urlParam  id string required the id of the product</p>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
@@ -646,48 +587,17 @@ fetch(url, {
 <h3>HTTP Request</h3>
 <p><code>GET api/product/{product}</code></p>
 <!-- END_1fcbf5d495e6ada99ea017e9ae32b380 -->
-<!-- START_463d241542df480cf5180f5104171652 -->
-<h2>Show the form for editing the specified resource.</h2>
-<blockquote>
-<p>Example request:</p>
-</blockquote>
-<pre><code class="language-bash">curl -X GET \
-    -G "http://localhost/api/product/1/edit" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
-<pre><code class="language-javascript">const url = new URL(
-    "http://localhost/api/product/1/edit"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response =&gt; response.json())
-    .then(json =&gt; console.log(json));</code></pre>
-<blockquote>
-<p>Example response (401):</p>
-</blockquote>
-<pre><code class="language-json">{
-    "message": "Unauthenticated."
-}</code></pre>
-<h3>HTTP Request</h3>
-<p><code>GET api/product/{product}/edit</code></p>
-<!-- END_463d241542df480cf5180f5104171652 -->
 <!-- START_682327ab9f9deab00b7c603486ad935a -->
-<h2>Update the specified resource in storage.</h2>
+<h2>Update a Specified Product</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>
 <pre><code class="language-bash">curl -X PUT \
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"</code></pre>
+    -H "Accept: application/json" \
+    -d '{"name":"rerum","product_number":"debitis","price":23038.284,"description":"quam","quantity":15}'
+</code></pre>
 <pre><code class="language-javascript">const url = new URL(
     "http://localhost/api/product/1"
 );
@@ -697,18 +607,82 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "name": "rerum",
+    "product_number": "debitis",
+    "price": 23038.284,
+    "description": "quam",
+    "quantity": 15
+}
+
 fetch(url, {
     method: "PUT",
     headers: headers,
+    body: body
 })
     .then(response =&gt; response.json())
     .then(json =&gt; console.log(json));</code></pre>
 <h3>HTTP Request</h3>
 <p><code>PUT api/product/{product}</code></p>
 <p><code>PATCH api/product/{product}</code></p>
+<h4>URL Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>optional</td>
+<td>string required the id of the product</td>
+</tr>
+</tbody>
+</table>
+<h4>Body Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>product_number</code></td>
+<td>string</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>price</code></td>
+<td>float</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>string</td>
+<td>optional</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>integer</td>
+<td>optional</td>
+</tr>
+</tbody>
+</table>
 <!-- END_682327ab9f9deab00b7c603486ad935a -->
 <!-- START_587b06cc0dc038b2e049f3a1baa2593b -->
-<h2>Remove the specified resource from storage.</h2>
+<h2>Delete the specified product.</h2>
 <blockquote>
 <p>Example request:</p>
 </blockquote>

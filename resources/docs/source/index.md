@@ -34,7 +34,7 @@ curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"ad","password":"ab","remember_me":false}'
+    -d '{"email":"veniam","password":"commodi","remember_me":false}'
 
 ```
 
@@ -49,8 +49,8 @@ let headers = {
 };
 
 let body = {
-    "email": "ad",
-    "password": "ab",
+    "email": "veniam",
+    "password": "commodi",
     "remember_me": false
 }
 
@@ -89,7 +89,7 @@ curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"qui","email":"dolorem","phone":"quisquam","password":"quis","password_confirmation":"sint"}'
+    -d '{"name":"alias","email":"aut","phone":"beatae","password":"blanditiis","password_confirmation":"architecto"}'
 
 ```
 
@@ -104,11 +104,11 @@ let headers = {
 };
 
 let body = {
-    "name": "qui",
-    "email": "dolorem",
-    "phone": "quisquam",
-    "password": "quis",
-    "password_confirmation": "sint"
+    "name": "alias",
+    "email": "aut",
+    "phone": "beatae",
+    "password": "blanditiis",
+    "password_confirmation": "architecto"
 }
 
 fetch(url, {
@@ -578,9 +578,9 @@ fetch(url, {
 #Product management
 
 
-APIs for Producs
+APIs for Product
 <!-- START_dc538d69a8586a7a3c36d4393cee42e6 -->
-## Display a listing of the resource.
+## Get all Products.
 
 > Example request:
 
@@ -624,91 +624,10 @@ fetch(url, {
 
 <!-- END_dc538d69a8586a7a3c36d4393cee42e6 -->
 
-<!-- START_dacecdb40d12cd7c191a4cb9036946f8 -->
-## Show the form for creating a new resource.
-
-> Example request:
-
-```bash
-curl -X GET \
-    -G "http://localhost/api/product/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/product/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (401):
-
-```json
-{
-    "message": "Unauthenticated."
-}
-```
-
-### HTTP Request
-`GET api/product/create`
-
-
-<!-- END_dacecdb40d12cd7c191a4cb9036946f8 -->
-
-<!-- START_2d62ba7cf16a7d6db447375e13e86c34 -->
-## Store a newly created resource in storage.
-
-> Example request:
-
-```bash
-curl -X POST \
-    "http://localhost/api/product" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/product"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-
-### HTTP Request
-`POST api/product`
-
-
-<!-- END_2d62ba7cf16a7d6db447375e13e86c34 -->
-
 <!-- START_1fcbf5d495e6ada99ea017e9ae32b380 -->
-## Display the specified resource.
+## Get Single Product
+
+@urlParam  id string required the id of the product
 
 > Example request:
 
@@ -752,53 +671,8 @@ fetch(url, {
 
 <!-- END_1fcbf5d495e6ada99ea017e9ae32b380 -->
 
-<!-- START_463d241542df480cf5180f5104171652 -->
-## Show the form for editing the specified resource.
-
-> Example request:
-
-```bash
-curl -X GET \
-    -G "http://localhost/api/product/1/edit" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/product/1/edit"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (401):
-
-```json
-{
-    "message": "Unauthenticated."
-}
-```
-
-### HTTP Request
-`GET api/product/{product}/edit`
-
-
-<!-- END_463d241542df480cf5180f5104171652 -->
-
 <!-- START_682327ab9f9deab00b7c603486ad935a -->
-## Update the specified resource in storage.
+## Update a Specified Product
 
 > Example request:
 
@@ -806,7 +680,9 @@ fetch(url, {
 curl -X PUT \
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
+    -H "Accept: application/json" \
+    -d '{"name":"rerum","product_number":"debitis","price":23038.284,"description":"quam","quantity":15}'
+
 ```
 
 ```javascript
@@ -819,9 +695,18 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "name": "rerum",
+    "product_number": "debitis",
+    "price": 23038.284,
+    "description": "quam",
+    "quantity": 15
+}
+
 fetch(url, {
     method: "PUT",
     headers: headers,
+    body: body
 })
     .then(response => response.json())
     .then(json => console.log(json));
@@ -834,11 +719,24 @@ fetch(url, {
 
 `PATCH api/product/{product}`
 
+#### URL Parameters
 
+Parameter | Status | Description
+--------- | ------- | ------- | -------
+    `id` |  optional  | string required the id of the product
+#### Body Parameters
+Parameter | Type | Status | Description
+--------- | ------- | ------- | ------- | -----------
+    `name` | string |  optional  | 
+        `product_number` | string |  optional  | 
+        `price` | float |  optional  | 
+        `description` | string |  optional  | 
+        `quantity` | integer |  optional  | 
+    
 <!-- END_682327ab9f9deab00b7c603486ad935a -->
 
 <!-- START_587b06cc0dc038b2e049f3a1baa2593b -->
-## Remove the specified resource from storage.
+## Delete the specified product.
 
 > Example request:
 

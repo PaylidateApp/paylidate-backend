@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "b5c25d7a-1a51-49ee-b2ca-318cac9cb962",
+        "_postman_id": "c2534acb-d92f-4708-9137-491c4b29c387",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"ad\",\n    \"password\": \"ab\",\n    \"remember_me\": false\n}"
+                            "raw": "{\n    \"email\": \"veniam\",\n    \"password\": \"commodi\",\n    \"remember_me\": false\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"qui\",\n    \"email\": \"dolorem\",\n    \"phone\": \"quisquam\",\n    \"password\": \"quis\",\n    \"password_confirmation\": \"sint\"\n}"
+                            "raw": "{\n    \"name\": \"alias\",\n    \"email\": \"aut\",\n    \"phone\": \"beatae\",\n    \"password\": \"blanditiis\",\n    \"password_confirmation\": \"architecto\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -357,10 +357,10 @@
         },
         {
             "name": "Product management",
-            "description": "\nAPIs for Producs",
+            "description": "\nAPIs for Product",
             "item": [
                 {
-                    "name": "Display a listing of the resource.",
+                    "name": "Get all Products.",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -388,63 +388,7 @@
                     }
                 },
                 {
-                    "name": "Show the form for creating a new resource.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/product\/create",
-                            "query": []
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Store a newly created resource in storage.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/product",
-                            "query": []
-                        },
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Display the specified resource.",
+                    "name": "Get Single Product",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -467,40 +411,12 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "",
+                        "description": "@urlParam  id string required the id of the product",
                         "response": []
                     }
                 },
                 {
-                    "name": "Show the form for editing the specified resource.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/product\/:product\/edit",
-                            "query": []
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Update the specified resource in storage.",
+                    "name": "Update a Specified Product",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -521,14 +437,14 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "[]"
+                            "raw": "{\n    \"name\": \"rerum\",\n    \"product_number\": \"debitis\",\n    \"price\": 23038.284,\n    \"description\": \"quam\",\n    \"quantity\": 15\n}"
                         },
                         "description": "",
                         "response": []
                     }
                 },
                 {
-                    "name": "Remove the specified resource from storage.",
+                    "name": "Delete the specified product.",
                     "request": {
                         "url": {
                             "protocol": "http",

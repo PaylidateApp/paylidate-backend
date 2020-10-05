@@ -10,12 +10,12 @@ use Auth;
 /**
  * @group  Product management
  *
- * APIs for Producs
+ * APIs for Product
  */
 class ProductController extends Controller
 {
-     /**
-     * Display a listing of the resource.
+    /**
+     * Get all Products.
      *
      * @return \Illuminate\Http\Response
      */
@@ -30,10 +30,11 @@ class ProductController extends Controller
     }
 
     
-    public function create()
-    {
+    // public function create()
+    // {
 
-    }
+    // }
+    
 
     /**
      * Create Product
@@ -61,7 +62,7 @@ class ProductController extends Controller
     }
 
     /**
-     * single product
+     * Get Single Product
      *
      *  @urlParam  id string required the id of the product
      * 
@@ -77,28 +78,30 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+    // /**
+    //  * Show the form for editing the specified resource.
+    //  *
+    //  * @param  int  $id
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function edit($id)
+    // {
+    //     //
+    // }
 
     
      /**
-     * Update the specified Product
+     * Update a Specified Product
      *
      * 
      * @urlParam  id string required the id of the product
-     * @bodyParam price string 
-     * @bodyParam quantity int 
-     * @bodyParam type string  
-     * @bodyParam description string 
      * 
+     * @bodyParam name string 
+     * @bodyParam product_number string 
+     * @bodyParam price double 
+     * @bodyParam description string 
+     * @bodyParam quantity int 
+     * @bodyParam description string 
      * 
      * @return [string] message
      */   
@@ -114,13 +117,18 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified product.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        //
+        $product = Product::where('id', $id)->delete();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
     }
 }
