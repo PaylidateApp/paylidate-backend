@@ -15,7 +15,7 @@ use Auth;
 class PaymentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Get all payments.
      *
      * @return \Illuminate\Http\Response
      */
@@ -29,25 +29,34 @@ class PaymentController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
+    // /**
+    //  * Show the form for creating a new resource.
+    //  *
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function create()
+    // {
 
-    }
+    // }
 
+   
     /**
-     * Store a newly created resource in storage.
+     * Create Payment
      *
-     * @param  \Illuminate\Http\Request  $request
+     * 
+     * @bodyParam name string required the full name of the user
+     * @bodyParam price string required 
+     * @bodyParam quantity int required 
+     * @bodyParam type string  
+     * @bodyParam description 
+     * 
+     * 
      * @return \Illuminate\Http\Response
-     */
+     */   
     public function store(Request $request)
     {
         $input = $request->all();
+        $input['user_id'] = Auth::user()->id;
         $Payment = Payment::create($input);
         return response()->json([
             'status' => 'success',
