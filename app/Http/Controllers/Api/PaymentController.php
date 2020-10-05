@@ -41,7 +41,7 @@ class PaymentController extends Controller
 
    
     /**
-     * Create Product
+     * Create Payment
      *
      * the payment creation
      * 

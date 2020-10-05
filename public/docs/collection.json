@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "ac5c3a1c-709f-471e-9dde-94f28cb6a0a0",
+        "_postman_id": "5f9cb531-4fc7-4134-bc5a-0e48ae78b26a",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"alias\",\n    \"password\": \"corrupti\",\n    \"remember_me\": false\n}"
+                            "raw": "{\n    \"email\": \"dolor\",\n    \"password\": \"animi\",\n    \"remember_me\": false\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"omnis\",\n    \"email\": \"ullam\",\n    \"phone\": \"nulla\",\n    \"password\": \"vitae\",\n    \"password_confirmation\": \"soluta\"\n}"
+                            "raw": "{\n    \"name\": \"dolor\",\n    \"email\": \"aut\",\n    \"phone\": \"inventore\",\n    \"password\": \"blanditiis\",\n    \"password_confirmation\": \"sapiente\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -173,7 +173,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"voluptas\",\n    \"email\": \"omnis\",\n    \"phone\": \"itaque\"\n}"
+                            "raw": "{\n    \"name\": \"voluptatem\",\n    \"email\": \"maxime\",\n    \"phone\": \"sed\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -214,7 +214,7 @@
                     }
                 },
                 {
-                    "name": "Create Product",
+                    "name": "Create Payment",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -235,7 +235,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"product_id\": \"et\",\n    \"quantity\": 9,\n    \"type\": \"quos\",\n    \"status\": true,\n    \"expires\": \"voluptatem\",\n    \"description\": \"et\"\n}"
+                            "raw": "{\n    \"product_id\": \"molestiae\",\n    \"quantity\": 2,\n    \"type\": \"nesciunt\",\n    \"status\": false,\n    \"expires\": \"natus\",\n    \"description\": \"explicabo\"\n}"
                         },
                         "description": "the payment creation",
                         "response": []
@@ -291,7 +291,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"quantity\": 7,\n    \"type\": \"dolores\",\n    \"status\": false,\n    \"expires\": \"sed\",\n    \"description\": \"dolorem\"\n}"
+                            "raw": "{\n    \"quantity\": 17,\n    \"type\": \"et\",\n    \"status\": false,\n    \"expires\": \"tempore\",\n    \"description\": \"ut\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -381,7 +381,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"ipsam\",\n    \"product_number\": \"quam\",\n    \"price\": \"sunt\",\n    \"quantity\": 20,\n    \"description\": \"id\"\n}"
+                            "raw": "{\n    \"name\": \"laborum\",\n    \"product_number\": \"vel\",\n    \"price\": \"veritatis\",\n    \"quantity\": 15,\n    \"description\": \"ea\"\n}"
                         },
                         "description": "The Product creation",
                         "response": []
@@ -437,7 +437,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"explicabo\",\n    \"product_number\": \"perferendis\",\n    \"price\": 2642.11,\n    \"description\": \"velit\",\n    \"quantity\": 11\n}"
+                            "raw": "{\n    \"name\": \"quidem\",\n    \"product_number\": \"maxime\",\n    \"price\": 6939.0703,\n    \"description\": \"atque\",\n    \"quantity\": 13\n}"
                         },
                         "description": "",
                         "response": []

@@ -34,7 +34,7 @@ curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"alias","password":"corrupti","remember_me":false}'
+    -d '{"email":"dolor","password":"animi","remember_me":false}'
 
 ```
 
@@ -49,8 +49,8 @@ let headers = {
 };
 
 let body = {
-    "email": "alias",
-    "password": "corrupti",
+    "email": "dolor",
+    "password": "animi",
     "remember_me": false
 }
 
@@ -89,7 +89,7 @@ curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"omnis","email":"ullam","phone":"nulla","password":"vitae","password_confirmation":"soluta"}'
+    -d '{"name":"dolor","email":"aut","phone":"inventore","password":"blanditiis","password_confirmation":"sapiente"}'
 
 ```
 
@@ -104,11 +104,11 @@ let headers = {
 };
 
 let body = {
-    "name": "omnis",
-    "email": "ullam",
-    "phone": "nulla",
-    "password": "vitae",
-    "password_confirmation": "soluta"
+    "name": "dolor",
+    "email": "aut",
+    "phone": "inventore",
+    "password": "blanditiis",
+    "password_confirmation": "sapiente"
 }
 
 fetch(url, {
@@ -285,7 +285,7 @@ curl -X POST \
     "http://localhost/api/user/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"voluptas","email":"omnis","phone":"itaque"}'
+    -d '{"name":"voluptatem","email":"maxime","phone":"sed"}'
 
 ```
 
@@ -300,9 +300,9 @@ let headers = {
 };
 
 let body = {
-    "name": "voluptas",
-    "email": "omnis",
-    "phone": "itaque"
+    "name": "voluptatem",
+    "email": "maxime",
+    "phone": "sed"
 }
 
 fetch(url, {
@@ -378,7 +378,7 @@ fetch(url, {
 <!-- END_6cd4ec602ffcd199483fb2d8cf889109 -->
 
 <!-- START_deb129964c28500a2815c8b001f0bc2e -->
-## Create Product
+## Create Payment
 
 the payment creation
 
@@ -389,7 +389,7 @@ curl -X POST \
     "http://localhost/api/payment" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"product_id":"et","quantity":9,"type":"quos","status":true,"expires":"voluptatem","description":"et"}'
+    -d '{"product_id":"molestiae","quantity":2,"type":"nesciunt","status":false,"expires":"natus","description":"explicabo"}'
 
 ```
 
@@ -404,12 +404,12 @@ let headers = {
 };
 
 let body = {
-    "product_id": "et",
-    "quantity": 9,
-    "type": "quos",
-    "status": true,
-    "expires": "voluptatem",
-    "description": "et"
+    "product_id": "molestiae",
+    "quantity": 2,
+    "type": "nesciunt",
+    "status": false,
+    "expires": "natus",
+    "description": "explicabo"
 }
 
 fetch(url, {
@@ -498,7 +498,7 @@ curl -X PUT \
     "http://localhost/api/payment/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"quantity":7,"type":"dolores","status":false,"expires":"sed","description":"dolorem"}'
+    -d '{"quantity":17,"type":"et","status":false,"expires":"tempore","description":"ut"}'
 
 ```
 
@@ -513,11 +513,11 @@ let headers = {
 };
 
 let body = {
-    "quantity": 7,
-    "type": "dolores",
+    "quantity": 17,
+    "type": "et",
     "status": false,
-    "expires": "sed",
-    "description": "dolorem"
+    "expires": "tempore",
+    "description": "ut"
 }
 
 fetch(url, {
@@ -656,7 +656,7 @@ curl -X POST \
     "http://localhost/api/product" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"ipsam","product_number":"quam","price":"sunt","quantity":20,"description":"id"}'
+    -d '{"name":"laborum","product_number":"vel","price":"veritatis","quantity":15,"description":"ea"}'
 
 ```
 
@@ -671,11 +671,11 @@ let headers = {
 };
 
 let body = {
-    "name": "ipsam",
-    "product_number": "quam",
-    "price": "sunt",
-    "quantity": 20,
-    "description": "id"
+    "name": "laborum",
+    "product_number": "vel",
+    "price": "veritatis",
+    "quantity": 15,
+    "description": "ea"
 }
 
 fetch(url, {
@@ -760,7 +760,7 @@ curl -X PUT \
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"explicabo","product_number":"perferendis","price":2642.11,"description":"velit","quantity":11}'
+    -d '{"name":"quidem","product_number":"maxime","price":6939.0703,"description":"atque","quantity":13}'
 
 ```
 
@@ -775,11 +775,11 @@ let headers = {
 };
 
 let body = {
-    "name": "explicabo",
-    "product_number": "perferendis",
-    "price": 2642.11,
-    "description": "velit",
-    "quantity": 11
+    "name": "quidem",
+    "product_number": "maxime",
+    "price": 6939.0703,
+    "description": "atque",
+    "quantity": 13
 }
 
 fetch(url, {
