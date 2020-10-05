@@ -14,7 +14,7 @@ use Auth;
  */
 class ProductController extends Controller
 {
-    /**
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -29,22 +29,25 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
     public function create()
     {
 
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create Product
      *
-     * @param  \Illuminate\Http\Request  $request
+     * 
+     * @bodyParam name string required the full name of the user
+     * @bodyParam price string required 
+     * @bodyParam quantity int required 
+     * @bodyParam type string  
+     * @bodyParam description 
+     * 
+     * 
      * @return \Illuminate\Http\Response
-     */
+     */   
     public function store(Request $request)
     {
         $input = $request->all();
@@ -58,10 +61,11 @@ class ProductController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * single product
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     *  @urlParam  id string required the id of the product
+     * 
+     * @return [json] user object
      */
     public function show($id)
     {
@@ -84,13 +88,20 @@ class ProductController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
+    
+     /**
+     * Update the specified Product
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+     * 
+     * @urlParam  id string required the id of the product
+     * @bodyParam price string 
+     * @bodyParam quantity int 
+     * @bodyParam type string  
+     * @bodyParam description string 
+     * 
+     * 
+     * @return [string] message
+     */   
     public function update(Request $request, $id)
     {
         $input = $request->all();
