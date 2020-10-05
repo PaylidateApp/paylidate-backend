@@ -39,16 +39,17 @@ class ProductController extends Controller
     /**
      * Create Product
      *
+     * the pproduct creation
      * 
-     * @bodyParam name string required the full name of the user
-     * @bodyParam price string required 
-     * @bodyParam quantity int required 
-     * @bodyParam type string  
-     * @bodyParam description 
+     * @bodyParam name string required 
+     * @bodyParam product_number string 
+     * @bodyParam price string required
+     * @bodyParam quantity int 
+     * @bodyParam description string
      * 
      * 
-     * @return \Illuminate\Http\Response
-     */   
+     * @return [string] message
+     */    
     public function store(Request $request)
     {
         $input = $request->all();
@@ -64,7 +65,7 @@ class ProductController extends Controller
     /**
      * Get Single Product
      *
-     *  @urlParam  id string required the id of the product
+     *  * @urlParam id string required
      * 
      * @return [json] user object
      */

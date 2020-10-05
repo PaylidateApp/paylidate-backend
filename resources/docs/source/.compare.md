@@ -34,7 +34,7 @@ curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"veniam","password":"commodi","remember_me":false}'
+    -d '{"email":"recusandae","password":"deserunt","remember_me":false}'
 
 ```
 
@@ -49,8 +49,8 @@ let headers = {
 };
 
 let body = {
-    "email": "veniam",
-    "password": "commodi",
+    "email": "recusandae",
+    "password": "deserunt",
     "remember_me": false
 }
 
@@ -89,7 +89,7 @@ curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"alias","email":"aut","phone":"beatae","password":"blanditiis","password_confirmation":"architecto"}'
+    -d '{"name":"laudantium","email":"ut","phone":"unde","password":"omnis","password_confirmation":"dignissimos"}'
 
 ```
 
@@ -104,11 +104,11 @@ let headers = {
 };
 
 let body = {
-    "name": "alias",
-    "email": "aut",
-    "phone": "beatae",
-    "password": "blanditiis",
-    "password_confirmation": "architecto"
+    "name": "laudantium",
+    "email": "ut",
+    "phone": "unde",
+    "password": "omnis",
+    "password_confirmation": "dignissimos"
 }
 
 fetch(url, {
@@ -280,7 +280,7 @@ fetch(url, {
 
 APIs for Payment
 <!-- START_6cd4ec602ffcd199483fb2d8cf889109 -->
-## Display a listing of the resource.
+## Get all payments.
 
 > Example request:
 
@@ -323,89 +323,6 @@ fetch(url, {
 
 
 <!-- END_6cd4ec602ffcd199483fb2d8cf889109 -->
-
-<!-- START_8927b39098db3a3ded2ba3eb766fab7d -->
-## Show the form for creating a new resource.
-
-> Example request:
-
-```bash
-curl -X GET \
-    -G "http://localhost/api/payment/create" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/payment/create"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (401):
-
-```json
-{
-    "message": "Unauthenticated."
-}
-```
-
-### HTTP Request
-`GET api/payment/create`
-
-
-<!-- END_8927b39098db3a3ded2ba3eb766fab7d -->
-
-<!-- START_deb129964c28500a2815c8b001f0bc2e -->
-## Store a newly created resource in storage.
-
-> Example request:
-
-```bash
-curl -X POST \
-    "http://localhost/api/payment" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/payment"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "POST",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-
-### HTTP Request
-`POST api/payment`
-
-
-<!-- END_deb129964c28500a2815c8b001f0bc2e -->
 
 <!-- START_aeb6c4fefc495ba68a89a66aba3e16d6 -->
 ## Display the specified resource.
@@ -624,10 +541,69 @@ fetch(url, {
 
 <!-- END_dc538d69a8586a7a3c36d4393cee42e6 -->
 
+<!-- START_2d62ba7cf16a7d6db447375e13e86c34 -->
+## Create Product
+
+the pproduct creation
+
+> Example request:
+
+```bash
+curl -X POST \
+    "http://localhost/api/product" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json" \
+    -d '{"name":"non","product_number":"ex","price":"velit","quantity":18,"description":"velit"}'
+
+```
+
+```javascript
+const url = new URL(
+    "http://localhost/api/product"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+let body = {
+    "name": "non",
+    "product_number": "ex",
+    "price": "velit",
+    "quantity": 18,
+    "description": "velit"
+}
+
+fetch(url, {
+    method: "POST",
+    headers: headers,
+    body: body
+})
+    .then(response => response.json())
+    .then(json => console.log(json));
+```
+
+
+
+### HTTP Request
+`POST api/product`
+
+#### Body Parameters
+Parameter | Type | Status | Description
+--------- | ------- | ------- | ------- | -----------
+    `name` | string |  required  | 
+        `product_number` | string |  optional  | 
+        `price` | string |  required  | 
+        `quantity` | integer |  optional  | 
+        `description` | string |  optional  | 
+    
+<!-- END_2d62ba7cf16a7d6db447375e13e86c34 -->
+
 <!-- START_1fcbf5d495e6ada99ea017e9ae32b380 -->
 ## Get Single Product
 
-@urlParam  id string required the id of the product
+* @urlParam id string required
 
 > Example request:
 
@@ -681,7 +657,7 @@ curl -X PUT \
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"rerum","product_number":"debitis","price":23038.284,"description":"quam","quantity":15}'
+    -d '{"name":"quod","product_number":"recusandae","price":338872284.36428636,"description":"id","quantity":14}'
 
 ```
 
@@ -696,11 +672,11 @@ let headers = {
 };
 
 let body = {
-    "name": "rerum",
-    "product_number": "debitis",
-    "price": 23038.284,
-    "description": "quam",
-    "quantity": 15
+    "name": "quod",
+    "product_number": "recusandae",
+    "price": 338872284.36428636,
+    "description": "id",
+    "quantity": 14
 }
 
 fetch(url, {

@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "c2534acb-d92f-4708-9137-491c4b29c387",
+        "_postman_id": "1873576d-4403-45f5-8a95-83179875d538",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"veniam\",\n    \"password\": \"commodi\",\n    \"remember_me\": false\n}"
+                            "raw": "{\n    \"email\": \"recusandae\",\n    \"password\": \"deserunt\",\n    \"remember_me\": false\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"alias\",\n    \"email\": \"aut\",\n    \"phone\": \"beatae\",\n    \"password\": \"blanditiis\",\n    \"password_confirmation\": \"architecto\"\n}"
+                            "raw": "{\n    \"name\": \"laudantium\",\n    \"email\": \"ut\",\n    \"phone\": \"unde\",\n    \"password\": \"omnis\",\n    \"password_confirmation\": \"dignissimos\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -158,7 +158,7 @@
             "description": "\nAPIs for Payment",
             "item": [
                 {
-                    "name": "Display a listing of the resource.",
+                    "name": "Get all payments.",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -167,62 +167,6 @@
                             "query": []
                         },
                         "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Show the form for creating a new resource.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/payment\/create",
-                            "query": []
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
-                    "name": "Store a newly created resource in storage.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/payment",
-                            "query": []
-                        },
-                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
@@ -388,6 +332,34 @@
                     }
                 },
                 {
+                    "name": "Create Product",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/product",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"non\",\n    \"product_number\": \"ex\",\n    \"price\": \"velit\",\n    \"quantity\": 18,\n    \"description\": \"velit\"\n}"
+                        },
+                        "description": "the pproduct creation",
+                        "response": []
+                    }
+                },
+                {
                     "name": "Get Single Product",
                     "request": {
                         "url": {
@@ -411,7 +383,7 @@
                             "mode": "raw",
                             "raw": "[]"
                         },
-                        "description": "@urlParam  id string required the id of the product",
+                        "description": "* @urlParam id string required",
                         "response": []
                     }
                 },
@@ -437,7 +409,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"rerum\",\n    \"product_number\": \"debitis\",\n    \"price\": 23038.284,\n    \"description\": \"quam\",\n    \"quantity\": 15\n}"
+                            "raw": "{\n    \"name\": \"quod\",\n    \"product_number\": \"recusandae\",\n    \"price\": 338872284.36428636,\n    \"description\": \"id\",\n    \"quantity\": 14\n}"
                         },
                         "description": "",
                         "response": []
