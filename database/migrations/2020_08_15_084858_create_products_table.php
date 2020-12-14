@@ -16,7 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->bigInteger('secondary_user_id');
+            $table->bigInteger('secondary_user_id')->nullable();
             $table->string('name');
             $table->string('slug');
             $table->string('image')->nullable()->default('default_product.png');
