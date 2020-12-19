@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
-       'user_id','product_id','quantity','type','status','expires'
+       'user_id','product_id','payment_ref','transaction_id','transaction_ref','status','description'
     ];
 
     public function product()

@@ -60,11 +60,11 @@ class ProductController extends Controller
            $payment = Payment::create([
                 'user_id' => Auth::user()->id,
                 'product_id' => $product->id,
-                'payment_ref' => $request->payment_details['flw_ref'],
+                // 'payment_ref' => $request->payment_details['flw_ref'],
                 'transaction_id' => $request->payment_details['transaction_id'],
                 'transaction_ref' => $request->payment_details['tx_ref'],
                 'status' => $request->payment_details['status'],
-                'description' => $request->payment_details['description'],
+                // 'description' => $request->payment_details['description'],
            ]);
         }
 
