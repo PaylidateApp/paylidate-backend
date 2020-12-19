@@ -18,10 +18,10 @@ class CreatePaymentsTable extends Migration
             $table->id();
             $table->bigInteger('user_id');
             $table->bigInteger('product_id');
-            $table->integer('quantity')->unsigned()->nullable()->default(0);
-            $table->string('type')->nullable();
-            $table->boolean('status')->nullable()->default(false);
-            $table->dateTime('expires')->nullable()->default(Carbon::now()->addWeeks(1));
+            $table->string('payment_ref')->nullable();
+            $table->string('transaction_id')->nullable();
+            $table->string('transaction_ref')->nullable();
+            $table->string('status')->nullable();
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

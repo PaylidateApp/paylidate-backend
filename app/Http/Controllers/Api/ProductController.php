@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\Payment;
 use Auth;
 
 /**
@@ -55,6 +56,18 @@ class ProductController extends Controller
         $input = $request->all();
         $input['user_id'] = Auth::user()->id;
         $product = Product::create($input);
+        if ($request->payment_details) {
+           $payment = Payment::create([
+                'user_id' => Auth::user()->id,
+                'product_id' => $product->id,
+                'payment_ref' => $request->payment_details['flw_ref'],
+                'transaction_id' => $request->payment_details['transaction_id'],
+                'transaction_ref' => $request->payment_details['tx_ref'],
+                'status' => $request->payment_details['status'],
+                'description' => $request->payment_details['description'],
+           ]);
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
