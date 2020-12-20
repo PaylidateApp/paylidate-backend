@@ -59,13 +59,14 @@ class PaymentController extends Controller
     {
         $payment = Payment::create([
             'user_id' => Auth::user()->id,
-            'product_id' => $product->id,
-            'payment_ref' => $request->payment_details['flw_ref'],
-            'transaction_id' => $request->payment_details['transaction_id'],
-            'transaction_ref' => $request->payment_details['tx_ref'],
-            'status' => $request->payment_details['status'],
-            'description' => $request->payment_details['description'],
+            'product_id' => $request->id,
+            // 'payment_ref' => $request->flw_ref,
+            'transaction_id' => $request->transaction_id,
+            'transaction_ref' => $request->tx_ref,
+            'status' => $request->status,
+            // 'description' => $request->description,
        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',

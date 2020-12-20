@@ -39,4 +39,11 @@ class Product extends Model
     {
         return 'slug';
     }
+
+
+    public function payment()
+    {
+        return $this->hasOne('App\Payment');
+    }
+    
 }
