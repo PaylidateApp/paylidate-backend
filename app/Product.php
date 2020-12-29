@@ -46,4 +46,9 @@ class Product extends Model
         return $this->hasOne('App\Payment');
     }
     
+    public function secondary_user()
+    {
+        return $this->belongsTo('App\User', 'secondary_user_id');
+    }
+
 }

@@ -22,7 +22,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::where('user_id', Auth::user()->id)->with('payment')->orderBy('created_at', 'desc')->get();
+        $product = Product::where('user_id', Auth::user()->id)->with('payment','secondary_user','user')->orderBy('created_at', 'desc')->get();
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -71,7 +71,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $product->load('payment')
+            'data' => $product->load('payment','secondary_user','user')
         ]);
     }
 
@@ -84,7 +84,7 @@ class ProductController extends Controller
      */
     public function show($slug)
     {
-        $product = Product::where('slug', $slug)->with('payment')->first();
+        $product = Product::where('slug', $slug)->with('payment','secondary_user','user')->first();
         return response()->json([
             'status' => 'success',
             'message' => 'success',
