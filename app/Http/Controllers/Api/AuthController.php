@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Ixudra\Curl\Facades\Curl;
 use Validator;
 use App\User;
 use App\Wallet;
+use App\UserAccount;
 use Auth;
 use Carbon\Carbon;
 
@@ -33,11 +35,13 @@ class AuthController extends Controller
      */   
     public function signup(Request $request)
     {
-
+        
         $messages = [
             'name.required'    => 'Enter full name!',
             'email.required' => 'Enter an e-mail address!',
             'email' => 'E-mail address exist!',
+            'phone' => 'unique',
+            'phone' => 'Phone number exist!',
             'password.required'    => 'Password is required',
             'password_confirmation' => 'The :password and :password_confirmation must match.'
         ];
@@ -49,7 +53,20 @@ class AuthController extends Controller
             'password_confirmation' => 'required|same:password',
         ], $messages);
 
+        $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
+            ->withHeader('Content-Type: application/json')    
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
+            ->withData( array( 
+                "email" => "syflex360@mail.com",
+                "is_permanent" => true,
+                "tx_ref" => "simon-moses-101923123463"
+            ) )
+            ->asJson( true )
+            ->post();
+
+        
         $user = User::where('email', $request->get('email'))->first();
+        $ref = '';
 
         if ($user) {
             return response()->json([
@@ -71,6 +88,26 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
+            $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
+            ->withHeader('Content-Type: application/json')    
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
+            ->withData( array( 
+                "email" => "syflex360@mail.com",
+                "is_permanent" => true,
+                "tx_ref" => "simon-moses-101923123463"
+            ) )
+            ->asJson( true )
+            ->post();
+            $ref = '';
+            if ($response['status'] == 'success') {
+                $ref =  $response['data']['order_ref'];
+            } 
+
+            UserAccount::create([
+                'user_id' => $user->id,
+                'ref' => $ref
+            ]);
+
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
             $token->save();
@@ -80,6 +117,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
+                'account' => $response['data']
             ]);
         }
     }
@@ -119,6 +157,14 @@ class AuthController extends Controller
             ], 401);
 
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $account = UserAccount::where('user_id', Auth::user()->id)->first();
+        
+        $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
+            ->withHeader('Content-Type: application/json')    
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+            ->asJson( true )
+            ->get();
+
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -131,7 +177,8 @@ class AuthController extends Controller
             'status' => 'success',
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
-            'data' => $user->load('wallet')
+            'data' => $user->load('wallet'),
+            'account' => $response['data']
         ]);
     }
 

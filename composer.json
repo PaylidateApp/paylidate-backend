@@ -1,5 +1,5 @@
 {
-    "name": "LotusBank/Paylidate",
+    "name": "lotus-bank/paylidate",
     "type": "project",
     "description": "Paylidate the e-scrow service of choice.",
     "keywords": [
@@ -12,6 +12,7 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "ixudra/curl": "^6.21",
         "laravel/framework": "^7.0",
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",

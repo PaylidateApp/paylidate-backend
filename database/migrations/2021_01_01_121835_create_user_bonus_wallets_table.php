@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserAccountsTable extends Migration
+class CreateUserBonusWalletsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateUserAccountsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_accounts', function (Blueprint $table) {
+        Schema::create('user_bonus_wallets', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->string('ref')->nullable();
+            $table->double('balance', 15, 8)->nullable()->default(0.0);
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateUserAccountsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_accounts');
+        Schema::dropIfExists('user_bonus_wallets');
     }
 }

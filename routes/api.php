@@ -45,5 +45,6 @@ Route::namespace('Api')->group(function () {
         Route::resource('payment', 'PaymentController');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
+        Route::resource('card', 'CardController');
     });
 });
