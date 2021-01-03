@@ -26,11 +26,9 @@ class CardController extends Controller
                 ->withHeader('Content-Type: application/json')
                 ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
                 ->asJson( true )
-                ->get();  
+                ->get(); 
 
-                $object = new \stdClass();
-                $object->data = $response['data'];
-                $new_cards[$key] = $object;
+                $new_cards[$key]->data = $response['data'];
             }                      
         }
         
@@ -69,12 +67,15 @@ class CardController extends Controller
             ) )
             ->asJson( true )
             ->post();
-            $ref = '';
 
             if ($response['status'] == 'success') {
                 $card = UserCard::create([
                     'user_id' => Auth::user()->id,
-                    'card_id' => $response['data']['id']
+                    'card_id' => $response['data']['id'],
+                    'account_id' => $response['data']['account_id'],
+                    'currency' => $response['data']['currency'],
+                    'label' => $request->label,
+                    'default' => $request->default,
                 ]);
                 return response()->json([
                     'status' => 'success',
@@ -109,7 +110,6 @@ class CardController extends Controller
             ) )
             ->asJson( true )
             ->post();
-            $ref = '';
 
             if ($response['status'] == 'success') {               
                 return response()->json([
