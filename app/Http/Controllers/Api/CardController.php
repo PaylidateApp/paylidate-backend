@@ -105,7 +105,7 @@ class CardController extends Controller
             ->withHeader('Content-Type: application/json')
             ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
             ->withData( array( 
-                "debit_currency" => 'NGN',
+                "debit_currency" => $request->currency,
                 "amount" => $request->amount,
             ) )
             ->asJson( true )

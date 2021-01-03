@@ -46,5 +46,6 @@ Route::namespace('Api')->group(function () {
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
         Route::resource('card', 'CardController');
+        Route::post('fund', 'CardController@fund');
     });
 });
