@@ -18,6 +18,7 @@ class CreateUserCardsTable extends Migration
             $table->bigInteger('user_id');
             $table->string('card_id')->nullable();
             $table->string('label')->nullable();
+            $table->string('color')->nullable();
             $table->string('account_id')->nullable();
             $table->string('currency')->nullable();
             $table->boolean('default')->nullable()->default(false);

@@ -170,7 +170,7 @@ class AuthController extends Controller
         $token = $tokenResult->token;
 
         if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(1);
+            $token->expires_at = Carbon::now()->addWeeks(4);
         $token->save();
 
         return response()->json([
@@ -209,10 +209,19 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $account = UserAccount::where('user_id', Auth::user()->id)->first();
+
+        $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
+            ->withHeader('Content-Type: application/json')    
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+            ->asJson( true )
+            ->get();
+
         return response()->json([
             'status' => 'success',
             'message' => 'user fetched',
-            'data' => $user->load('wallet')
+            'data' => $user->load('wallet'),
+            'account' => $response['data']
         ]);
     }
 
