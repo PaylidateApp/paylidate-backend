@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
+use App\Mail\ResgistrationMail;
+use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\User;
 use App\Wallet;
@@ -66,8 +68,6 @@ class AuthController extends Controller
 
         
         $user = User::where('email', $request->get('email'))->first();
-        
-
         if ($user) {
             return response()->json([
                 'status' => 'exist',
@@ -88,25 +88,28 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
-            ->withHeader('Content-Type: application/json')    
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
-            ->withData( array( 
-                "email" => "syflex360@mail.com",
-                "is_permanent" => true,
-                "tx_ref" => "simon-moses-101923123463"
-            ) )
-            ->asJson( true )
-            ->post();
             $ref = '';
-            if ($response['status'] == 'success') {
-                $ref =  $response['data']['order_ref'];
-            } 
+
+            // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
+            // ->withHeader('Content-Type: application/json')    
+            // ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
+            // ->withData( array( 
+            //     "email" => "syflex360@mail.com",
+            //     "is_permanent" => true,
+            //     "tx_ref" => "simon-moses-101923123463"
+            // ) )
+            // ->asJson( true )
+            // ->post();           
+            // if ($response['status'] == 'success') {
+            //     $ref =  $response['data']['order_ref'];
+            // } 
 
             UserAccount::create([
                 'user_id' => $user->id,
                 'ref' => $ref
             ]);
+
+            Mail::to($user)->send(new ResgistrationMail($user));
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;

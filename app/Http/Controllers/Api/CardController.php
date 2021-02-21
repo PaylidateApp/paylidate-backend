@@ -17,25 +17,36 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = UserCard::where('user_id', Auth::user()->id)->get();
-        $new_cards = $cards;
+        $card = UserCard::where('user_id', Auth::user()->id)->first();
+        // $new_cards = $cards;
 
-        if ($cards) {
-            foreach ($cards as $key => $card) {
-                $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
+        if ($card) {
+            // foreach ($cards as $key => $card) {
+            //     $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
+            //     ->withHeader('Content-Type: application/json')
+            //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+            //     ->asJson( true )
+            //     ->get(); 
+
+            //     $new_cards[$key]->data = $response['data'];
+            // }    
+
+            $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
                 ->withHeader('Content-Type: application/json')
                 ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
                 ->asJson( true )
                 ->get(); 
 
-                $new_cards[$key]->data = $response['data'];
-            }                      
+            $newCard = (array)$card;
+            $newCard['data'] = $response['data'];
+            $card = (object)$newCard;
+                  
         }
         
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $new_cards
+            'data' => $card
         ]);       
     }
 
