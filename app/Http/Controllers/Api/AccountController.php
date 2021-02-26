@@ -6,14 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use App\UserAccount;
+use App\User;
 use Auth;
 
-/**
- * @group  User Account Management
- *
- * APIs for User Account Management
- */
-class UserAccountController extends Controller
+class AccountController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -31,7 +27,7 @@ class UserAccountController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'data' => $response['data']
+            'account' => $response['data']
         ]);
     }
 
