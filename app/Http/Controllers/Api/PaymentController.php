@@ -39,22 +39,22 @@ class PaymentController extends Controller
 
     // }
 
-   
+
     /**
      * Create Payment
      *
      * the payment creation
-     * 
-     * @bodyParam product_id string required 
-     * @bodyParam quantity int string 
-     * @bodyParam type string required  either make-payment/receive-payment 
-     * @bodyParam status boolean true for paid false un-paid,  false by default 
+     *
+     * @bodyParam product_id string required
+     * @bodyParam quantity int string
+     * @bodyParam type string required  either make-payment/receive-payment
+     * @bodyParam status boolean true for paid false un-paid,  false by default
      * @bodyParam expires string expires in a week by default
      * @bodyParam description string
-     * 
-     * 
+     *
+     *
      * @return [string] message
-     */     
+     */
     public function store(Request $request)
     {
         $payment = Payment::create([
@@ -70,7 +70,7 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $Payment
+            'data' => $payment
         ]);
     }
 
@@ -78,7 +78,7 @@ class PaymentController extends Controller
      * Get Single Payment
      *
      * @urlParam id string required
-     * 
+     *
      * @return [json] user object
      */
     public function show($id)
@@ -105,17 +105,17 @@ class PaymentController extends Controller
     /**
      * Update a Specified Payment
      *
-     * 
+     *
      * @urlParam  id string required the id of the payment
-     * 
-     * @bodyParam quantity int string 
-     * @bodyParam type string required  either make-payment/receive-payment 
-     * @bodyParam status boolean true for paid false un-paid,  false by default 
+     *
+     * @bodyParam quantity int string
+     * @bodyParam type string required  either make-payment/receive-payment
+     * @bodyParam status boolean true for paid false un-paid,  false by default
      * @bodyParam expires string expires in a week by default
      * @bodyParam description string
-     * 
+     *
      * @return [string] message
-     */ 
+     */
     public function update(Request $request, $id)
     {
         $input = $request->all();
