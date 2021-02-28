@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
-use App\Mail\ResgistrationMail;
+use App\Mail\RegistrationMail;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\User;
@@ -109,7 +109,7 @@ class AuthController extends Controller
             // ]);
 
             try {
-                Mail::to($user)->send(new ResgistrationMail($user));
+                Mail::to($user)->send(new RegistrationMail($user));
             } catch (\Throwable $th) {
                 //throw $th;
             }

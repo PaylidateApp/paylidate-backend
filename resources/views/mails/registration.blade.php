@@ -45,7 +45,7 @@
             .back-pad {
                 background-color: #283f4c; padding: 10px 10px 10px 10px;
             }
-            
+
             </style>
 
         </head>
@@ -60,7 +60,7 @@
     <p style="font-size: 20px"><b>Welcome to Paylidate.</b></p>
     <p style="font-size: 20px"><b>We are excited to have you on paylidate.</b></p>
     <p>
-        If you have any questions, please just reply to this email, we are always happy to help out.
+        For any questions, please send a reply to this mail, we are always happy to help out.
         Meanwhile, follow this
         <a href="https://paylidate.com/escrow-help">link</a> to view our
         <a href="https://paylidate.com/escrow-help">escrow help page</a> to help you know your way around as
