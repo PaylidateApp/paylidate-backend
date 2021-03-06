@@ -31,10 +31,25 @@ class ProductController extends Controller
     }
 
     
-    // public function create()
-    // {
+    public function create()
+    {
 
-    // }
+    }
+
+    public function accept($id){   
+
+        $product = Product::where('id', $id)->update([
+            'secondary_user_id' => Auth::user()->id
+        ]);
+
+        $product = Product::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
     
 
     /**
