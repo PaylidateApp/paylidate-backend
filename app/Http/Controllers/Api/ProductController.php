@@ -22,7 +22,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::where('user_id', Auth::user()->id)->with('payment','secondary_user','user')->orderBy('created_at', 'desc')->get();
+        $product = Product::where('user_id', Auth::user()->id)
+            ->orWhere('secondary_user_id', Auth::user()->id)
+            ->with('payment','secondary_user','user')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
