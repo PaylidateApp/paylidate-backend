@@ -25,8 +25,9 @@ class CreateProductsTable extends Migration
             $table->integer('quantity')->unsigned()->nullable()->default(0);
             $table->string('type')->nullable();
             $table->boolean('confirmed')->nullable()->default(false);
-            $table->tinyInteger('status')->nullable()->default(0);//0 awaiting fulfillment, 1 in transit, 2 delivered, 3 recieved
+            $table->tinyInteger('status')->nullable()->default(0);//0 awaiting fulfillment, 1 in transit, 2 delivered, 3 recieved, 4 canceled
             $table->boolean('dispute')->nullable()->default(false);
+            $table->integer('delivery_period')->nullable()->default(false);
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->softDeletes();

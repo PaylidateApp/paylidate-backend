@@ -39,10 +39,25 @@ class ProductController extends Controller
     public function accept($id){   
 
         $product = Product::where('id', $id)->update([
-            'secondary_user_id' => Auth::user()->id
+            'secondary_user_id' => Auth::user()->id,
+            'status' => 1
         ]);
 
         $product = Product::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function status($id, Request $request){   
+        
+        $status = $request->status === 'delivered' ? 2 : 3 ;
+        $product = Product::where('id', $id)->update([
+            'status' => $status 
+        ]);
 
         return response()->json([
             'status' => 'success',
@@ -68,18 +83,23 @@ class ProductController extends Controller
      */    
     public function store(Request $request)
     {
-        $input = $request->all();
-        $input['user_id'] = Auth::user()->id;
-        $product = Product::create($input);
+       if ($request->type === 'new') {
+            $input              = $request->all();
+            $input['user_id']   = Auth::user()->id;
+            $product            = Product::create($input);
+       } else {
+            $product            = Product::where('slug', $request->slug)->first();
+       }
+
         if ($request->payment_details) {
            $payment = Payment::create([
-                'user_id' => Auth::user()->id,
-                'product_id' => $product->id,
-                // 'payment_ref' => $request->payment_details['flw_ref'],
-                'transaction_id' => $request->payment_details['transaction_id'],
-                'transaction_ref' => $request->payment_details['tx_ref'],
-                'status' => $request->payment_details['status'],
-                // 'description' => $request->payment_details['description'],
+                'user_id'           => Auth::user()->id,
+                'product_id'        => $product->id,
+                // 'payment_ref'    => $request->payment_details['flw_ref'],
+                'transaction_id'    => $request->payment_details['transaction_id'],
+                'transaction_ref'   => $request->payment_details['tx_ref'],
+                'status'            => $request->payment_details['status'],
+                // 'description'    => $request->payment_details['description'],
            ]);
         }
 
