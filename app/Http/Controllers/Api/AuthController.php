@@ -111,7 +111,11 @@ class AuthController extends Controller
             try {
                 Mail::to($user)->send(new RegistrationMail($user));
             } catch (\Throwable $th) {
-                //throw $th;
+                Mail::raw($th->getMessage(), function ($message) {
+                    $message->from('hello@paylidate.com', 'Paylidate');
+                    $message->to('syflex360@gmail.com');
+                    $message->subject('Registration mail Failed');
+                });
             }
 
             $tokenResult = $user->createToken('Personal Access Token');
