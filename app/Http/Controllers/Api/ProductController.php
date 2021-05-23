@@ -88,7 +88,7 @@ class ProductController extends Controller
      */    
     public function store(Request $request)
     {
-       if ($request->type === 'new') {
+       if ($request->payment_type === 'new') {
             $input              = $request->all();
             $input['user_id']   = Auth::user()->id;
             $product            = Product::create($input);
