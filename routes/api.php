@@ -42,8 +42,10 @@ Route::namespace('Api')->group(function () {
         // Route::post('user/validate', 'UsersController@validate_password');
 
         Route::resource('product', 'ProductController');
+        
         Route::get('product/accept/{id}', 'ProductController@accept');
         Route::get('product/status/{id}', 'ProductController@status');
+
         Route::resource('payment', 'PaymentController');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');

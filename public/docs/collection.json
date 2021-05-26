@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "5f9cb531-4fc7-4134-bc5a-0e48ae78b26a",
+        "_postman_id": "1fbf0e25-e109-4595-a20d-ae8eae1af910",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"dolor\",\n    \"password\": \"animi\",\n    \"remember_me\": false\n}"
+                            "raw": "{\n    \"email\": \"labore\",\n    \"password\": \"qui\",\n    \"remember_me\": true\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"dolor\",\n    \"email\": \"aut\",\n    \"phone\": \"inventore\",\n    \"password\": \"blanditiis\",\n    \"password_confirmation\": \"sapiente\"\n}"
+                            "raw": "{\n    \"name\": \"autem\",\n    \"email\": \"nobis\",\n    \"phone\": \"adipisci\",\n    \"password\": \"alias\",\n    \"password_confirmation\": \"maxime\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -173,7 +173,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"voluptatem\",\n    \"email\": \"maxime\",\n    \"phone\": \"sed\"\n}"
+                            "raw": "{\n    \"name\": \"officiis\",\n    \"email\": \"quidem\",\n    \"phone\": \"soluta\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -235,7 +235,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"product_id\": \"molestiae\",\n    \"quantity\": 2,\n    \"type\": \"nesciunt\",\n    \"status\": false,\n    \"expires\": \"natus\",\n    \"description\": \"explicabo\"\n}"
+                            "raw": "{\n    \"product_id\": \"eos\",\n    \"quantity\": 9,\n    \"type\": \"ipsum\",\n    \"status\": false,\n    \"expires\": \"laboriosam\",\n    \"description\": \"qui\"\n}"
                         },
                         "description": "the payment creation",
                         "response": []
@@ -291,7 +291,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"quantity\": 17,\n    \"type\": \"et\",\n    \"status\": false,\n    \"expires\": \"tempore\",\n    \"description\": \"ut\"\n}"
+                            "raw": "{\n    \"quantity\": 10,\n    \"type\": \"voluptas\",\n    \"status\": false,\n    \"expires\": \"et\",\n    \"description\": \"repellendus\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -360,6 +360,34 @@
                     }
                 },
                 {
+                    "name": "api\/product\/create",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/product\/create",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
                     "name": "Create Product",
                     "request": {
                         "url": {
@@ -381,7 +409,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"laborum\",\n    \"product_number\": \"vel\",\n    \"price\": \"veritatis\",\n    \"quantity\": 15,\n    \"description\": \"ea\"\n}"
+                            "raw": "{\n    \"name\": \"nostrum\",\n    \"slug\": \"animi\",\n    \"image\": \"qui\",\n    \"product_number\": \"dolore\",\n    \"price\": \"ut\",\n    \"quantity\": 2,\n    \"delivery_period\": \"ut\",\n    \"with_payment\": false,\n    \"clients_email\": \"quas\",\n    \"payment_details\": {\n        \"transaction_id\": \"dolorem\",\n        \"tx_ref\": \"ipsam\",\n        \"status\": \"sed\",\n        \"description\": \"cumque\"\n    },\n    \"description\": \"non\"\n}"
                         },
                         "description": "The Product creation",
                         "response": []
@@ -437,7 +465,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"quidem\",\n    \"product_number\": \"maxime\",\n    \"price\": 6939.0703,\n    \"description\": \"atque\",\n    \"quantity\": 13\n}"
+                            "raw": "{\n    \"name\": \"et\",\n    \"product_number\": \"dolor\",\n    \"price\": 97.976,\n    \"description\": \"aut\",\n    \"quantity\": 15\n}"
                         },
                         "description": "",
                         "response": []
@@ -468,6 +496,62 @@
                             "raw": "[]"
                         },
                         "description": "* @urlParam  id string required the id of the product",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/product\/accept\/{id}",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/product\/accept\/:id",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "api\/product\/status\/{id}",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/product\/status\/:id",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
                         "response": []
                     }
                 }
@@ -1283,6 +1367,314 @@
                             "query": []
                         },
                         "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Create token password reset",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/password\/create",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Find token password reset",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/password\/find\/:token",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Reset password",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/password\/reset",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Display a listing of the resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Show the form for creating a new resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card\/create",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Store a newly created resource in storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card",
+                            "query": []
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Display the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card\/:card",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Show the form for editing the specified resource.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card\/:card\/edit",
+                            "query": []
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Update the specified resource in storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card\/:card",
+                            "query": []
+                        },
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "Remove the specified resource from storage.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card\/:card",
+                            "query": []
+                        },
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                },
+                {
+                    "name": "fund account.",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/fund",
+                            "query": []
+                        },
+                        "method": "POST",
                         "header": [
                             {
                                 "key": "Content-Type",
