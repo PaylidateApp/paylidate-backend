@@ -34,7 +34,7 @@ curl -X POST \
     "http://localhost/api/login" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"email":"labore","password":"qui","remember_me":true}'
+    -d '{"email":"deserunt","password":"maiores","remember_me":true}'
 
 ```
 
@@ -49,8 +49,8 @@ let headers = {
 };
 
 let body = {
-    "email": "labore",
-    "password": "qui",
+    "email": "deserunt",
+    "password": "maiores",
     "remember_me": true
 }
 
@@ -89,7 +89,7 @@ curl -X POST \
     "http://localhost/api/signup" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"autem","email":"nobis","phone":"adipisci","password":"alias","password_confirmation":"maxime"}'
+    -d '{"name":"quasi","email":"ea","phone":"enim","password":"optio","password_confirmation":"commodi"}'
 
 ```
 
@@ -104,11 +104,11 @@ let headers = {
 };
 
 let body = {
-    "name": "autem",
-    "email": "nobis",
-    "phone": "adipisci",
-    "password": "alias",
-    "password_confirmation": "maxime"
+    "name": "quasi",
+    "email": "ea",
+    "phone": "enim",
+    "password": "optio",
+    "password_confirmation": "commodi"
 }
 
 fetch(url, {
@@ -285,7 +285,7 @@ curl -X POST \
     "http://localhost/api/user/update" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"officiis","email":"quidem","phone":"soluta"}'
+    -d '{"name":"ipsa","email":"suscipit","phone":"nobis"}'
 
 ```
 
@@ -300,9 +300,9 @@ let headers = {
 };
 
 let body = {
-    "name": "officiis",
-    "email": "quidem",
-    "phone": "soluta"
+    "name": "ipsa",
+    "email": "suscipit",
+    "phone": "nobis"
 }
 
 fetch(url, {
@@ -389,7 +389,7 @@ curl -X POST \
     "http://localhost/api/payment" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"product_id":"eos","quantity":9,"type":"ipsum","status":false,"expires":"laboriosam","description":"qui"}'
+    -d '{"product_id":"non","quantity":9,"type":"qui","status":false,"expires":"est","description":"velit"}'
 
 ```
 
@@ -404,12 +404,12 @@ let headers = {
 };
 
 let body = {
-    "product_id": "eos",
+    "product_id": "non",
     "quantity": 9,
-    "type": "ipsum",
+    "type": "qui",
     "status": false,
-    "expires": "laboriosam",
-    "description": "qui"
+    "expires": "est",
+    "description": "velit"
 }
 
 fetch(url, {
@@ -498,7 +498,7 @@ curl -X PUT \
     "http://localhost/api/payment/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"quantity":10,"type":"voluptas","status":false,"expires":"et","description":"repellendus"}'
+    -d '{"quantity":2,"type":"eum","status":false,"expires":"quasi","description":"modi"}'
 
 ```
 
@@ -513,11 +513,11 @@ let headers = {
 };
 
 let body = {
-    "quantity": 10,
-    "type": "voluptas",
+    "quantity": 2,
+    "type": "eum",
     "status": false,
-    "expires": "et",
-    "description": "repellendus"
+    "expires": "quasi",
+    "description": "modi"
 }
 
 fetch(url, {
@@ -700,7 +700,7 @@ curl -X POST \
     "http://localhost/api/product" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"nostrum","slug":"animi","image":"qui","product_number":"dolore","price":"ut","quantity":2,"delivery_period":"ut","with_payment":false,"clients_email":"quas","payment_details":{"transaction_id":"dolorem","tx_ref":"ipsam","status":"sed","description":"cumque"},"description":"non"}'
+    -d '{"name":"delectus","slug":"laudantium","image":"voluptatibus","product_number":"placeat","price":"quis","quantity":1,"delivery_period":"molestiae","with_payment":true,"clients_email":"fuga","payment_details":{"transaction_id":"libero","tx_ref":"velit","status":"laudantium","description":"recusandae"},"description":"consequuntur"}'
 
 ```
 
@@ -715,22 +715,22 @@ let headers = {
 };
 
 let body = {
-    "name": "nostrum",
-    "slug": "animi",
-    "image": "qui",
-    "product_number": "dolore",
-    "price": "ut",
-    "quantity": 2,
-    "delivery_period": "ut",
-    "with_payment": false,
-    "clients_email": "quas",
+    "name": "delectus",
+    "slug": "laudantium",
+    "image": "voluptatibus",
+    "product_number": "placeat",
+    "price": "quis",
+    "quantity": 1,
+    "delivery_period": "molestiae",
+    "with_payment": true,
+    "clients_email": "fuga",
     "payment_details": {
-        "transaction_id": "dolorem",
-        "tx_ref": "ipsam",
-        "status": "sed",
-        "description": "cumque"
+        "transaction_id": "libero",
+        "tx_ref": "velit",
+        "status": "laudantium",
+        "description": "recusandae"
     },
-    "description": "non"
+    "description": "consequuntur"
 }
 
 fetch(url, {
@@ -757,7 +757,7 @@ Parameter | Type | Status | Description
         `price` | string |  required  | Unit Price of the product
         `quantity` | integer |  required  | Total Unit of product if empty it will default to one(1)
         `delivery_period` | string |  optional  | Possible Dilivery days (5)
-        `with_payment` | boolean |  optional  | Indicate thats both product creation and payment
+        `with_payment` | boolean |  optional  | Indicate that it's both product creation and payment (true/false)
         `clients_email` | string |  optional  | Adds multiple emails to tonify/invite
         `payment_details` | array |  optional  | Required if user is creating and making payment at the same time
         `payment_details.transaction_id` | string |  optional  | Transaction ID (Sub-property of payment_details)
@@ -825,7 +825,7 @@ curl -X PUT \
     "http://localhost/api/product/1" \
     -H "Content-Type: application/json" \
     -H "Accept: application/json" \
-    -d '{"name":"et","product_number":"dolor","price":97.976,"description":"aut","quantity":15}'
+    -d '{"name":"quis","product_number":"repudiandae","price":2390213.1465322347,"description":"quia","quantity":11}'
 
 ```
 
@@ -840,11 +840,11 @@ let headers = {
 };
 
 let body = {
-    "name": "et",
-    "product_number": "dolor",
-    "price": 97.976,
-    "description": "aut",
-    "quantity": 15
+    "name": "quis",
+    "product_number": "repudiandae",
+    "price": 2390213.1465322347,
+    "description": "quia",
+    "quantity": 11
 }
 
 fetch(url, {
@@ -1607,6 +1607,54 @@ fetch(url, {
 
 <!-- END_fff037991817542a80c7e20070ff00e0 -->
 
+#Virtual card
+
+
+<!-- START_91cd98a902bbb56e08d7d1125cc43964 -->
+## APIs for Virtual card
+
+> Example request:
+
+```bash
+curl -X GET \
+    -G "http://localhost/api/card" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/json"
+```
+
+```javascript
+const url = new URL(
+    "http://localhost/api/card"
+);
+
+let headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+};
+
+fetch(url, {
+    method: "GET",
+    headers: headers,
+})
+    .then(response => response.json())
+    .then(json => console.log(json));
+```
+
+
+> Example response (401):
+
+```json
+{
+    "message": "Unauthenticated."
+}
+```
+
+### HTTP Request
+`GET api/card`
+
+
+<!-- END_91cd98a902bbb56e08d7d1125cc43964 -->
+
 #general
 
 
@@ -2337,51 +2385,6 @@ fetch(url, {
 
 <!-- END_8ad860d24dc1cc6dac772d99135ad13e -->
 
-<!-- START_91cd98a902bbb56e08d7d1125cc43964 -->
-## Display a listing of the resource.
-
-> Example request:
-
-```bash
-curl -X GET \
-    -G "http://localhost/api/card" \
-    -H "Content-Type: application/json" \
-    -H "Accept: application/json"
-```
-
-```javascript
-const url = new URL(
-    "http://localhost/api/card"
-);
-
-let headers = {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-};
-
-fetch(url, {
-    method: "GET",
-    headers: headers,
-})
-    .then(response => response.json())
-    .then(json => console.log(json));
-```
-
-
-> Example response (401):
-
-```json
-{
-    "message": "Unauthenticated."
-}
-```
-
-### HTTP Request
-`GET api/card`
-
-
-<!-- END_91cd98a902bbb56e08d7d1125cc43964 -->
-
 <!-- START_dc2449bd2273cfb20c94da6050883300 -->
 ## Show the form for creating a new resource.
 
@@ -2428,7 +2431,9 @@ fetch(url, {
 <!-- END_dc2449bd2273cfb20c94da6050883300 -->
 
 <!-- START_37016b0e284c9a6bd51c7e77810a3876 -->
-## Store a newly created resource in storage.
+## Create Product
+
+The Product creation
 
 > Example request:
 
@@ -2436,7 +2441,9 @@ fetch(url, {
 curl -X POST \
     "http://localhost/api/card" \
     -H "Content-Type: application/json" \
-    -H "Accept: application/json"
+    -H "Accept: application/json" \
+    -d '{"name":"ea","slug":"maxime","image":"in","product_number":"ut","price":"facilis","quantity":20,"delivery_period":"eum","with_payment":false,"clients_email":"et","payment_details":{"transaction_id":"in","tx_ref":"quia","status":"vitae","description":"tenetur"},"description":"numquam"}'
+
 ```
 
 ```javascript
@@ -2449,9 +2456,29 @@ let headers = {
     "Accept": "application/json",
 };
 
+let body = {
+    "name": "ea",
+    "slug": "maxime",
+    "image": "in",
+    "product_number": "ut",
+    "price": "facilis",
+    "quantity": 20,
+    "delivery_period": "eum",
+    "with_payment": false,
+    "clients_email": "et",
+    "payment_details": {
+        "transaction_id": "in",
+        "tx_ref": "quia",
+        "status": "vitae",
+        "description": "tenetur"
+    },
+    "description": "numquam"
+}
+
 fetch(url, {
     method: "POST",
     headers: headers,
+    body: body
 })
     .then(response => response.json())
     .then(json => console.log(json));
@@ -2462,7 +2489,25 @@ fetch(url, {
 ### HTTP Request
 `POST api/card`
 
-
+#### Body Parameters
+Parameter | Type | Status | Description
+--------- | ------- | ------- | ------- | -----------
+    `name` | string |  required  | Product Name
+        `slug` | string |  optional  | Product     Slug Required if is_payment is true
+        `image` | string |  optional  | Product     Image
+        `product_number` | string |  optional  | Product     Number / Skew
+        `price` | string |  required  | Unit Price of the product
+        `quantity` | integer |  required  | Total Unit of product if empty it will default to one(1)
+        `delivery_period` | string |  optional  | Possible Dilivery days (5)
+        `with_payment` | boolean |  optional  | Indicate that it's both product creation and payment (true/false)
+        `clients_email` | string |  optional  | Adds multiple emails to tonify/invite
+        `payment_details` | array |  optional  | Required if user is creating and making payment at the same time
+        `payment_details.transaction_id` | string |  optional  | Transaction ID (Sub-property of payment_details)
+        `payment_details.tx_ref` | string |  optional  | Transaction refrence (Sub-property of payment_details)
+        `payment_details.status` | string |  optional  | Transaction status (Sub-property of payment_details)
+        `payment_details.description` | string |  optional  | Transaction Decsription (Sub-property of payment_details)
+        `description` | string |  optional  | Product Description
+    
 <!-- END_37016b0e284c9a6bd51c7e77810a3876 -->
 
 <!-- START_5b6e7e0a32e4457748fd54b2207e8d8f -->

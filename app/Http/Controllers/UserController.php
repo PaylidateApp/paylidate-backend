@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller
 {
@@ -68,7 +69,18 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::find(Auth::user()->id);
+        $user->name =  $request->name;
+        $user->email =  $request->name;
+        $user->password =  $request->name;
+        $user->phone =  $request->name;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $user
+        ]);
     }
 
     /**

@@ -12,9 +12,9 @@ use Auth;
 class CardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @group  Virtual card
      *
-     * @return \Illuminate\Http\Response
+     * APIs for Virtual card
      */
     public function index()
     {
@@ -64,7 +64,7 @@ class CardController extends Controller
     /**
      * Create Virtual Card
      *
-     * The Product creation
+     * The Virtual Card creation
      *
      * @bodyParam   currency        string  required    NG or USD
      * @bodyParam   amount          number  required    at least 150 for NG and 1 for USD

@@ -2,7 +2,7 @@
     "variables": [],
     "info": {
         "name": "Paylidate API",
-        "_postman_id": "1fbf0e25-e109-4595-a20d-ae8eae1af910",
+        "_postman_id": "fc1af1cd-25b4-4969-b07b-5296605f75e3",
         "description": "",
         "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.0.0\/collection.json"
     },
@@ -33,7 +33,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"email\": \"labore\",\n    \"password\": \"qui\",\n    \"remember_me\": true\n}"
+                            "raw": "{\n    \"email\": \"deserunt\",\n    \"password\": \"maiores\",\n    \"remember_me\": true\n}"
                         },
                         "description": "",
                         "response": []
@@ -61,7 +61,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"autem\",\n    \"email\": \"nobis\",\n    \"phone\": \"adipisci\",\n    \"password\": \"alias\",\n    \"password_confirmation\": \"maxime\"\n}"
+                            "raw": "{\n    \"name\": \"quasi\",\n    \"email\": \"ea\",\n    \"phone\": \"enim\",\n    \"password\": \"optio\",\n    \"password_confirmation\": \"commodi\"\n}"
                         },
                         "description": "the user signup routs",
                         "response": []
@@ -173,7 +173,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"officiis\",\n    \"email\": \"quidem\",\n    \"phone\": \"soluta\"\n}"
+                            "raw": "{\n    \"name\": \"ipsa\",\n    \"email\": \"suscipit\",\n    \"phone\": \"nobis\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -235,7 +235,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"product_id\": \"eos\",\n    \"quantity\": 9,\n    \"type\": \"ipsum\",\n    \"status\": false,\n    \"expires\": \"laboriosam\",\n    \"description\": \"qui\"\n}"
+                            "raw": "{\n    \"product_id\": \"non\",\n    \"quantity\": 9,\n    \"type\": \"qui\",\n    \"status\": false,\n    \"expires\": \"est\",\n    \"description\": \"velit\"\n}"
                         },
                         "description": "the payment creation",
                         "response": []
@@ -291,7 +291,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"quantity\": 10,\n    \"type\": \"voluptas\",\n    \"status\": false,\n    \"expires\": \"et\",\n    \"description\": \"repellendus\"\n}"
+                            "raw": "{\n    \"quantity\": 2,\n    \"type\": \"eum\",\n    \"status\": false,\n    \"expires\": \"quasi\",\n    \"description\": \"modi\"\n}"
                         },
                         "description": "",
                         "response": []
@@ -409,7 +409,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"nostrum\",\n    \"slug\": \"animi\",\n    \"image\": \"qui\",\n    \"product_number\": \"dolore\",\n    \"price\": \"ut\",\n    \"quantity\": 2,\n    \"delivery_period\": \"ut\",\n    \"with_payment\": false,\n    \"clients_email\": \"quas\",\n    \"payment_details\": {\n        \"transaction_id\": \"dolorem\",\n        \"tx_ref\": \"ipsam\",\n        \"status\": \"sed\",\n        \"description\": \"cumque\"\n    },\n    \"description\": \"non\"\n}"
+                            "raw": "{\n    \"name\": \"delectus\",\n    \"slug\": \"laudantium\",\n    \"image\": \"voluptatibus\",\n    \"product_number\": \"placeat\",\n    \"price\": \"quis\",\n    \"quantity\": 1,\n    \"delivery_period\": \"molestiae\",\n    \"with_payment\": true,\n    \"clients_email\": \"fuga\",\n    \"payment_details\": {\n        \"transaction_id\": \"libero\",\n        \"tx_ref\": \"velit\",\n        \"status\": \"laudantium\",\n        \"description\": \"recusandae\"\n    },\n    \"description\": \"consequuntur\"\n}"
                         },
                         "description": "The Product creation",
                         "response": []
@@ -465,7 +465,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"et\",\n    \"product_number\": \"dolor\",\n    \"price\": 97.976,\n    \"description\": \"aut\",\n    \"quantity\": 15\n}"
+                            "raw": "{\n    \"name\": \"quis\",\n    \"product_number\": \"repudiandae\",\n    \"price\": 2390213.1465322347,\n    \"description\": \"quia\",\n    \"quantity\": 11\n}"
                         },
                         "description": "",
                         "response": []
@@ -941,6 +941,40 @@
                             "query": []
                         },
                         "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]"
+                        },
+                        "description": "",
+                        "response": []
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Virtual card",
+            "description": "",
+            "item": [
+                {
+                    "name": "APIs for Virtual card",
+                    "request": {
+                        "url": {
+                            "protocol": "http",
+                            "host": "localhost",
+                            "path": "api\/card",
+                            "query": []
+                        },
+                        "method": "GET",
                         "header": [
                             {
                                 "key": "Content-Type",
@@ -1470,34 +1504,6 @@
                     }
                 },
                 {
-                    "name": "Display a listing of the resource.",
-                    "request": {
-                        "url": {
-                            "protocol": "http",
-                            "host": "localhost",
-                            "path": "api\/card",
-                            "query": []
-                        },
-                        "method": "GET",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application\/json"
-                            },
-                            {
-                                "key": "Accept",
-                                "value": "application\/json"
-                            }
-                        ],
-                        "body": {
-                            "mode": "raw",
-                            "raw": "[]"
-                        },
-                        "description": "",
-                        "response": []
-                    }
-                },
-                {
                     "name": "Show the form for creating a new resource.",
                     "request": {
                         "url": {
@@ -1526,7 +1532,7 @@
                     }
                 },
                 {
-                    "name": "Store a newly created resource in storage.",
+                    "name": "Create Product",
                     "request": {
                         "url": {
                             "protocol": "http",
@@ -1547,9 +1553,9 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "[]"
+                            "raw": "{\n    \"name\": \"ea\",\n    \"slug\": \"maxime\",\n    \"image\": \"in\",\n    \"product_number\": \"ut\",\n    \"price\": \"facilis\",\n    \"quantity\": 20,\n    \"delivery_period\": \"eum\",\n    \"with_payment\": false,\n    \"clients_email\": \"et\",\n    \"payment_details\": {\n        \"transaction_id\": \"in\",\n        \"tx_ref\": \"quia\",\n        \"status\": \"vitae\",\n        \"description\": \"tenetur\"\n    },\n    \"description\": \"numquam\"\n}"
                         },
-                        "description": "",
+                        "description": "The Product creation",
                         "response": []
                     }
                 },
