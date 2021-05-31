@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use App\UserCard;
@@ -26,28 +27,28 @@ class CardController extends Controller
             //     ->withHeader('Content-Type: application/json')
             //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
             //     ->asJson( true )
-            //     ->get(); 
+            //     ->get();
 
             //     $new_cards[$key]->data = $response['data'];
-            // }    
+            // }
 
             $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
                 ->withHeader('Content-Type: application/json')
                 ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
                 ->asJson( true )
-                ->get(); 
+                ->get();
 
             $newCard = (array)$card;
             $newCard['data'] = $response['data'];
             $card = (object)$newCard;
-                  
+
         }
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
             'data' => $card
-        ]);       
+        ]);
     }
 
     /**
@@ -57,28 +58,50 @@ class CardController extends Controller
      */
     public function create()
     {
-         
+
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Create Virtual Card
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * The Product creation
+     *
+     * @bodyParam   currency        string  required    NG or USD
+     * @bodyParam   amount          number  required    at least 150 for NG and 1 for USD
+     * @bodyParam   label           string              Card Name
+     * @bodyParam   default         boolean             Make card default (if empty it's default to 0)
+     *
+     *
+     * @return [string] message
      */
+
     public function store(Request $request)
     {
-        $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards')
-            ->withHeader('Content-Type: application/json')    
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
-            ->withData( array( 
+        try {
+            $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards')
+            ->withHeader('Content-Type: application/json')
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+            ->withData( array(
                 "currency" => $request->currency,
                 "amount" => $request->amount,
                 "billing_name" => Auth::user()->name
             ) )
             ->asJson( true )
             ->post();
+        } catch (\Throwable $th) {
+            Mail::raw($th->getMessage(), function ($message) {
+                $message->from('hello@paylidate.com', 'Paylidate');
+                $message->to('syflex360@gmail.com');
+                $message->subject('Card Creation Error');
+            });
 
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Card Creation Error'
+            ], 406);
+        }
+
+        try {
             if ($response['status'] == 'success') {
                 $card = UserCard::create([
                     'user_id' => Auth::user()->id,
@@ -99,7 +122,14 @@ class CardController extends Controller
                     'message' => $response
                 ], 406);
             }
-               
+        } catch (\Throwable $th) {
+            Mail::raw($th->getMessage(), function ($message) {
+                $message->from('hello@paylidate.com', 'Paylidate');
+                $message->to('syflex360@gmail.com');
+                $message->subject('Unable to save created card');
+            });
+        }
+
     }
 
 
@@ -114,15 +144,15 @@ class CardController extends Controller
         $card = UserCard::where('user_id', Auth::user()->id)->first();
         $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id.'/fund')
             ->withHeader('Content-Type: application/json')
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')    
-            ->withData( array( 
+            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+            ->withData( array(
                 "debit_currency" => $request->currency,
                 "amount" => $request->amount,
             ) )
             ->asJson( true )
             ->post();
 
-            if ($response['status'] == 'success') {               
+            if ($response['status'] == 'success') {
                 return response()->json([
                     'status' => 'success',
                     'message' => 'success',
@@ -134,7 +164,7 @@ class CardController extends Controller
                     'message' => $response
                 ], 406);
             }
-               
+
     }
 
     /**
