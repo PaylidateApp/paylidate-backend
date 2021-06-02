@@ -86,7 +86,6 @@ class ProductController extends Controller
      * @bodyParam   price           string  required    Unit Price of the product
      * @bodyParam   quantity        int     required    Total Unit of product if empty it will default to one(1)
      * @bodyParam   delivery_period string              Possible Dilivery days (5)
-     * @bodyParam   with_payment    boolean             Indicate that it's both product creation and payment (true/false)
      * @bodyParam   clients_email   string              Adds multiple emails to tonify/invite
      * @bodyParam   payment_details array               Required if user is creating and making payment at the same time
      * @bodyParam   payment_details.transaction_id  string      Transaction ID (Sub-property of payment_details)
@@ -101,16 +100,13 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $user_id = Auth::user()->id;
+
 
         try {
-            if ($request->with_payment) {
-                $input              = $request->all();
-                $input['user_id']   = $user_id;
-                $product            = Product::create($input);
-            } else {
-                $product            = Product::where('slug', $request->slug)->first();
-            }
+            $user_id = Auth::user()->id;
+            $input              = $request->all();
+            $input['user_id']   = $user_id;
+            $product            = Product::create($input);
 
             if ($request->payment_details) {
                 Payment::create([
@@ -133,7 +129,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $product
+            'data' => $product->load('payment', 'secondary_user', 'user')
         ]);
     }
 
