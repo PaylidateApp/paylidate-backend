@@ -281,6 +281,7 @@ class AuthController extends Controller
         $input = $request->all();
         $id = Auth::user()->id;
         $user = User::where('id', $id)->update($input);
+        $user = Auth::user();
 
         return response()->json([
             'status' => 'success',
