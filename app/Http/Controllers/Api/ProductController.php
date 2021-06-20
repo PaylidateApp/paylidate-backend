@@ -100,8 +100,6 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
-
         try {
             $user_id = Auth::user()->id;
             $input              = $request->all();
@@ -118,6 +116,8 @@ class ProductController extends Controller
                     'description'    => $request->payment_details['description'],
                 ]);
             }
+            $user = Auth::user();
+            Mail::to($user)->send(new RegistrationMail($user, $product));
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
                 $message->from('hello@paylidate.com', 'Paylidate');

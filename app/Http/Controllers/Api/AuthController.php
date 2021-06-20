@@ -88,25 +88,29 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            // $ref = '';
-            // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
-            // ->withHeader('Content-Type: application/json')
-            // ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-            // ->withData( array(
-            //     "email" => "syflex360@mail.com",
-            //     "is_permanent" => true,
-            //     "tx_ref" => "simon-moses-101923123463"
-            // ) )
-            // ->asJson( true )
-            // ->post();
-            // if ($response['status'] == 'success') {
-            //     $ref =  $response['data']['order_ref'];
-            // }
+            $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
+            if ($enable_virtual_account) {
+                $ref = '';
+                $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
+                ->withHeader('Content-Type: application/json')
+                ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+                ->withData( array(
+                    "email" => "syflex360@mail.com",
+                    "is_permanent" => true,
+                    "tx_ref" => "simon-moses-101923123463"
+                ) )
+                ->asJson( true )
+                ->post();
+                if ($response['status'] == 'success') {
+                    $ref =  $response['data']['order_ref'];
+                }
 
-            // UserAccount::create([
-            //     'user_id' => $user->id,
-            //     'ref' => $ref
-            // ]);
+                UserAccount::create([
+                    'user_id' => $user->id,
+                    'ref' => $ref
+                ]);
+            }
+
 
             try {
                 Mail::to($user)->send(new RegistrationMail($user));

@@ -57,6 +57,7 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
+        
         $payment = Payment::create([
             'user_id' => Auth::user()->id,
             'product_id' => $request->id,
