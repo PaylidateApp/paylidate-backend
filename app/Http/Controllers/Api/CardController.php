@@ -82,12 +82,15 @@ class CardController extends Controller
             ->withHeader('Content-Type: application/json')
             ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
             ->withData( array(
-                "currency" => $request->currency,
-                "amount" => $request->amount,
-                "billing_name" => Auth::user()->name
+                "currency" => 'NGN',
+                "amount" => 5,
+                "billing_name" => 'me'
             ) )
-            ->asJson( true )
+            ->asJson(true)
             ->post();
+
+            return $response;
+
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
                 $message->from('hello@paylidate.com', 'Paylidate');

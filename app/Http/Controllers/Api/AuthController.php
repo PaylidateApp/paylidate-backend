@@ -13,6 +13,7 @@ use App\Wallet;
 use App\UserAccount;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 
 /**
  * @group  Authentication management
@@ -55,17 +56,6 @@ class AuthController extends Controller
             'password_confirmation' => 'required|same:password',
         ], $messages);
 
-        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
-        //     ->withHeader('Content-Type: application/json')
-        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-        //     ->withData( array(
-        //         "email" => "syflex360@mail.com",
-        //         "is_permanent" => true,
-        //         "tx_ref" => "simon-moses-101923123463"
-        //     ) )
-        //     ->asJson( true )
-        //     ->post();
-
         $user = User::where('email', $request->get('email'))->first();
 
         if ($user) {
@@ -79,7 +69,6 @@ class AuthController extends Controller
                 'message' => $validator->errors()
             ], 406);
         } else {
-            // insert new record
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
@@ -88,28 +77,27 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
-            if ($enable_virtual_account) {
+            // $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
+            // if ($enable_virtual_account) {
                 $ref = '';
-                $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers')
-                ->withHeader('Content-Type: application/json')
-                ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-                ->withData( array(
-                    "email" => "syflex360@mail.com",
-                    "is_permanent" => true,
-                    "tx_ref" => "simon-moses-101923123463"
-                ) )
-                ->asJson( true )
-                ->post();
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+                ])->post(env('FLW_BASE_URL').'/v3/virtual-account-numbers', [
+                    "email" => $request->email,
+                    "is_permanent" => false,
+                    "tx_ref" => $request->name.'-'.time(),
+                    "narration" => $request->name,
+                ]);
+
                 if ($response['status'] == 'success') {
-                    $ref =  $response['data']['order_ref'];
-                }
+                        $ref =  $response['data']['order_ref'];
+                    }
 
                 UserAccount::create([
                     'user_id' => $user->id,
                     'ref' => $ref
                 ]);
-            }
+            // }
 
 
             try {
@@ -131,7 +119,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                // 'account' => $response['data']
+                'account' => $response['data']
             ]);
         }
     }
@@ -172,14 +160,18 @@ class AuthController extends Controller
 
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
 
-        // $account = UserAccount::where('user_id', Auth::user()->id)->first();
+        $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
-        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
-        //     ->withHeader('Content-Type: application/json')
-        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-        //     ->asJson( true )
-        //     ->get();
 
+        if ($account && $account->ref) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/virtual-account-numbers/'. $account->ref);
+
+            if ($response['status'] == 'success') {
+                    $account['account'] = $response['data'];
+                }
+        }
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -193,7 +185,7 @@ class AuthController extends Controller
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
             'data' => $user->load('wallet'),
-            // 'account' => $response['data']
+            'account' => $account
         ]);
     }
 
@@ -226,16 +218,21 @@ class AuthController extends Controller
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
         $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
-        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
-        //     ->withHeader('Content-Type: application/json')
-        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-        //     ->asJson( true )
-        //     ->get();
+        if ($account && $account->ref) {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/virtual-account-numbers/'. $account->ref);
+
+            if ($response['status'] == 'success') {
+                    $account['account'] = $response['data'];
+                }
+        }
 
         return response()->json([
             'status' => 'success',
             'message' => 'user fetched',
-            'data' => $user->load('wallet')
+            'data' => $user->load('wallet'),
+            'account'=> $account
         ]);
     }
 
