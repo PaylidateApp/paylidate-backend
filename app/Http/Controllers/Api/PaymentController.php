@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use App\Payment;
 use Auth;
+use stdClass;
 
 /**
  * @group  Payment management
@@ -29,15 +31,16 @@ class PaymentController extends Controller
         ]);
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  *
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function create()
-    // {
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
 
-    // }
+
+    }
 
 
     /**
@@ -57,7 +60,7 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $payment = Payment::create([
             'user_id' => Auth::user()->id,
             'product_id' => $request->id,
@@ -65,7 +68,7 @@ class PaymentController extends Controller
             'transaction_id' => $request->transaction_id,
             'transaction_ref' => $request->tx_ref,
             'status' => $request->status,
-            // 'description' => $request->description,
+            'description' => $request->description,
        ]);
 
         return response()->json([
@@ -92,16 +95,16 @@ class PaymentController extends Controller
         ]);
     }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
 
     /**
      * Update a Specified Payment
@@ -141,6 +144,42 @@ class PaymentController extends Controller
             'status' => 'success',
             'message' => 'success',
             'data' => $payment
+        ]);
+    }
+
+    public function getPaymentLink(Request $request){
+        $user =  Auth::user();
+        $meta = new stdClass();
+        $meta->consumer_id =  $user->id;
+        $meta->consumer_mac = "";
+
+        $customer = new stdClass();
+        $customer->email =  $user->email;
+        $customer->phonenumber =  $user->phone;
+        $customer->name =  $user->name;
+
+        $customizations = new stdClass();
+        $customizations->title = "Paylidate Payment";
+        $customizations->description = "";
+        $customizations->logo = "";
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL').'/v3/payments', [
+            "tx_ref" => $user->name."-tx-".time(),
+            "amount" => $request->amount,
+            "currency" => $request->currency,
+            "redirect_url" => $request->redirect_url,
+            "payment_options" => "card",
+            "meta" => $meta,
+            "customer" => $customer,
+            "customizations" => $customizations
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $response['data']
         ]);
     }
 }

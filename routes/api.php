@@ -49,6 +49,7 @@ Route::namespace('Api')->group(function () {
         Route::get('product/status/{id}', 'ProductController@status');
 
         Route::resource('payment', 'PaymentController');
+        Route::post('payment/link', 'PaymentController@getPaymentLink');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
 
