@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Payment;
+use App\Product;
 use Auth;
 use stdClass;
 
@@ -60,15 +61,15 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-
+        $product = Product::where('slug',$request->slug)->first('id');
         $payment = Payment::create([
             'user_id' => Auth::user()->id,
-            'product_id' => $request->id,
+            'product_id' => $product->id,
             // 'payment_ref' => $request->flw_ref,
             'transaction_id' => $request->transaction_id,
             'transaction_ref' => $request->tx_ref,
-            'status' => $request->status,
-            'description' => $request->description,
+            // 'status' => $request->status,
+            // 'description' => $request->description,
        ]);
 
         return response()->json([
