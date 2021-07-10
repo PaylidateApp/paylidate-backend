@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
+use Illuminate\Support\Facades\Http;
 use App\UserCard;
 use Auth;
+use stdClass;
 
 class CardController extends Controller
 {
@@ -18,36 +20,23 @@ class CardController extends Controller
      */
     public function index()
     {
-        $card = UserCard::where('user_id', Auth::user()->id)->first();
-        // $new_cards = $cards;
+        $cards = UserCard::where('user_id', Auth::user()->id)->get();
+        $new_cards = $cards;
 
-        if ($card) {
-            // foreach ($cards as $key => $card) {
-            //     $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
-            //     ->withHeader('Content-Type: application/json')
-            //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-            //     ->asJson( true )
-            //     ->get();
+        if ($cards) {
+            foreach ($cards as $key => $card) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+                ])->get(env('FLW_BASE_URL').'/v3/virtual-cards/'.$card->card_id);
 
-            //     $new_cards[$key]->data = $response['data'];
-            // }
-
-            $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id)
-                ->withHeader('Content-Type: application/json')
-                ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-                ->asJson( true )
-                ->get();
-
-            $newCard = (array)$card;
-            $newCard['data'] = $response['data'];
-            $card = (object)$newCard;
-
+                $new_cards[$key]->data = $response['data'];
+            }
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $card
+            'data' => $new_cards
         ]);
     }
 
@@ -78,18 +67,15 @@ class CardController extends Controller
     public function store(Request $request)
     {
         try {
-            $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards')
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-            ->withData( array(
-                "currency" => 'NGN',
-                "amount" => 5,
-                "billing_name" => 'me'
-            ) )
-            ->asJson(true)
-            ->post();
 
-            return $response;
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
+                "currency" => $request->currency,
+                "debit_currency" => $request->currency,
+                "amount" => $request->amount,
+                "billing_name" => Auth::user()->name
+            ]);
 
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
@@ -106,13 +92,13 @@ class CardController extends Controller
 
         try {
             if ($response['status'] == 'success') {
-                $card = UserCard::create([
+                UserCard::create([
                     'user_id' => Auth::user()->id,
                     'card_id' => $response['data']['id'],
                     'account_id' => $response['data']['account_id'],
                     'currency' => $response['data']['currency'],
                     'label' => $request->label,
-                    'default' => $request->default,
+                    // 'default' => $request->default,
                 ]);
                 return response()->json([
                     'status' => 'success',
