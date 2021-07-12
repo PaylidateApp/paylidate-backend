@@ -306,4 +306,7 @@ class AuthController extends Controller
                 'message' => 'User doesnot exist.'
             ], 406);
         }
+
+    }
+    
 }
