@@ -184,3 +184,5 @@ class PaymentController extends Controller
         ]);
     }
 }
+
+rest cli

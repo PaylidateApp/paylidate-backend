@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use PHPUnit\Util\Getopt;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::namespace('Api')->group(function () {
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
+    Route::get('check/email/{email}', 'AuthController@check_email');
 
     // password reset routes
     Route::group(['middleware' => 'api', 'prefix' => 'password'], function () {
@@ -55,3 +57,4 @@ Route::namespace('Api')->group(function () {
         Route::post('fund', 'CardController@fund');
     });
 });
+

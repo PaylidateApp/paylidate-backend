@@ -291,4 +291,19 @@ class AuthController extends Controller
         ]);
 
     }
+
+    public function check_email($email){
+        $user = User::where('email', $email)->first();
+
+        if ($user) {
+            return response()->json([
+                'status' => 'true',
+                'message' => 'User exist.',
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'false',
+                'message' => 'User doesnot exist.'
+            ], 406);
+        }
 }
