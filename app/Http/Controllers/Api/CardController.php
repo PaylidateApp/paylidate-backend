@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\UserCard;
 use Auth;
 use stdClass;
+use App\VirtualCard;
 
 class CardController extends Controller
 {
@@ -20,7 +21,7 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = UserCard::where('user_id', Auth::user()->id)->get();
+        $cards = VirtualCard::where('user_id', Auth::user()->id)->get();
         $new_cards = $cards;
 
         if ($cards) {
@@ -92,7 +93,7 @@ class CardController extends Controller
 
         try {
             if ($response['status'] == 'success') {
-                UserCard::create([
+                VirtualCard::create([
                     'user_id' => Auth::user()->id,
                     'card_id' => $response['data']['id'],
                     'account_id' => $response['data']['account_id'],
@@ -130,29 +131,29 @@ class CardController extends Controller
      */
     public function fund(Request $request)
     {
-        $card = UserCard::where('user_id', Auth::user()->id)->first();
-        $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id.'/fund')
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-            ->withData( array(
-                "debit_currency" => $request->currency,
-                "amount" => $request->amount,
-            ) )
-            ->asJson( true )
-            ->post();
+        // $card = UserCard::where('user_id', Auth::user()->id)->first();
+        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id.'/fund')
+        //     ->withHeader('Content-Type: application/json')
+        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+        //     ->withData( array(
+        //         "debit_currency" => $request->currency,
+        //         "amount" => $request->amount,
+        //     ) )
+        //     ->asJson( true )
+        //     ->post();
 
-            if ($response['status'] == 'success') {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'success',
-                    'data' => $response['data']
-                ]);
-            }else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $response
-                ], 406);
-            }
+        //     if ($response['status'] == 'success') {
+        //         return response()->json([
+        //             'status' => 'success',
+        //             'message' => 'success',
+        //             'data' => $response['data']
+        //         ]);
+        //     }else {
+        //         return response()->json([
+        //             'status' => 'error',
+        //             'message' => $response
+        //         ], 406);
+        //     }
 
     }
 

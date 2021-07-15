@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Payment;
-use App\Product;
+use App\UserCard;
+use App\VirtualCard;
 use Auth;
 use stdClass;
 
@@ -61,10 +62,12 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $product = Product::where('slug',$request->slug)->first('id');
-        $payment = Payment::create([
-            'user_id' => Auth::user()->id,
-            'product_id' => $product->id,
+        $user = Auth::user();
+        // $product = Product::where('slug',$request->slug)->first('id');
+
+        Payment::create([
+            'user_id' => $user->id,
+            // 'product_id' => 0,
             // 'payment_ref' => $request->flw_ref,
             'transaction_id' => $request->transaction_id,
             'transaction_ref' => $request->tx_ref,
@@ -72,10 +75,37 @@ class PaymentController extends Controller
             // 'description' => $request->description,
        ]);
 
+
+       $response = Http::withHeaders([
+        'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+        ])->get(env('FLW_BASE_URL').'/v3/transactions/'.$request->transaction_id.'\/verify/');
+
+        // create an instance of UserCard and insert 'first_6digits','last_4digits','issuer','country','type','token','expiry'
+        $userCard = new UserCard();
+        $userCard->first_6digits =  $response['data']['card']['first_6digits'];
+        $userCard->last_4digits = $response['data']['card']['last_4digits'];
+        $userCard->issuer = $response['data']['card']['issuer'];
+        $userCard->country = $response['data']['card']['country'];
+        $userCard->type = $response['data']['card']['type'];
+        $userCard->token = $response['data']['card']['token'];
+        $userCard->expiry = $response['data']['card']['expiry'];
+        $userCard->user_id = $user->id;
+        $userCard->save();
+
+        // get card_id from VirtualCard where id is equal to user-id
+        $virtualCard = VirtualCard::where('user_id',$user->id)->first('card_id');
+
+        $response1 = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/fund', [
+            "amount" => $response['data']['amount'],
+            "debit_currency" => 'NGN',
+        ]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $payment
+            'data' => $response1['data']
         ]);
     }
 
@@ -184,5 +214,3 @@ class PaymentController extends Controller
         ]);
     }
 }
-
-rest cli

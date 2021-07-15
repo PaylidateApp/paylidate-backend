@@ -16,12 +16,13 @@ class CreateUserCardsTable extends Migration
         Schema::create('user_cards', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->string('card_id')->nullable();
-            $table->string('label')->nullable();
-            $table->string('color')->nullable();
-            $table->string('account_id')->nullable();
-            $table->string('currency')->nullable();
-            $table->boolean('default')->nullable()->default(false);
+            $table->string('first_6digits')->nullable();
+            $table->string('last_4digits')->nullable();
+            $table->string('issuer')->nullable();
+            $table->string('country')->nullable();
+            $table->string('type')->nullable();
+            $table->string('token')->nullable();
+            $table->string('expiry')->nullable();
             $table->timestamps();
         });
     }

@@ -12,6 +12,7 @@ use App\User;
 use App\Wallet;
 use App\UserAccount;
 use Auth;
+use App\VirtualCard;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 
@@ -77,8 +78,8 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            // $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
-            // if ($enable_virtual_account) {
+            $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
+            if ($enable_virtual_account) {
                 $ref = '';
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
@@ -97,7 +98,50 @@ class AuthController extends Controller
                     'user_id' => $user->id,
                     'ref' => $ref
                 ]);
-            // }
+            }
+
+            // create virtual card for transactions
+            try {
+
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+                ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
+                    "currency" => 'NGN',
+                    "amount" => '150',
+                    "billing_name" => $user->name
+                ]);
+
+            } catch (\Throwable $th) {
+                Mail::raw($th->getMessage(), function ($message) {
+                    $message->from('hello@paylidate.com', 'Paylidate');
+                    $message->to('syflex360@gmail.com');
+                    $message->subject('Card Creation Error');
+                });
+            }
+
+            try {
+                if ($response['status'] == 'success') {
+                    VirtualCard::create([
+                        'user_id' => $user->id,
+                        'card_id' => $response['data']['id'],
+                        'account_id' => $response['data']['account_id'],
+                        'currency' => $response['data']['currency'],
+                        'default' => 1,
+                    ]);
+                }else {
+                    Mail::raw($th->getMessage(), function ($message) {
+                        $message->from('hello@paylidate.com', 'Paylidate');
+                        $message->to('syflex360@gmail.com');
+                        $message->subject('Error Creation users card');
+                    });
+                }
+            } catch (\Throwable $th) {
+                Mail::raw($th->getMessage(), function ($message) {
+                    $message->from('hello@paylidate.com', 'Paylidate');
+                    $message->to('syflex360@gmail.com');
+                    $message->subject('Error inserting users card details');
+                });
+            }
 
 
             try {
@@ -308,5 +352,5 @@ class AuthController extends Controller
         }
 
     }
-    
+
 }
