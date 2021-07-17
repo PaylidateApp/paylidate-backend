@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 use App\Payment;
 use App\UserCard;
 use App\VirtualCard;
+use App\Product;
 use Auth;
 use stdClass;
 
@@ -65,15 +66,15 @@ class PaymentController extends Controller
         $user = Auth::user();
         // $product = Product::where('slug',$request->slug)->first('id');
 
-        Payment::create([
-            'user_id' => $user->id,
-            // 'product_id' => 0,
-            // 'payment_ref' => $request->flw_ref,
-            'transaction_id' => $request->transaction_id,
-            'transaction_ref' => $request->tx_ref,
-            // 'status' => $request->status,
-            // 'description' => $request->description,
-       ]);
+    //     Payment::create([
+    //         'user_id' => $user->id,
+    //         // 'product_id' => 0,
+    //         // 'payment_ref' => $request->flw_ref,
+    //         'transaction_id' => $request->transaction_id,
+    //         'transaction_ref' => $request->tx_ref,
+    //         // 'status' => $request->status,
+    //         // 'description' => $request->description,
+    //    ]);
 
 
        $response = Http::withHeaders([
@@ -95,9 +96,10 @@ class PaymentController extends Controller
         // get card_id from VirtualCard where id is equal to user-id
         $virtualCard = VirtualCard::where('user_id',$user->id)->first('card_id');
 
+        // fund virtual card with payment
         $response1 = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/fund', [
+        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'\/fund', [
             "amount" => $response['data']['amount'],
             "debit_currency" => 'NGN',
         ]);
@@ -108,6 +110,62 @@ class PaymentController extends Controller
             'data' => $response1['data']
         ]);
     }
+
+
+
+    /**
+     * Create Payment
+     *
+     * the payment creation
+     *
+     * @bodyParam product_id string required
+     * @bodyParam quantity int string
+     * @bodyParam type string required  either make-payment/receive-payment
+     * @bodyParam status boolean true for paid false un-paid,  false by default
+     * @bodyParam expires string expires in a week by default
+     * @bodyParam description string
+     *
+     *
+     * @return [string] message
+     */
+    public function make_payment(Request $request)
+    {
+        $user = Auth::user();
+
+        // get product
+        $product = Product::where('slug',$request->slug)->first('id');
+
+        // get card_id from VirtualCard where id is equal to user-id
+        $virtualCard = VirtualCard::where('user_id', $user->id)->where('default', 1)->first('card_id');
+
+        // get virtual card balance
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id);
+
+
+        if ($request->amount <= $response['data']['amount']) {
+            // withdraw from virtual card
+            $response1 = Http::withHeaders([
+                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/withdraw', [
+                "amount" => $request->amount,
+            ]);
+        }else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Amount connot be more than wallet balnce',
+                'data' => []
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $response1
+        ]);
+    }
+
 
     /**
      * Get Single Payment

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'user_id','product_id','payment_id','status','amount','wallet_befor','amount_due','wallet_after','description'
+        'user_id','product_id','type','payment_ref','transaction_id',
+        'transaction_ref','status','verified','amount','balance_befor',
+        'balance_after','description'
     ];
 }

@@ -204,4 +204,14 @@ class ProductController extends Controller
             'data' => $product
         ]);
     }
+
+    public function get_product($slug)
+    {
+        $product = Product::where('slug', $slug)->with('payment', 'secondary_user', 'user')->first();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
 }

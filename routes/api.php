@@ -25,6 +25,7 @@ Route::namespace('Api')->group(function () {
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
+    Route::get('product/{slug}', 'ProductController@get_product');
 
     // password reset routes
     Route::group(['middleware' => 'api', 'prefix' => 'password'], function () {
@@ -51,6 +52,7 @@ Route::namespace('Api')->group(function () {
         Route::resource('payment', 'PaymentController');
         Route::resource('card', 'CardController');
         Route::post('payment/link', 'PaymentController@getPaymentLink');
+        Route::post('make-payment', 'PaymentController@make_payment');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
 
