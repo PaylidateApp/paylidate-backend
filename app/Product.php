@@ -11,7 +11,8 @@ class Product extends Model
     use HasSlug;
 
     protected $fillable = [
-        'user_id','name','image','product_number','price','quantity','type','description'
+        'user_id','name','image','product_number','price','quantity','type','description','confirmed',
+        'delivery_status','payment_status','dispute','delivery_period','clients_email','description'
     ];
 
     public function user()
@@ -45,7 +46,7 @@ class Product extends Model
     {
         return $this->hasOne('App\Payment');
     }
-    
+
     public function secondary_user()
     {
         return $this->belongsTo('App\User', 'secondary_user_id');

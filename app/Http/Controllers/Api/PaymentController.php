@@ -133,7 +133,7 @@ class PaymentController extends Controller
         $user = Auth::user();
 
         // get product
-        $product = Product::where('slug',$request->slug)->first('id');
+        // $product = Product::where('slug', $request->slug)->first('id');
 
         // get card_id from VirtualCard where id is equal to user-id
         $virtualCard = VirtualCard::where('user_id', $user->id)->where('default', 1)->first('card_id');
@@ -145,12 +145,16 @@ class PaymentController extends Controller
 
 
         if ($request->amount <= $response['data']['amount']) {
+
             // withdraw from virtual card
             $response1 = Http::withHeaders([
                 'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
             ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/withdraw', [
                 "amount" => $request->amount,
             ]);
+            
+            Product::where('slug', $request->slug)->update(['payment_status' => 1]);
+
         }else {
             return response()->json([
                 'status' => 'failed',
