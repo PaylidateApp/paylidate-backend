@@ -23,15 +23,15 @@ class UserAccountController extends Controller
      */
     public function index()
     {
-        $account = UserAccount::where('user_id', Auth::user()->id)->first();
+        $virtual_account = new UserAccount;
+        $account = $virtual_account->where('user_id', Auth::user()->id)->first();
+
         $output = null;
         if ($account && $account->ref) {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/virtual-account-numbers/'. $account->ref);
+           $virtual_account->getVirtualAccount($account->ref);
 
-            if ($response['status'] == 'success') {
-                    $output = $response['data'];
+            if ($virtual_account['status'] == 'success') {
+                    $output = $virtual_account['data'];
                 }
         }
 

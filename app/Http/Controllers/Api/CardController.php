@@ -21,15 +21,13 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = VirtualCard::where('user_id', Auth::user()->id)->get();
+        $virtual_card = new VirtualCard;
+        $cards = $virtual_card->where('user_id', Auth::user()->id)->get();
         $new_cards = $cards;
 
         if ($cards) {
             foreach ($cards as $key => $card) {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-                ])->get(env('FLW_BASE_URL').'/v3/virtual-cards/'.$card->card_id);
-
+                $response = $virtual_card->getvirtualCard($card->card_id);
                 $new_cards[$key]->data = $response['data'];
             }
         }
@@ -67,29 +65,8 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-        try {
-
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
-                "currency" => $request->currency,
-                "debit_currency" => $request->currency,
-                "amount" => $request->amount,
-                "billing_name" => Auth::user()->name
-            ]);
-
-        } catch (\Throwable $th) {
-            Mail::raw($th->getMessage(), function ($message) {
-                $message->from('hello@paylidate.com', 'Paylidate');
-                $message->to('syflex360@gmail.com');
-                $message->subject('Card Creation Error');
-            });
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Card Creation Error'
-            ], 406);
-        }
+        $virtual_card = new VirtualCard;
+        $response = $virtual_card->virtualCard($currency = '', $ammount = '=', $name = '');
 
         try {
             if ($response['status'] == 'success') {

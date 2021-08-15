@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\Http;
 
 class User extends Authenticatable
 {
@@ -47,4 +48,13 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\UserAccount');
     }
+
+    function getTransaction($transaction_id){
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/transactions/'. $transaction_id .'\/verify/');
+
+        return $response;
+    }
+
 }

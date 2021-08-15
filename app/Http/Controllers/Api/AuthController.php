@@ -57,9 +57,10 @@ class AuthController extends Controller
             'password_confirmation' => 'required|same:password',
         ], $messages);
 
-        $user = User::where('email', $request->get('email'))->first();
+        $user = new User;
+        $current_user = User::where('email', $request->get('email'))->first();
 
-        if ($user) {
+        if ($current_user) {
             return response()->json([
                 'status' => 'exist',
                 'message' => 'User already exist. please login',
@@ -72,51 +73,38 @@ class AuthController extends Controller
         } else {
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
-            $user = User::create($input);
+            $new_user = $user->create($input);
 
             Wallet::create([
-                'user_id' => $user->id,
+                'user_id' => $new_user->id,
             ]);
 
-            $enable_virtual_account = env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false);
-
-            if ($enable_virtual_account) {
+            if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
                 $ref = '';
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-                ])->post(env('FLW_BASE_URL').'/v3/virtual-account-numbers', [
-                    "email" => $request->email,
-                    "is_permanent" => false,
-                    "tx_ref" => $request->name.'-'.time(),
-                    "narration" => $request->name,
-                ]);
 
-                if ($response['status'] == 'success') {
-                        $ref =  $response['data']['order_ref'];
+                $virtual_account = $user->createVirtualAccount($email = '', $is_permanent = false, $name = '');
+
+                if ($virtual_account['status'] == 'success') {
+                        $ref =  $virtual_account['data']['order_ref'];
                     }
 
                 UserAccount::create([
-                    'user_id' => $user->id,
+                    'user_id' => $new_user->id,
                     'ref' => $ref
                 ]);
             }
 
             // create NGN virtual card for transactions
-            try {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-                ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
-                    "currency" => 'NGN',
-                    "amount" => '150',
-                    "billing_name" => $user->name
-                ]);
-            } catch (\Throwable $th) {
-                Mail::raw($th->getMessage(), function ($message) {
-                    $message->from('hello@paylidate.com', 'Paylidate');
-                    $message->to('syflex360@gmail.com');
-                    $message->subject('Card Creation Error');
-                });
-            }
+            $virtual_card = $user->virtualCard($currency = '', $ammount = '', $name = '');
+            // try {
+
+            // } catch (\Throwable $th) {
+            //     Mail::raw($th->getMessage(), function ($message) {
+            //         $message->from('hello@paylidate.com', 'Paylidate');
+            //         $message->to('syflex360@gmail.com');
+            //         $message->subject('Card Creation Error');
+            //     });
+            // }
 
             try {
                 if ($response['status'] == 'success') {
@@ -143,30 +131,21 @@ class AuthController extends Controller
             }
 
             // withdraw from virtual card
-            $response1 = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $response['data']['id'] .'/withdraw', [
-                "amount" => "150",
-            ]);
+           $withdraw = $user->withdrawFromVirtualCard($card_id = '', $ammount = '');
 
 
 
             // create USD virtual card for transactions
-            try {
-                $response = Http::withHeaders([
-                    'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-                ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
-                    "currency" => 'USD',
-                    "amount" => '2',
-                    "billing_name" => $user->name
-                ]);
-            } catch (\Throwable $th) {
-                Mail::raw($th->getMessage(), function ($message) {
-                    $message->from('hello@paylidate.com', 'Paylidate');
-                    $message->to('syflex360@gmail.com');
-                    $message->subject('Card Creation Error');
-                });
-            }
+            $virtual_card = $user->virtualCard($currency = '', $ammount = '', $name = '');
+            // try {
+
+            // } catch (\Throwable $th) {
+            //     Mail::raw($th->getMessage(), function ($message) {
+            //         $message->from('hello@paylidate.com', 'Paylidate');
+            //         $message->to('syflex360@gmail.com');
+            //         $message->subject('Card Creation Error');
+            //     });
+            // }
 
             try {
                 if ($response['status'] == 'success') {
@@ -192,11 +171,7 @@ class AuthController extends Controller
             }
 
               // withdraw from virtual card
-              $response1 = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $response['data']['id'] .'/withdraw', [
-                "amount" => "2",
-            ]);
+              $withdraw = $user->withdrawFromVirtualCard($card_id = '', $ammount = '');
 
 
 
@@ -219,7 +194,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                'account' => $response['data']
+                'account' => $virtual_account['data']
             ]);
         }
     }
@@ -319,12 +294,11 @@ class AuthController extends Controller
         $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
         if ($account && $account->ref) {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/virtual-account-numbers/'. $account->ref);
+            $user_object = new User;
+            $virtual_account = $user_object->getVirtualAccount($account->ref);
 
-            if ($response['status'] == 'success') {
-                    $account['account'] = $response['data'];
+            if ($virtual_account['status'] == 'success') {
+                    $account['account'] = $virtual_account['data'];
                 }
         }
 

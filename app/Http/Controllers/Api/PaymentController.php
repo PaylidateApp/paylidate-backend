@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Payment;
 use App\UserCard;
+use App\User;
 use App\VirtualCard;
 use App\Product;
 use Auth;
@@ -76,10 +77,8 @@ class PaymentController extends Controller
     //         // 'description' => $request->description,
     //    ]);
 
-
-       $response = Http::withHeaders([
-        'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->get(env('FLW_BASE_URL').'/v3/transactions/'.$request->transaction_id.'\/verify/');
+        $user = new User;
+        $response = $user->getTransaction($request->transaction_id);
 
         // create an instance of UserCard and insert 'first_6digits','last_4digits','issuer','country','type','token','expiry'
         $userCard = new UserCard();
@@ -94,20 +93,16 @@ class PaymentController extends Controller
         $userCard->save();
 
         // get card_id from VirtualCard where id is equal to user-id
-        $virtualCard = VirtualCard::where('user_id',$user->id)->first('card_id');
+        $virtualCard = new VirtualCard;
+        $card = $virtualCard->where('user_id', $user->id)->first('card_id');
 
         // fund virtual card with payment
-        $response1 = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'\/fund', [
-            "amount" => $response['data']['amount'],
-            "debit_currency" => 'NGN',
-        ]);
+        $virtualCard->fundVirtualCard($card->card_id, $amount = '', $debit_currency = '');
 
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $response1['data']
+            'data' => $virtualCard['data']
         ]);
     }
 
@@ -152,7 +147,7 @@ class PaymentController extends Controller
             ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/withdraw', [
                 "amount" => $request->amount,
             ]);
-            
+
             Product::where('slug', $request->slug)->update(['payment_status' => 1]);
 
         }else {
