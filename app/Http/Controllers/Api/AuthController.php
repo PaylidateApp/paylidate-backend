@@ -82,7 +82,7 @@ class AuthController extends Controller
             if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
                 $ref = '';
 
-                $virtual_account = $user->createVirtualAccount($email = '', $is_permanent = false, $name = '');
+                $virtual_account = $user->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
 
                 if ($virtual_account['status'] == 'success') {
                         $ref =  $virtual_account['data']['order_ref'];
@@ -95,7 +95,7 @@ class AuthController extends Controller
             }
 
             // create NGN virtual card for transactions
-            $virtual_card = $user->virtualCard($currency = '', $ammount = '', $name = '');
+            $virtual_card = $user->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
             // try {
 
             // } catch (\Throwable $th) {
@@ -107,20 +107,16 @@ class AuthController extends Controller
             // }
 
             try {
-                if ($response['status'] == 'success') {
+                if ($virtual_card['status'] == 'success') {
                     VirtualCard::create([
                         'user_id' => $user->id,
-                        'card_id' => $response['data']['id'],
-                        'account_id' => $response['data']['account_id'],
-                        'currency' => $response['data']['currency'],
+                        'card_id' => $virtual_card['data']['id'],
+                        'account_id' => $virtual_card['data']['account_id'],
+                        'currency' => $virtual_card['data']['currency'],
                         'default' => 1,
                     ]);
                 }else {
-                    Mail::raw($th->getMessage(), function ($message) {
-                        $message->from('hello@paylidate.com', 'Paylidate');
-                        $message->to('syflex360@gmail.com');
-                        $message->subject('Error Creation users card');
-                    });
+                   // Mail::raw($virtual_card['message'], function ($message) {
                 }
             } catch (\Throwable $th) {
                 Mail::raw($th->getMessage(), function ($message) {
@@ -131,12 +127,11 @@ class AuthController extends Controller
             }
 
             // withdraw from virtual card
-           $withdraw = $user->withdrawFromVirtualCard($card_id = '', $ammount = '');
-
+           $withdraw = $user->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '150');
 
 
             // create USD virtual card for transactions
-            $virtual_card = $user->virtualCard($currency = '', $ammount = '', $name = '');
+            $virtual_card = $user->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
             // try {
 
             // } catch (\Throwable $th) {
@@ -148,19 +143,19 @@ class AuthController extends Controller
             // }
 
             try {
-                if ($response['status'] == 'success') {
+                if ($virtual_card['status'] == 'success') {
                     VirtualCard::create([
                         'user_id' => $user->id,
-                        'card_id' => $response['data']['id'],
-                        'account_id' => $response['data']['account_id'],
-                        'currency' => $response['data']['currency'],
+                        'card_id' => $virtual_card['data']['id'],
+                        'account_id' => $virtual_card['data']['account_id'],
+                        'currency' => $virtual_card['data']['currency'],
                     ]);
                 }else {
-                    Mail::raw($th->getMessage(), function ($message) {
-                        $message->from('hello@paylidate.com', 'Paylidate');
-                        $message->to('syflex360@gmail.com');
-                        $message->subject('Error Creation users card');
-                    });
+                    // Mail::raw($th->getMessage(), function ($message) {
+                    //     $message->from('hello@paylidate.com', 'Paylidate');
+                    //     $message->to('syflex360@gmail.com');
+                    //     $message->subject('Error Creation users card');
+                    // });
                 }
             } catch (\Throwable $th) {
                 Mail::raw($th->getMessage(), function ($message) {
@@ -171,7 +166,7 @@ class AuthController extends Controller
             }
 
               // withdraw from virtual card
-              $withdraw = $user->withdrawFromVirtualCard($card_id = '', $ammount = '');
+              $withdraw = $user->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '1');
 
 
 
@@ -235,13 +230,12 @@ class AuthController extends Controller
 
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
 
-        $account = UserAccount::where('user_id', Auth::user()->id)->first();
+        $user_account = new UserAccount;
+        $account = $user_account->where('user_id', Auth::user()->id)->first();
 
 
         if ($account && $account->ref) {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/virtual-account-numbers/'. $account->ref);
+            $response = $user_account->getVirtualAccount($account->ref);
 
             if ($response['status'] == 'success') {
                     $account['account'] = $response['data'];
