@@ -81,8 +81,8 @@ class AuthController extends Controller
 
             if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
                 $ref = '';
-
-                $virtual_account = $user->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
+                $user_account = new UserAccount;
+                $virtual_account = $user_account->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
 
                 if ($virtual_account['status'] == 'success') {
                         $ref =  $virtual_account['data']['order_ref'];
