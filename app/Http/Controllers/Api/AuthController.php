@@ -94,8 +94,10 @@ class AuthController extends Controller
                 ]);
             }
 
+            $user_virtual_card = new VirtualCard;
+
             // create NGN virtual card for transactions
-            $virtual_card = $user->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
+            $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
             // try {
 
             // } catch (\Throwable $th) {
@@ -127,11 +129,11 @@ class AuthController extends Controller
             }
 
             // withdraw from virtual card
-           $withdraw = $user->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '150');
+           $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '150');
 
 
             // create USD virtual card for transactions
-            $virtual_card = $user->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
+            $virtual_card = $user_virtual_card->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
             // try {
 
             // } catch (\Throwable $th) {
@@ -166,7 +168,7 @@ class AuthController extends Controller
             }
 
               // withdraw from virtual card
-              $withdraw = $user->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '1');
+              $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $virtual_card['data']['id'], $ammount = '1');
 
 
 
