@@ -37,7 +37,7 @@ class VirtualCard extends Model
         ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $card_id .'/withdraw', [
             "amount" => $amount,
         ]);
-
+        
         return $response;
     }
 

@@ -61,12 +61,12 @@
     <b>Product details:</b>
     <p>
         <ul>
-            <li>Product name:</li>
+            <li>Product name:{{$product['name']}}</li>
             <li>Product Price:</li>
             <li>Product description:</li>
         </ul>
     </p>
-    
+
     <p><b>Thanks</b></p>
     <p><b>Lawrence from Paylidate</b></p>
 

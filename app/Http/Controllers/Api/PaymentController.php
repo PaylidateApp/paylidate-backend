@@ -97,7 +97,7 @@ class PaymentController extends Controller
         $card = $virtualCard->where('user_id', $user->id)->first('card_id');
 
         // fund virtual card with payment
-        $virtualCard->fundVirtualCard($card->card_id, $amount = '', $debit_currency = '');
+        $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['card']['amount'], $debit_currency = $response['data']['card']['currency']);
 
         return response()->json([
             'status' => 'success',
@@ -126,27 +126,21 @@ class PaymentController extends Controller
     public function make_payment(Request $request)
     {
         $user = Auth::user();
+        $virtual_card = new VirtualCard;
 
         // get product
         // $product = Product::where('slug', $request->slug)->first('id');
 
         // get card_id from VirtualCard where id is equal to user-id
-        $virtualCard = VirtualCard::where('user_id', $user->id)->where('default', 1)->first('card_id');
+        $get_virtual_card_id = $virtual_card->where('user_id', $user->id)->where('default', 1)->first('card_id');
 
         // get virtual card balance
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id);
+        $get_virtual_card = $virtual_card->getvirtualCard($get_virtual_card_id->card_id);
 
-
-        if ($request->amount <= $response['data']['amount']) {
+        if ($request->amount <= $get_virtual_card['data']['amount']) {
 
             // withdraw from virtual card
-            $response1 = Http::withHeaders([
-                'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $virtualCard->card_id .'/withdraw', [
-                "amount" => $request->amount,
-            ]);
+            $withdraw_from_card = $virtual_card->withdrawFromVirtualCard($card_id =  $get_virtual_card->card_id, $amount = $request->amount);
 
             Product::where('slug', $request->slug)->update(['payment_status' => 1]);
 
@@ -161,7 +155,7 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $response1
+            'data' => $withdraw_from_card
         ]);
     }
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Ixudra\Curl\Facades\Curl;
 use App\Mail\RegistrationMail;
 use Illuminate\Support\Facades\Mail;
 use Validator;
@@ -14,7 +13,6 @@ use App\UserAccount;
 use Auth;
 use App\VirtualCard;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Http;
 
 /**
  * @group  Authentication management
@@ -131,8 +129,8 @@ class AuthController extends Controller
             }
 
             // withdraw from virtual card
-            $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '150');
-            $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
+            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '150');
+            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
 
             Mail::to($user)->send(new RegistrationMail($user));
 

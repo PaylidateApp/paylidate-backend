@@ -18,17 +18,18 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $account = UserAccount::where('user_id', Auth::user()->id)->first();
-        $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
-            ->withHeader('Content-Type: application/json')
-            ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-            ->asJson( true )
-            ->get();
+        // $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
-        return response()->json([
-            'status' => 'success',
-            'account' => $response['data']
-        ]);
+        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
+        //     ->withHeader('Content-Type: application/json')
+        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
+        //     ->asJson( true )
+        //     ->get();
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'account' => $response['data']
+        // ]);
     }
 
     /**

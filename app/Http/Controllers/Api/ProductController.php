@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CreateProductMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Product;
@@ -117,7 +118,9 @@ class ProductController extends Controller
                 ]);
             }
             $user = Auth::user();
-            Mail::to($user)->send(new RegistrationMail($user, $product));
+
+            Mail::to($user)->send(new CreateProductMail($user, $product));
+
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
                 $message->from('hello@paylidate.com', 'Paylidate');

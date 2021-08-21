@@ -65,37 +65,37 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-        $virtual_card = new VirtualCard;
-        $response = $virtual_card->virtualCard($currency = '', $ammount = '=', $name = '');
+        // $virtual_card = new VirtualCard;
+        // $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = , $name = '');
 
-        try {
-            if ($response['status'] == 'success') {
-                VirtualCard::create([
-                    'user_id' => Auth::user()->id,
-                    'card_id' => $response['data']['id'],
-                    'account_id' => $response['data']['account_id'],
-                    'currency' => $response['data']['currency'],
-                    'label' => $request->label,
-                    // 'default' => $request->default,
-                ]);
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'success',
-                    'data' => $response['data']
-                ]);
-            }else {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $response
-                ], 406);
-            }
-        } catch (\Throwable $th) {
-            Mail::raw($th->getMessage(), function ($message) {
-                $message->from('hello@paylidate.com', 'Paylidate');
-                $message->to('syflex360@gmail.com');
-                $message->subject('Unable to save created card');
-            });
-        }
+        // try {
+        //     if ($response['status'] == 'success') {
+        //         VirtualCard::create([
+        //             'user_id' => Auth::user()->id,
+        //             'card_id' => $response['data']['id'],
+        //             'account_id' => $response['data']['account_id'],
+        //             'currency' => $response['data']['currency'],
+        //             'label' => $request->label,
+        //             // 'default' => $request->default,
+        //         ]);
+        //         return response()->json([
+        //             'status' => 'success',
+        //             'message' => 'success',
+        //             'data' => $response['data']
+        //         ]);
+        //     }else {
+        //         return response()->json([
+        //             'status' => 'error',
+        //             'message' => $response
+        //         ], 406);
+        //     }
+        // } catch (\Throwable $th) {
+        //     Mail::raw($th->getMessage(), function ($message) {
+        //         $message->from('hello@paylidate.com', 'Paylidate');
+        //         $message->to('syflex360@gmail.com');
+        //         $message->subject('Unable to save created card');
+        //     });
+        // }
 
     }
 
