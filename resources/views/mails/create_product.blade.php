@@ -62,8 +62,8 @@
     <p>
         <ul>
             <li>Product name:{{$product['name']}}</li>
-            <li>Product Price:</li>
-            <li>Product description:</li>
+            <li>Product Price:{{$product['price']}}</li>
+            <li>Product description:{{$product['description']}}</li>
         </ul>
     </p>
 

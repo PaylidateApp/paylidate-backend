@@ -64,7 +64,6 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
         // $product = Product::where('slug',$request->slug)->first('id');
 
     //     Payment::create([
@@ -89,20 +88,20 @@ class PaymentController extends Controller
         $userCard->type = $response['data']['card']['type'];
         $userCard->token = $response['data']['card']['token'];
         $userCard->expiry = $response['data']['card']['expiry'];
-        $userCard->user_id = $user->id;
+        $userCard->user_id = Auth::user()->id;
         $userCard->save();
 
         // get card_id from VirtualCard where id is equal to user-id
         $virtualCard = new VirtualCard;
-        $card = $virtualCard->where('user_id', $user->id)->first('card_id');
+        $card = $virtualCard->where('user_id', Auth::user()->id)->first('card_id');
 
         // fund virtual card with payment
-        $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['card']['amount'], $debit_currency = $response['data']['card']['currency']);
+        $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
 
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $virtualCard['data']
+            'data' => $response['data']
         ]);
     }
 
@@ -128,8 +127,7 @@ class PaymentController extends Controller
         $user = Auth::user();
         $virtual_card = new VirtualCard;
 
-        // get product
-        // $product = Product::where('slug', $request->slug)->first('id');
+
 
         // get card_id from VirtualCard where id is equal to user-id
         $get_virtual_card_id = $virtual_card->where('user_id', $user->id)->where('default', 1)->first('card_id');
@@ -140,9 +138,14 @@ class PaymentController extends Controller
         if ($request->amount <= $get_virtual_card['data']['amount']) {
 
             // withdraw from virtual card
-            $withdraw_from_card = $virtual_card->withdrawFromVirtualCard($card_id =  $get_virtual_card->card_id, $amount = $request->amount);
+            $withdraw_from_card = $virtual_card->withdrawFromVirtualCard($card_id =  $get_virtual_card_id->card_id, $amount = $request->amount);
 
+            // get product
+            $product = Product::where('slug', $request->slug)->first('id');
             Product::where('slug', $request->slug)->update(['payment_status' => 1]);
+            if ($user->id != $product->user_id) {
+                Product::where('slug', $request->slug)->update(['secondary_user_id' => $user->id]);
+            }
 
         }else {
             return response()->json([

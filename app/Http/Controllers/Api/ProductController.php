@@ -107,16 +107,16 @@ class ProductController extends Controller
             $input['user_id']   = $user_id;
             $product            = Product::create($input);
 
-            if ($request->payment_details) {
-                Payment::create([
-                    'user_id'           => $user_id,
-                    'product_id'        => $product->id,
-                    'transaction_id'    => $request->payment_details['transaction_id'],
-                    'transaction_ref'   => $request->payment_details['tx_ref'],
-                    'status'            => $request->payment_details['status'],
-                    'description'    => $request->payment_details['description'],
-                ]);
-            }
+            // if ($request->payment_details) {
+            //     Payment::create([
+            //         'user_id'           => $user_id,
+            //         'product_id'        => $product->id,
+            //         'transaction_id'    => $request->payment_details['transaction_id'],
+            //         'transaction_ref'   => $request->payment_details['tx_ref'],
+            //         'status'            => $request->payment_details['status'],
+            //         'description'    => $request->payment_details['description'],
+            //     ]);
+            // }
             $user = Auth::user();
 
             Mail::to($user)->send(new CreateProductMail($user, $product));
