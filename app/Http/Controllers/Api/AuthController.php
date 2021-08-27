@@ -113,20 +113,20 @@ class AuthController extends Controller
 
            // create USD virtual card for transactions
 
-            $virtual_card = $user_virtual_card->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
-            $dollar_card_id = null;
-            if ($virtual_card['status'] == 'success') {
-                $dollar_card_id = $virtual_card['data']['id'];
-                VirtualCard::create([
-                    'user_id' => $user->id,
-                    'card_id' => $virtual_card['data']['id'],
-                    'account_id' => $virtual_card['data']['account_id'],
-                    'currency' => $virtual_card['data']['currency'],
-                    'default' => false,
-                ]);
-            }else {
+            // $virtual_card = $user_virtual_card->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
+            // $dollar_card_id = null;
+            // if ($virtual_card['status'] == 'success') {
+            //     $dollar_card_id = $virtual_card['data']['id'];
+            //     VirtualCard::create([
+            //         'user_id' => $user->id,
+            //         'card_id' => $virtual_card['data']['id'],
+            //         'account_id' => $virtual_card['data']['account_id'],
+            //         'currency' => $virtual_card['data']['currency'],
+            //         'default' => false,
+            //     ]);
+            // }else {
 
-            }
+            // }
 
             // withdraw from virtual card
             // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '150');
@@ -143,9 +143,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                'account' => $virtual_account['data'],
-                'n' => $naira_card_id,
-                'd' => $dollar_card_id,
+                'account' => $virtual_account['data']
             ]);
         }
     }
