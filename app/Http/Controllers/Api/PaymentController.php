@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AddMoneyMail;
 use App\Payment;
 use App\UserCard;
 use App\User;
@@ -93,10 +95,12 @@ class PaymentController extends Controller
 
         // get card_id from VirtualCard where id is equal to user-id
         $virtualCard = new VirtualCard;
-        $card = $virtualCard->where('user_id', Auth::user()->id)->first('card_id');
+        $card = $virtualCard->where('user_id', Auth::user()->id)->where('default', 1)->first('card_id');
 
         // fund virtual card with payment
         $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
+
+        Mail::to($user)->send(new AddMoneyMail($user->name, $response['data']['amount'], $response['data']['currency']));
 
         return response()->json([
             'status' => 'success',

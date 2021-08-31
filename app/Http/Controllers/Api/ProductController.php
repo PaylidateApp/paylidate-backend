@@ -75,9 +75,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function delivered(Request $request)
+    public function delivered($id, Request $request)
     {
-        $product = Product::where('id', $request->product_id)->update([
+        $product = Product::where('id', $id)->update([
             'delivery_status' => 2 //delivered
         ]);
 
@@ -88,9 +88,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function delivery(Request $request)
+    public function delivery($id, Request $request)
     {
-        $product = Product::where('id', $request->product_id)->update([
+        $product = Product::where('id', $id)->update([
             'delivery_status' => 1 //in transit
         ]);
 
@@ -101,9 +101,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function recieved(Request $request)
+    public function recieved($id, Request $request)
     {
-        $product = Product::where('id', $request->product_id)->update([
+        $product = Product::where('id', $id)->update([
             'delivery_status' => 3 //in transit
         ]);
 
@@ -114,9 +114,9 @@ class ProductController extends Controller
         ]);
     }
 
-    public function canceled(Request $request)
+    public function canceled($id, Request $request)
     {
-        $product = Product::where('id', $request->product_id)->update([
+        $product = Product::where('id', $id)->update([
             'delivery_status' => 4 //canceled
         ]);
 

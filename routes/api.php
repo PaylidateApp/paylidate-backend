@@ -51,6 +51,11 @@ Route::namespace('Api')->group(function () {
         Route::get('product/accept/{id}', 'ProductController@accept');
         Route::get('product/status/{id}', 'ProductController@status');
 
+        Route::get('product/status/delivery/{id}', 'ProductController@delivery');
+        Route::get('product/status/delivered/{id}', 'ProductController@delivered');
+        Route::get('product/status/recieved/{id}', 'ProductController@recieved');
+        Route::get('product/status/canceled/{id}', 'ProductController@canceled');
+
         Route::resource('payment', 'PaymentController');
         Route::resource('card', 'CardController');
         Route::post('payment/link', 'PaymentController@getPaymentLink');
