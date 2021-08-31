@@ -27,6 +27,8 @@ Route::namespace('Api')->group(function () {
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
 
+    Route::Post('get-rate', 'PaymentController@get_rate');
+
     // password reset routes
     Route::group(['middleware' => 'api', 'prefix' => 'password'], function () {
         Route::post('create', 'PasswordResetController@create');

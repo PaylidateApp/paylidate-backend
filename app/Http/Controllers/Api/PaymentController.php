@@ -267,4 +267,16 @@ class PaymentController extends Controller
             'data' => $response['data']
         ]);
     }
+
+    public function get_rate(Request $request){
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/transfers/rates', [
+                'amount' => '1000',
+                'destination_currency' => 'USD',
+                'source_currency' => 'NGN'
+            ]);
+
+        return $response;
+    }
 }

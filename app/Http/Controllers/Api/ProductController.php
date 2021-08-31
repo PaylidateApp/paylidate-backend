@@ -63,8 +63,61 @@ class ProductController extends Controller
     {
 
         $status = $request->status === 'delivered' ? 2 : 3;
+
         $product = Product::where('id', $id)->update([
             'status' => $status
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function delivered(Request $request)
+    {
+        $product = Product::where('id', $request->product_id)->update([
+            'delivery_status' => 2 //delivered
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function delivery(Request $request)
+    {
+        $product = Product::where('id', $request->product_id)->update([
+            'delivery_status' => 1 //in transit
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function recieved(Request $request)
+    {
+        $product = Product::where('id', $request->product_id)->update([
+            'delivery_status' => 3 //in transit
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function canceled(Request $request)
+    {
+        $product = Product::where('id', $request->product_id)->update([
+            'delivery_status' => 4 //canceled
         ]);
 
         return response()->json([
