@@ -67,6 +67,7 @@
             "php artisan clear-compiled",
             "php artisan optimize",
             "php artisan config:clear",
+            "php artisan route:cache",
             "chmod -R 777 storage",
             "php artisan storage:link",
             "php artisan migrate:fresh --seed",
