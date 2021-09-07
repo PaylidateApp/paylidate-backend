@@ -276,7 +276,7 @@ class PaymentController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
             ])->get(env('FLW_BASE_URL').'/v3/transfers/rates', [
-                'amount' => '1000',
+                'amount' => '1',
                 'destination_currency' => 'USD',
                 'source_currency' => 'NGN'
             ]);
