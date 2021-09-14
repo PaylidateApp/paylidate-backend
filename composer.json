@@ -74,7 +74,8 @@
             "php artisan migrate:fresh --seed",
             "php artisan passport:install --force",
             "php artisan log-viewer:clear",
-            "php artisan log-viewer:publish --force"
+            "php artisan log-viewer:publish --force",
+            "php artisan view:cache"
         ]
     }
 }
