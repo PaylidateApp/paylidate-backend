@@ -100,7 +100,7 @@ class PaymentController extends Controller
         // fund virtual card with payment
         $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
 
-        Mail::to(Auth::user())->send(new AddMoneyMail(Auth::user()->name, $response['data']['amount'], $response['data']['currency']));
+        // Mail::to(Auth::user())->send(new AddMoneyMail(Auth::user()->name, $response['data']['amount'], $response['data']['currency']));
 
         return response()->json([
             'status' => 'success',
