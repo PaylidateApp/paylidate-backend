@@ -92,24 +92,24 @@ class AuthController extends Controller
             //     ]);
             // }
 
-            $user_virtual_card = new VirtualCard;
+            // $user_virtual_card = new VirtualCard;
 
-            // create NGN virtual card for transactions
-            $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
-            $naira_card_id = null;
+            // // create NGN virtual card for transactions
+            // $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
+            // $naira_card_id = null;
 
-            if ($virtual_card['status'] == 'success') {
-                $naira_card_id = $virtual_card['data']['id'];
-                VirtualCard::create([
-                    'user_id' => $user->id,
-                    'card_id' => $virtual_card['data']['id'],
-                    'account_id' => $virtual_card['data']['account_id'],
-                    'currency' => $virtual_card['data']['currency'],
-                    'default' => 1,
-                ]);
-            }else {
-                // Mail::raw($virtual_card['message'], function ($message) {
-            }
+            // if ($virtual_card['status'] == 'success') {
+            //     $naira_card_id = $virtual_card['data']['id'];
+            //     VirtualCard::create([
+            //         'user_id' => $user->id,
+            //         'card_id' => $virtual_card['data']['id'],
+            //         'account_id' => $virtual_card['data']['account_id'],
+            //         'currency' => $virtual_card['data']['currency'],
+            //         'default' => 1,
+            //     ]);
+            // }else {
+            //     // Mail::raw($virtual_card['message'], function ($message) {
+            // }
 
            // create USD virtual card for transactions
 
@@ -128,9 +128,9 @@ class AuthController extends Controller
 
             // }
 
-            // withdraw from virtual card
-            $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
-            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
+            // // withdraw from virtual card
+            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
+            // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
 
             Mail::to($user)->send(new RegistrationMail($user));
 
