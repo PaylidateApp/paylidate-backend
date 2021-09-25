@@ -100,7 +100,7 @@ class PaymentController extends Controller
         // fund virtual card with payment
         $virtualCard->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
 
-        Mail::to($user)->send(new AddMoneyMail($user->name, $response['data']['amount'], $response['data']['currency']));
+        // Mail::to(Auth::user())->send(new AddMoneyMail(Auth::user()->name, $response['data']['amount'], $response['data']['currency']));
 
         return response()->json([
             'status' => 'success',
@@ -276,7 +276,7 @@ class PaymentController extends Controller
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
             ])->get(env('FLW_BASE_URL').'/v3/transfers/rates', [
-                'amount' => '1000',
+                'amount' => '1',
                 'destination_currency' => 'USD',
                 'source_currency' => 'NGN'
             ]);

@@ -77,39 +77,39 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
-            if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
-                $ref = '';
-                $user_account = new UserAccount;
-                $virtual_account = $user_account->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
+            // if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
+            //     $ref = '';
+            //     $user_account = new UserAccount;
+            //     $virtual_account = $user_account->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
 
-                if ($virtual_account['status'] == 'success') {
-                        $ref =  $virtual_account['data']['order_ref'];
-                    }
+            //     if ($virtual_account['status'] == 'success') {
+            //             $ref =  $virtual_account['data']['order_ref'];
+            //         }
 
-                UserAccount::create([
-                    'user_id' => $user->id,
-                    'ref' => $ref
-                ]);
-            }
+            //     UserAccount::create([
+            //         'user_id' => $user->id,
+            //         'ref' => $ref
+            //     ]);
+            // }
 
-            $user_virtual_card = new VirtualCard;
+            // $user_virtual_card = new VirtualCard;
 
-            // create NGN virtual card for transactions
-            $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
-            $naira_card_id = null;
+            // // create NGN virtual card for transactions
+            // $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
+            // $naira_card_id = null;
 
-            if ($virtual_card['status'] == 'success') {
-                $naira_card_id = $virtual_card['data']['id'];
-                VirtualCard::create([
-                    'user_id' => $user->id,
-                    'card_id' => $virtual_card['data']['id'],
-                    'account_id' => $virtual_card['data']['account_id'],
-                    'currency' => $virtual_card['data']['currency'],
-                    'default' => 1,
-                ]);
-            }else {
-                // Mail::raw($virtual_card['message'], function ($message) {
-            }
+            // if ($virtual_card['status'] == 'success') {
+            //     $naira_card_id = $virtual_card['data']['id'];
+            //     VirtualCard::create([
+            //         'user_id' => $user->id,
+            //         'card_id' => $virtual_card['data']['id'],
+            //         'account_id' => $virtual_card['data']['account_id'],
+            //         'currency' => $virtual_card['data']['currency'],
+            //         'default' => 1,
+            //     ]);
+            // }else {
+            //     // Mail::raw($virtual_card['message'], function ($message) {
+            // }
 
            // create USD virtual card for transactions
 
@@ -128,9 +128,9 @@ class AuthController extends Controller
 
             // }
 
-            // withdraw from virtual card
-            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '150');
-            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
+            // // withdraw from virtual card
+            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
+            // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
 
             Mail::to($user)->send(new RegistrationMail($user));
 
@@ -143,7 +143,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                'account' => $virtual_account['data']
+                // 'account' => $virtual_account['data']
             ]);
         }
     }
@@ -184,17 +184,17 @@ class AuthController extends Controller
 
         $user = User::where('id', Auth::user()->id)->with('wallet')->first();
 
-        $user_account = new UserAccount;
-        $account = $user_account->where('user_id', Auth::user()->id)->first();
+        // $user_account = new UserAccount;
+        // $account = $user_account->where('user_id', Auth::user()->id)->first();
 
 
-        if ($account && $account->ref) {
-            $response = $user_account->getVirtualAccount($account->ref);
+        // if ($account && $account->ref) {
+        //     $response = $user_account->getVirtualAccount($account->ref);
 
-            if ($response['status'] == 'success') {
-                    $account['account'] = $response['data'];
-                }
-        }
+        //     if ($response['status'] == 'success') {
+        //             $account['account'] = $response['data'];
+        //         }
+        // }
 
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
@@ -208,7 +208,7 @@ class AuthController extends Controller
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
             'data' => $user->load('wallet'),
-            'account' => $account
+            // 'account' => $account
         ]);
     }
 
