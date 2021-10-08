@@ -46,11 +46,24 @@ class ProductController extends Controller
     {
 
         $product = Product::where('id', $id)->update([
-            'secondary_user_id' => Auth::user()->id,
-            'status' => 1
+            'secondary_user_id' => Auth::user()->id
         ]);
 
         $product = Product::where('id', $id)->first();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+    public function paid($id)
+    {
+
+        $product = Product::where('slug', $id)->update([
+            'payment_status' => 1
+        ]);
 
         return response()->json([
             'status' => 'success',
