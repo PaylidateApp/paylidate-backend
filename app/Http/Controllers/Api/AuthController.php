@@ -132,7 +132,11 @@ class AuthController extends Controller
             // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
             // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
 
-            Mail::to($user)->send(new RegistrationMail($user));
+            try {
+                Mail::to($user)->send(new RegistrationMail($user));
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
