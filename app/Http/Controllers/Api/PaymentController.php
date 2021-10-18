@@ -283,4 +283,12 @@ class PaymentController extends Controller
 
         return $response;
     }
+
+    public function banks(Request $request){
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+            ])->get(env('FLW_BASE_URL').'/v3/banks/NG');
+
+        return $response;
+    }
 }
