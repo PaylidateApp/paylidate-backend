@@ -66,7 +66,7 @@ class CardController extends Controller
     public function store(Request $request)
     {
         $virtual_card = new VirtualCard;
-        $amount = $request->currency == 'NGN' ? ($request->amount - 50) : ($request->amount - 1);
+        $amount = $request->currency == 'NGN' ? ($request->amount - 100) : ($request->amount - 1);
         $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $amount, $name = Auth::user()->name);
 
         try {
