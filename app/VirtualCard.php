@@ -37,12 +37,12 @@ class VirtualCard extends Model
         ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $card_id .'/withdraw', [
             "amount" => $amount,
         ]);
-        
+
         return $response;
     }
 
     // fund virtual card with payment
-    function fundVirtualCard($card_id, $amount, $debit_currency){
+    function fundVirtualCard($card_id, $amount, $debit_currency = 'NGN'){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
         ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $card_id .'\/fund', [
