@@ -72,7 +72,6 @@
             "chmod -R 777 storage",
             "php artisan storage:link",
             "php artisan migrate",
-            "php artisan migrate:fresh --seed",
             "php artisan passport:install --force",
             "php artisan log-viewer:clear",
             "php artisan log-viewer:publish --force"
