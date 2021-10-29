@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Http;
-use App\UserCard;
+use App\User;
 use Auth;
 use stdClass;
 use App\VirtualCard;
@@ -66,7 +66,8 @@ class CardController extends Controller
     public function store(Request $request)
     {
         $virtual_card = new VirtualCard;
-        $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $request->amount, $name = Auth::user()->name);
+        $amount = $request->currency == 'NGN' ? ($request->amount - 100) : ($request->amount - 1);
+        $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $amount, $name = Auth::user()->name);
 
         try {
             if ($response['status'] == 'success') {
@@ -108,29 +109,24 @@ class CardController extends Controller
      */
     public function fund(Request $request)
     {
-        // $card = UserCard::where('user_id', Auth::user()->id)->first();
-        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-cards/'.$card->card_id.'/fund')
-        //     ->withHeader('Content-Type: application/json')
-        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-        //     ->withData( array(
-        //         "debit_currency" => $request->currency,
-        //         "amount" => $request->amount,
-        //     ) )
-        //     ->asJson( true )
-        //     ->post();
+        $user = new User;
+        $response = $user->getTransaction($request->transaction_id);
 
-        //     if ($response['status'] == 'success') {
-        //         return response()->json([
-        //             'status' => 'success',
-        //             'message' => 'success',
-        //             'data' => $response['data']
-        //         ]);
-        //     }else {
-        //         return response()->json([
-        //             'status' => 'error',
-        //             'message' => $response
-        //         ], 406);
-        //     }
+        $virtual_card = new VirtualCard;
+        $response = $virtual_card->fundAccount($request->card_id, $response['data']['amount']);
+
+            if ($response['status'] == 'success') {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'success',
+                    'data' => $response['data']
+                ]);
+            }else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $response
+                ], 406);
+            }
 
     }
 
