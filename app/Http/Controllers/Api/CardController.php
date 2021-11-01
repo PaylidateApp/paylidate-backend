@@ -113,7 +113,7 @@ class CardController extends Controller
         $response = $user->getTransaction($request->transaction_id);
 
         $virtual_card = new VirtualCard;
-        $response = $virtual_card->fundAccount($request->card_id, $response['data']['amount']);
+        $response = $virtual_card->fundVirtualCard($request->card_id, $response['data']['amount']);
 
             if ($response['status'] == 'success') {
                 return response()->json([
