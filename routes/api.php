@@ -27,8 +27,11 @@ Route::namespace('Api')->group(function () {
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
 
-    Route::Post('get-rate', 'PaymentController@get_rate');
     Route::get('get-banks', 'PaymentController@banks');
+    Route::Post('get-rate', 'PaymentController@get_rate');
+    Route::Post('pay-with-card', 'PaymentController@pay_with_card');
+    Route::Post('validate-payment', 'PaymentController@validate_payment');
+    Route::Post('verify-payment', 'PaymentController@verify_payment');
 
     // password reset routes
     Route::group(['middleware' => 'api', 'prefix' => 'password'], function () {
