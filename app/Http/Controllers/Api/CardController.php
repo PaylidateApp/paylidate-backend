@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 use App\User;
 use Auth;
 use stdClass;
-use App\VirtualCard;
+use App\Services\FlutterwaveService;
 
 class CardController extends Controller
 {
@@ -21,7 +21,7 @@ class CardController extends Controller
      */
     public function index()
     {
-        $virtual_card = new VirtualCard;
+        $virtual_card = new FlutterwaveService;
         $cards = $virtual_card->where('user_id', Auth::user()->id)->get();
         $new_cards = $cards;
 
@@ -65,7 +65,7 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-        $virtual_card = new VirtualCard;
+        $virtual_card = new FlutterwaveService;
         $amount = $request->currency == 'NGN' ? ($request->amount - 100) : ($request->amount - 1);
         $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $amount, $name = Auth::user()->name);
 
@@ -109,7 +109,7 @@ class CardController extends Controller
      */
     public function fund(Request $request)
     {
-        $virtual_card = new VirtualCard;
+        $virtual_card = new FlutterwaveService;
         $response = $virtual_card->fundVirtualCard($request->card_id, $request->amount);
 
             if ($response['status'] == 'success') {
