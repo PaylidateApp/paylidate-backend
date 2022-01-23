@@ -298,9 +298,9 @@ class PaymentController extends Controller
 
         if($response["status"] == "success" && $response["data"]["suggested_auth"] == "PIN") {
   
-            $new_data = [...$data];
-            $new_data["suggested_auth"] = "PIN";
-            $response = $this->flutterwaveService->payviacard(...$data,);
+           // $new_data = [...$data];
+            $data["suggested_auth"] = "PIN";
+            $response = $this->flutterwaveService->payviacard(...$data);
 
                     return response()->json([
                     'status' => 'success',
@@ -313,16 +313,15 @@ class PaymentController extends Controller
         
         else if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "NOAUTH_INTERNATIONAL") {
             
-            $new_data = [...$data];
-            $new_data["suggested_auth"] = "NOAUTH_INTERNATIONAL";
-            $new_data["billingzip"] = "07205";
-            $new_data["billingcity"] = "Hillside";
-            $new_data["billingaddress"] = "470 Mundet PI";
-            $new_data["billingstate"] = "NJ";
-            $new_data["billingcountry"] = "US";
+            $data["suggested_auth"] = "NOAUTH_INTERNATIONAL";
+            $data["billingzip"] = "07205";
+            $data["billingcity"] = "Hillside";
+            $data["billingaddress"] = "470 Mundet PI";
+            $data["billingstate"] = "NJ";
+            $data["billingcountry"] = "US";
 
             
-            $response = $this->flutterwaveService->payviacard($new_data);
+            $response = $this->flutterwaveService->payviacard($data);
 
             return response()->json([
             'status' => 'success',
