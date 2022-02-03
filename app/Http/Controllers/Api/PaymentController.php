@@ -14,7 +14,9 @@ use App\VirtualCard;
 use App\Services\FlutterwaveService;
 use App\Product;
 use Auth;
+use Illuminate\Validation\ValidationException;
 use stdClass;
+use Exception;
 
 /**
  * @group  Payment management
@@ -36,7 +38,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $Payment = Payment::where('user_id', Auth::user()->id)->get();
+        $Payment = Payment::where('user_id', auth('api')->user()->id)->get();
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -97,19 +99,19 @@ class PaymentController extends Controller
         $userCard->type = $response['data']['card']['type'];
         $userCard->token = $response['data']['card']['token'];
         $userCard->expiry = $response['data']['card']['expiry'];
-        $userCard->user_id = Auth::user()->id;
+        $userCard->user_id = auth('api')->user()->id;
         $userCard->save();
 
         // get card_id from VirtualCard where id is equal to user-id
         $virtualCard = new VirtualCard;
 
 
-        $card = $virtualCard->where('user_id', Auth::user()->id)->where('default', 1)->first('card_id');
+        $card = $virtualCard->where('user_id', auth('api')->user()->id)->where('default', 1)->first('card_id');
 
         // fund virtual card with payment
         $this->flutterwaveService->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
 
-        // Mail::to(Auth::user())->send(new AddMoneyMail(Auth::user()->name, $response['data']['amount'], $response['data']['currency']));
+        // Mail::to(auth('api')->user())->send(new AddMoneyMail(auth('api')->user()->name, $response['data']['amount'], $response['data']['currency']));
 
         return response()->json([
             'status' => 'success',
@@ -137,7 +139,7 @@ class PaymentController extends Controller
      */
     public function make_payment(Request $request)
     {
-        $user = Auth::user();
+        $user = auth('api')->user();
         $virtual_card = new VirtualCard;
 
 
@@ -245,8 +247,8 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function getPaymentLink(Request $request){
-        $user =  Auth::user();
+    /* public function getPaymentLink(Request $request){
+        $user =  auth('api')->user();
         $meta = new stdClass();
         $meta->consumer_id =  $user->id;
         $meta->consumer_mac = "";
@@ -269,38 +271,74 @@ class PaymentController extends Controller
             'data' => $response['data']
         ]);
     }
-
+ */
 
     // Initiate card payment
     public function pay_with_card(Request $request){
+        $user = auth('api')->user();
+        $meta = new stdClass();
+        $meta->consumer_id =  $user->name;
+        $meta->consumer_mac = "";
+        $name = explode(' ', $user->name);
+        $lastName = "";
+        if(count($name)>1){
+            $lastName = $name[0];
+        }
+
+        if(strlen($request->cardno)){
+
+        }
+  
         $data = array(
         
             'PBFPubKey' => env('FLW_PUBLIC_KEY'),
             'cardno' => $request->cardno,
             'currency' => $request->currency,
             'country' => $request->country,
-            'cvv' => $request->cvv,
+            'cvv' => strval($request->cvv),
             'amount' => $request->amount,
             'expiryyear' => $request->expiryyear,
             'expirymonth' => $request->expirymonth,
             'pin' => $request->pin,
-            'email' => Auth::user()->email,
-            'phonenumber' => Auth::user()->phone,
-            "firstname" => Auth::user()->name,
-            "lastname" => '',
-            'txRef' => '5M-' . Auth::user()->id . date('dmyHis'),
-            'meta' => $request->meta,
-            'redirect_url' => 'https://paylidate.com/receivepayment'          
+            'email' => $user->email,
+            'phonenumber' => $user->phone,
+            "firstname" => $name[0],
+            "lastname" => $lastName,
+            'txRef' => 'PD' . $user->id . date('dmyHis'),
+            'meta' => $meta,
+            'redirect_url' => $request->redirect_url,           
         
         );
+        
+
+        try {
+            
+        //return 'helllooo';
 
         $response = $this->flutterwaveService->payviacard($data);
 
+         if(empty($response['data']) || $response["status"] != "success" || isset($response['data']['code'])){
+             return response()->json([
+                 'status' => 'error',
+                 'message' => 'An error occured while trying to initiate transaction. Please try again',
+                
+             ], 417);
+         }
+        
+        if($response["status"] == "success" && isset($response["data"]['authurl']) && $response["data"]['authurl'] != 'N/A') {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'Payment initiated successfully',
+                        'data' => $response['data']
+                    ]);
+                  
+            }
+
+            
         if($response["status"] == "success" && $response["data"]["suggested_auth"] == "PIN") {
-  
            // $new_data = [...$data];
             $data["suggested_auth"] = "PIN";
-            $response = $this->flutterwaveService->payviacard(...$data);
+            $response = $this->flutterwaveService->payviacard($data);
 
                     return response()->json([
                     'status' => 'success',
@@ -311,8 +349,13 @@ class PaymentController extends Controller
          
         }
         
-        else if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "NOAUTH_INTERNATIONAL") {
-            
+       if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "NOAUTH_INTERNATIONAL") {
+       
+        throw ValidationException::withMessages([
+            'error' => ['This card can not be charge']
+        ]);    
+
+
             $data["suggested_auth"] = "NOAUTH_INTERNATIONAL";
             $data["billingzip"] = "07205";
             $data["billingcity"] = "Hillside";
@@ -329,21 +372,22 @@ class PaymentController extends Controller
             'data' => $response['data']
         ]);
 
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occured while trying to initiate transaction. Please try again',
+            
+        ], 417);
+
         }
+    } catch (Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'An error occured while trying to initiate transaction. Please try again',
+            
+        ], 417);
+    }
+         
         
-        else if($response["status"] == "success" && $response["data"]['authurl'] != 'N/A') {
-          
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Payment initiated successfully',
-                'data' => $response['data']
-            ]);
-          
-        }
-        
-        else {
-          throw new Exception('Error while trying to initiate payment');
-        }
     }
 
     
@@ -360,7 +404,7 @@ class PaymentController extends Controller
 
     public function verify_payment(Request $request){
 
-        $response = $this->flutterwaveService->validate_payment($request->$txRef);
+        $response = $this->flutterwaveService->verify_payment($request->txRef);
 
         return response()->json([
             'status' => 'success',

@@ -118,7 +118,7 @@ class FlutterwaveService
     }
 
 
-    function getKey($seckey)
+    protected function getKey($seckey)
     {
         $hashedkey = md5($seckey);
         $hashedkeylast12 = substr($hashedkey, -12);
@@ -130,13 +130,13 @@ class FlutterwaveService
         return $encryptionkey;
     }
 
-    function encrypt3Des($data, $key)
+    protected function encrypt3Des($data, $key)
     {
         $encData = openssl_encrypt($data, 'DES-EDE3', $key, OPENSSL_RAW_DATA);
         return base64_encode($encData);
     }
 
-    function payviacard($data){
+    public function payviacard($data){
     
         error_reporting(E_ALL);
         ini_set('display_errors',1);
@@ -144,11 +144,11 @@ class FlutterwaveService
         
         $SecKey = env('FLW_SECRET_KEY');
         
-        $key = getKey($SecKey); 
+        $key = $this->getKey($SecKey); 
         
         $dataReq = json_encode($data);
         
-        $post_enc = encrypt3Des( $dataReq, $key );
+        $post_enc = $this->encrypt3Des( $dataReq, $key );
         
          $response = Http::withHeaders([
             "Content-Type"=> "application/json"
