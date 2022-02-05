@@ -14,7 +14,7 @@ class FlutterwaveService
     public function virtualCard($currency, $amount, $name){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
+        ])->post('https://api.flutterwave.com/v3/virtual-cards', [
             "currency" => $currency,
             "amount" => $amount,
             "billing_name" => $name
@@ -91,7 +91,19 @@ class FlutterwaveService
     public function banks(){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/banks/NG');
+            ])->get('https://api.flutterwave.com/v3/banks/NG');
+
+        return $response;
+    }
+
+    public function verifyBankAccountNumber($account_num, $bank_code){
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+        ])->post('https://api.flutterwave.com/v3/accounts/resolve', [
+            "account_number" => $account_num,
+            "account_bank" => $bank_code,
+           
+        ]);
 
         return $response;
     }

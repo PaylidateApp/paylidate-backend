@@ -90,13 +90,14 @@ class CardController extends Controller
                     'message' => $response
                 ], 406);
             }
-        } catch (\Throwable $th) {
+        }         
+        catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
                 $message->from('hello@paylidate.com', 'Paylidate');
                 $message->to('syflex360@gmail.com');
                 $message->subject('Unable to save created card');
             });
-        }
+        } 
 
     }
 
@@ -110,7 +111,7 @@ class CardController extends Controller
     public function fund(Request $request)
     {
         $virtual_card = new FlutterwaveService;
-        $response = $virtual_card->fundVirtualCard($request->card_id, $request->amount);
+        $response = $virtual_card->fundVirtualCard($request->virtual_card_id, $request->amount);
 
             if ($response['status'] == 'success') {
                 return response()->json([

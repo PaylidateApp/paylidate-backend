@@ -316,15 +316,17 @@ class PaymentController extends Controller
         //return 'helllooo';
 
         $response = $this->flutterwaveService->payviacard($data);
+    
 
          if(empty($response['data']) || $response["status"] != "success" || isset($response['data']['code'])){
-             return response()->json([
+            return $response;
+            return response()->json([
                  'status' => 'error',
                  'message' => 'An error occured while trying to initiate transaction. Please try again',
                 
              ], 417);
          }
-        
+       
         if($response["status"] == "success" && isset($response["data"]['authurl']) && $response["data"]['authurl'] != 'N/A') {
                     return response()->json([
                         'status' => 'success',
@@ -372,14 +374,12 @@ class PaymentController extends Controller
             'data' => $response['data']
         ]);
 
-        return response()->json([
-            'status' => 'error',
-            'message' => 'An error occured while trying to initiate transaction. Please try again',
-            
-        ], 417);
+        return $response;
 
         }
     } catch (Exception $e) {
+        return $e;
+
         return response()->json([
             'status' => 'error',
             'message' => 'An error occured while trying to initiate transaction. Please try again',
@@ -425,7 +425,19 @@ class PaymentController extends Controller
 
     public function banks(Request $request){
         $response = $this->flutterwaveService->banks();
+   
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $response['data']
+        ]);
+    }
 
+    
+    public function verifyBankAccountNumber(Request $request){
+
+        $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_num, $request->bank_code);
+        return $response;
         return response()->json([
             'status' => 'success',
             'message' => 'success',
