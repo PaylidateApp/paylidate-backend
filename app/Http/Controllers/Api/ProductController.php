@@ -169,7 +169,8 @@ class ProductController extends Controller
     {
         
         try {
-            $user_id = auth('api')->user()->id;
+            $user = auth('api')->user();
+            $user_id = $user->id;
             $input              = $request->all();
             $input['user_id']   = $user_id;
             
@@ -185,9 +186,9 @@ class ProductController extends Controller
             //         'description'    => $request->payment_details['description'],
             //     ]);
             // }
-            $user = auth('api')->user();
+            
 
-            Mail::to($user)->send(new CreateProductMail($user, $product));
+            //Mail::to($user)->send(new CreateProductMail($user, $product));
 
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
