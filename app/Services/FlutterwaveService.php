@@ -27,7 +27,7 @@ class FlutterwaveService
     public function getvirtualCard($card_id){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->get(env('FLW_BASE_URL').'/v3/virtual-cards/'.$card_id);
+        ])->get('https://api.flutterwave.com/v3/virtual-cards');
 
         return $response;
     }
