@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Http;
 use App\User;
+use App\VirtualCard;
 use Auth;
 use stdClass;
 use App\Services\FlutterwaveService;
