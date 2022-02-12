@@ -35,7 +35,7 @@ class CardController extends Controller
         $new_cards = $cards;
 
         //return $cards;
-        if (count($cards) != 0) {
+        if ($cards) {
             foreach ($cards as $key => $card) {
                 $response = $this->flutterwaveService->getvirtualCard($card->card_id);
                 $new_cards[$key]->data = $response['data'];
@@ -44,14 +44,6 @@ class CardController extends Controller
             }
         }
 
-        else{
-
-            return response()->json([
-                'status' => 'error',
-                'message' => 'null, no record found',
-               
-            ], 404);
-        }
 
         return response()->json([
             'status' => 'success',
