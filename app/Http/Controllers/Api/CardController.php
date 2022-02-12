@@ -19,15 +19,22 @@ class CardController extends Controller
      *
      * APIs for Virtual card
      */
+
+    protected $flutterwaveService;
+
+    public function __construct(){
+
+        $this->flutterwaveService = new FlutterwaveService;
+    }
+
     public function index()
     {
-        $virtual_card = new FlutterwaveService;
-        $cards = $virtual_card->where('user_id', Auth::user()->id)->get();
+        $virtual_card = new VirtualCard;
+        $cards = $virtual_card->where('user_id', auth('api')->user()->id)->get();
         $new_cards = $cards;
-
         if ($cards) {
             foreach ($cards as $key => $card) {
-                $response = $virtual_card->getvirtualCard($card->card_id);
+                $response = $this->flutterwaveService->getvirtualCard($card->card_id);
                 $new_cards[$key]->data = $response['data'];
             }
         }
@@ -65,14 +72,13 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-        $virtual_card = new FlutterwaveService;
         $amount = $request->currency == 'NGN' ? ($request->amount - 100) : ($request->amount - 1);
-        $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $amount, $name = Auth::user()->name);
+        $response = $this->flutterwaveService->virtualCard($currency = $request->currency, $ammount = $amount, $name = auth('api')->user()->name);
 
         try {
             if ($response['status'] == 'success') {
                 VirtualCard::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => auth('api')->user()->id,
                     'card_id' => $response['data']['id'],
                     'account_id' => $response['data']['account_id'],
                     'currency' => $response['data']['currency'],
@@ -110,8 +116,7 @@ class CardController extends Controller
      */
     public function fund(Request $request)
     {
-        $virtual_card = new FlutterwaveService;
-        $response = $virtual_card->fundVirtualCard($request->virtual_card_id, $request->amount);
+        $response = $this->flutterwaveService->fundVirtualCard($request->virtual_card_id, $request->amount);
 
             if ($response['status'] == 'success') {
                 return response()->json([
