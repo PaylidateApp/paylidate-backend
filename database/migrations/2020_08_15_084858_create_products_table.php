@@ -23,7 +23,8 @@ class CreateProductsTable extends Migration
             $table->string('product_number')->nullable();
             $table->double('price', 15, 8)->nullable()->default(0.00);
             $table->integer('quantity')->unsigned()->nullable()->default(0);
-            $table->string('type')->nullable();// buy, or sell
+            $table->string('type')->nullable();// product, or service
+            //$table->string('transaction_type')->nullable();// buy, or sell
             $table->boolean('confirmed')->nullable()->default(false);
             $table->tinyInteger('delivery_status')->nullable()->default(0);//0 awaiting fulfillment, 1 in transit, 2 delivered, 3 recieved, 4 canceled
             $table->tinyInteger('payment_status')->nullable()->default(0);//0 awaiting payment, 1 paid, 2 not paid

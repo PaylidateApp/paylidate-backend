@@ -17,6 +17,7 @@
         "laravel/framework": "^7.0",
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
+        "sentry/sentry-laravel": "^2.9",
         "spatie/laravel-sluggable": "^2.6"
     },
     "require-dev": {
@@ -71,8 +72,6 @@
             "php artisan route:cache",
             "chmod -R 777 storage",
             "php artisan storage:link",
-            "php artisan migrate",
-            "php artisan migrate:fresh --seed",
             "php artisan passport:install --force",
             "php artisan log-viewer:clear",
             "php artisan log-viewer:publish --force"

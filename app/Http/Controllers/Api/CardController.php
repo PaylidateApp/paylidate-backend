@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use Illuminate\Support\Facades\Http;
 use App\User;
+use App\VirtualCard;
 use Auth;
 use stdClass;
-use App\VirtualCard;
+use App\Services\FlutterwaveService;
 
 class CardController extends Controller
 {
@@ -19,18 +20,30 @@ class CardController extends Controller
      *
      * APIs for Virtual card
      */
+
+    protected $flutterwaveService;
+
+    public function __construct(){
+
+        $this->flutterwaveService = new FlutterwaveService;
+    }
+
     public function index()
     {
         $virtual_card = new VirtualCard;
-        $cards = $virtual_card->where('user_id', Auth::user()->id)->get();
+        $cards = $virtual_card->where('user_id', auth('api')->user()->id)->get();
         $new_cards = $cards;
 
+        //return $cards;
         if ($cards) {
             foreach ($cards as $key => $card) {
-                $response = $virtual_card->getvirtualCard($card->card_id);
+                $response = $this->flutterwaveService->getvirtualCard($card->card_id);
                 $new_cards[$key]->data = $response['data'];
+                
+
             }
         }
+
 
         return response()->json([
             'status' => 'success',
@@ -65,14 +78,13 @@ class CardController extends Controller
 
     public function store(Request $request)
     {
-        $virtual_card = new VirtualCard;
         $amount = $request->currency == 'NGN' ? ($request->amount - 100) : ($request->amount - 1);
-        $response = $virtual_card->virtualCard($currency = $request->currency, $ammount = $amount, $name = Auth::user()->name);
+        $response = $this->flutterwaveService->virtualCard($currency = $request->currency, $ammount = $amount, $name = auth('api')->user()->name);
 
         try {
             if ($response['status'] == 'success') {
                 VirtualCard::create([
-                    'user_id' => Auth::user()->id,
+                    'user_id' => auth('api')->user()->id,
                     'card_id' => $response['data']['id'],
                     'account_id' => $response['data']['account_id'],
                     'currency' => $response['data']['currency'],
@@ -90,13 +102,14 @@ class CardController extends Controller
                     'message' => $response
                 ], 406);
             }
-        } catch (\Throwable $th) {
+        }         
+        catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
                 $message->from('hello@paylidate.com', 'Paylidate');
                 $message->to('syflex360@gmail.com');
                 $message->subject('Unable to save created card');
             });
-        }
+        } 
 
     }
 
@@ -109,11 +122,7 @@ class CardController extends Controller
      */
     public function fund(Request $request)
     {
-        $user = new User;
-        $response = $user->getTransaction($request->transaction_id);
-
-        $virtual_card = new VirtualCard;
-        $response = $virtual_card->fundAccount($request->card_id, $response['data']['amount']);
+        $response = $this->flutterwaveService->fundVirtualCard($request->virtual_card_id, $request->amount);
 
             if ($response['status'] == 'success') {
                 return response()->json([
