@@ -11,7 +11,7 @@ class Product extends Model
     use HasSlug;
 
     protected $fillable = [
-        'user_id','name','image','product_number','price','quantity','type','description','confirmed',
+        'user_id','name','image','product_number','price','quantity','type','transaction_type','description','confirmed',
         'delivery_status','payment_status','dispute','delivery_period','clients_email','description'
     ];
 
