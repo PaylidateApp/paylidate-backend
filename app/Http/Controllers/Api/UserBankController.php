@@ -92,7 +92,7 @@ class UserBankController extends Controller
      */
     public function show($id)
     {
-        UserBank::whereNotNull('id')->delete();
+        
         $user_account = UserBank::where('user_id',$id)->first();
         if($user_account){
             return response()->json([
