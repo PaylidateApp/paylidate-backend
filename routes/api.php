@@ -74,6 +74,8 @@ Route::namespace('Api')->group(function () {
 
 
         Route::post('fund', 'CardController@fund');
+        Route::resource('user-bank', 'UserBankController');
+
     });
 });
 
