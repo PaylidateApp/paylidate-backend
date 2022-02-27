@@ -18,7 +18,8 @@
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
         "sentry/sentry-laravel": "^2.9",
-        "spatie/laravel-sluggable": "^2.6"
+        "spatie/laravel-sluggable": "^2.6",
+        "laravel/nova": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
@@ -31,7 +32,8 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform-check": false
     },
     "extra": {
         "laravel": {
@@ -54,6 +56,12 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./nova"
+        }
+    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

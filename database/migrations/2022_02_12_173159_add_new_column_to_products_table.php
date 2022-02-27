@@ -15,7 +15,7 @@ class AddNewColumnToProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             if (!Schema::hasColumn('products', 'transaction_type')){
-                $table->string('transaction_type')->after('type');
+                $table->string('transaction_type')->nullable()->after('type');
               };
         });
     }

@@ -188,7 +188,7 @@ class ProductController extends Controller
             // }
             
 
-            //Mail::to($user)->send(new CreateProductMail($user, $product));
+            Mail::to($user)->send(new CreateProductMail($user, $product));
 
         } catch (\Throwable $th) {
             Mail::raw($th->getMessage(), function ($message) {
