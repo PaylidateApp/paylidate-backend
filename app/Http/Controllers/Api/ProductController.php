@@ -141,6 +141,32 @@ class ProductController extends Controller
     }
 
 
+    public function open_dispute($id, Request $request)
+    {
+        $product = Product::where('id', $id)->update([
+            'dispute' => 1 //open dispute
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+    public function resolve_dispute($id, Request $request)
+    {
+        $product = Product::where('id', $id)->update([
+            'dispute' => 2 //resolve dispute
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $product
+        ]);
+    }
+
+
     /**
      * Create Product
      *
