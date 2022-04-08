@@ -76,7 +76,7 @@ Route::namespace('Api')->group(function () {
     });
    
 });
-Route::group(['middleware' => ['auth:api', 'admin'], 'prefix' => 'admin'], function () {
+Route::group(['middleware' =>'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
     Route::get('users/total', 'AdminController@numbers_of_users');
