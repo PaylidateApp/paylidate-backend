@@ -12,9 +12,42 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function users()
     {
-        //
+        
+        $users = User::where('id', '!=', auth('api')->user()->id)->orderBy('name', 'ASC')->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $users
+        ]);
+
+        
+    }
+
+
+    public function userBtwnDate($startDate, $endDate)
+    {
+        $userBtwnDate = User::whereBetween('created_at', [$startDate, $endDate])->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $userBtwnDate
+        ]);
+    }
+
+    
+    public function numbers_of_users()
+    {
+        $userCount = User::count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $userCount
+        ]);
     }
 
     /**
