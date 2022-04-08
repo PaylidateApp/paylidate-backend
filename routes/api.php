@@ -76,9 +76,9 @@ Route::namespace('Api')->group(function () {
     });
 
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('/user', 'UserController@users');
-        Route::get('/user/{startDate}/{endDate}', 'UserController@userBtwnDate');
-        Route::get('/user/toatl-users', 'UserController@numbers_of_users');
+        Route::get('admin/user', 'UserController@users');
+        Route::get('admin/user/{startDate}/{endDate}', 'UserController@userBtwnDate');
+        Route::get('admin/user/toatl-users', 'UserController@numbers_of_users');
         
 
 
