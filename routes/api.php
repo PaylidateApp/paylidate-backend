@@ -74,14 +74,14 @@ Route::namespace('Api')->group(function () {
         Route::resource('user-bank', 'UserBankController');
 
     });
+   
+});
+Route::group(['middleware' => ['auth:api', 'admin'], 'prefix' => 'admin'], function () {
+    Route::get('users', 'AdminController@users');
+    Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
+    Route::get('users/total', 'AdminController@numbers_of_users');
+    
 
-    Route::group(['middleware' => 'auth:api'], function () {
-        Route::get('admin/user', 'UserController@users');
-        Route::get('admin/user/{startDate}/{endDate}', 'UserController@userBtwnDate');
-        Route::get('admin/user/toatl-users', 'UserController@numbers_of_users');
-        
 
-
-    });
 });
 
