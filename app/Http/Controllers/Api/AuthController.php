@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\RegistrationMail;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use Validator;
 use App\User;
@@ -68,9 +69,17 @@ class AuthController extends Controller
                 'status' => 'error',
                 'message' => $validator->errors()
             ], 406);
-        } else {
+        } 
+        else {
+
+            $emailToken = Str::random(8).date('dmyHis');
+            $verifyEmailLink = "https://paylidate.com/verify/".$emailToken;
+                //return $verifyEmailLink;
+
+
             $input = $request->all();
             $input['password'] = bcrypt($input['password']);
+            $input['email_token'] = $emailToken;
             $user = User::create($input);
 
             Wallet::create([
@@ -132,11 +141,20 @@ class AuthController extends Controller
             // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
             // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
 
-            try {
-                Mail::to($user)->send(new RegistrationMail($user));
-            } catch (\Throwable $th) {
-                //throw $th;
-            }
+            // try {
+            //     Mail::to($request->email)->send(new RegistrationMail($user, $verifyEmailLink));
+            //     return response()->json([
+            //         'status' => 'success',
+            //         'message' => 'User created. A link has been sent to your email please click it verify your email',
+                    
+            //     ]);
+            // } catch (Exception $e) {
+               
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Email sending error'
+            //     ], 450);
+            // }
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
@@ -171,16 +189,25 @@ class AuthController extends Controller
         ]);
 
         $credentials = request(['email', 'password']);
-        $credentials['active'] = 1;
+        //$credentials['active'] = 1;
         $credentials['deleted_at'] = null;
+        
 
         if (!Auth::attempt($credentials))
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Unauthorized'
+                'message' => 'Wrong email and password'
             ], 401);
 
-        if (!Auth::user()->active)
+        // if (isset(Auth::user()->email_token) || !Auth::user()->email_verified_at)
+        //     {
+        //         return response()->json([
+        //         'status' => 'failed',
+        //         'message' => 'Please verify your email address'
+        //     ], 401);
+        //         }
+
+            if (!Auth::user()->active)
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Your account is not activated'
@@ -260,6 +287,76 @@ class AuthController extends Controller
             'data' => $user->load('wallet'),
             'account'=> $account
         ]);
+    }
+
+
+    public function verifyEmail($token)
+    {
+        
+
+        $user = User::where('email_token', $token)->first();
+        if (!$token || !$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'This verification token is invalid.'
+            ], 404);
+        }
+
+        $user->email_verified_at = date("Y-m-d H:i:s", strtotime('now'));
+        $user->email_token = null;
+        $user->save();
+
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $token->save();
+
+        return response()->json([
+            'status' => 'success',
+            'access_token' => $tokenResult->accessToken,
+            'message' => 'login successful',
+            'data' => $user->load('wallet'),
+            // 'account' => $account
+        ]);
+    
+    
+    }
+    public function resendVerificationEmail($email)
+    {
+        
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'No user with such email.'
+            ], 404);
+        }
+        $emailToken = Str::random(8).date('dmyHis');
+        $verifyEmailLink = "https://paylidate.com/verify/".$emailToken;
+
+        $user->email_verified_at = null;
+        $user->email_token = $emailToken;
+        $user->save();
+
+        try {
+            Mail::to($email)->send(new RegistrationMail($user, $verifyEmailLink));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email verification link sent',
+                
+            ]);
+        } catch (Exception $e) {
+           
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email sending error'
+            ], 450);
+        }
+
+
+    
+    
     }
 
 

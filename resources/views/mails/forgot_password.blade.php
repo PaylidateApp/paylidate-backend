@@ -57,21 +57,14 @@
     </div>
 
     <p style="font-size: 18px"><b>Hello {{$user['name']}}</b></p>
-    <p style="font-size: 20px"><b>Welcome to Paylidate.</b></p>
-    <p style="font-size: 20px"><b>We are excited to have you on paylidate.</b></p>
-    <p>
-        For any questions, please send a reply to this mail or paylidate@gmail.com, we are always happy to help out.
-        Meanwhile, click this
-        <a href={{ $verifyEmailLink }}>link</a> or visit
-        <a href={{ $verifyEmailLink }}>{{ $verifyEmailLink }}</a> to verify your account
+    
+        To reset your password, please click this
+        <a href={{ $passwordResetLink }}>link</a> or visit
+        <a href={{ $passwordResetLink }}>{{ $passwordResetLink }}</a> and reset your password.
     </p>
-    <p>
-        Once again, welcome to Paylidate - where you can do 'commerce without barriers'.
-    </p>
+
 
     <p><b>Thanks</b></p>
-    <p><b>Lawrence from Paylidate</b></p>
-
     <div class="flex-center back-pad">
         <div class="content links row">
             <a href="https://www.paylidate.com/login">Login</a>|

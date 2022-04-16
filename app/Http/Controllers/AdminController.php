@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Product;
 
 class AdminController extends Controller
 {
@@ -17,7 +18,8 @@ class AdminController extends Controller
     public function users()
     {
         
-        $users = User::where('id', '!=', auth('api')->user()->id)->orderBy('name', 'ASC')->get();
+        $users = User::with('Prouduct')->orderBy('name', 'ASC')->get();
+        //$users = User::where('id', '!=', auth('api')->user()->id)->orderBy('name', 'ASC')->get();
         
         return response()->json([
             'status' => 'success',
@@ -41,6 +43,7 @@ class AdminController extends Controller
     }
 
     
+
     public function numbers_of_users()
     {
         $userCount = User::count();
@@ -49,6 +52,29 @@ class AdminController extends Controller
             'status' => 'success',
             'message' => 'success',
             'data' => ['Total_registered_users' => $userCount]
+        ]);
+    }
+
+
+    public function totalTransations()
+    {
+        $totalTransations = Product::count();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => ['Total_Transations' => $totalTransations]
+        ]);
+    }
+
+    public function transations()
+    {
+        $transations = Product::all();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => ['Transations' => $transations]
         ]);
     }
 
