@@ -56,6 +56,9 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
     public function paid($id)
@@ -70,6 +73,8 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
     public function status($id, Request $request)
@@ -99,6 +104,8 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
     public function delivery($id, Request $request)
@@ -112,6 +119,7 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+        
     }
 
     public function recieved($id, Request $request)
@@ -125,6 +133,8 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
     public function canceled($id, Request $request)
@@ -138,6 +148,9 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
 
@@ -152,6 +165,9 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
     public function resolve_dispute($id, Request $request)
     {
@@ -164,6 +180,9 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
     }
 
 

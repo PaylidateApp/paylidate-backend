@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\ForgotPasswordMail;
 
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
@@ -24,30 +25,43 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|email',
         ]);
-
+        
         $user = User::where('email', $request->email)->first();
-
+        
         if (!$user)
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'We cannot find a user with that e-mail address.'
-            ]);
-
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'We cannot find a user with that e-mail address.'
+        ], 401);
+        
         $token = \Str::random(60);
-
+        
         $passwordReset = new PasswordReset;
         $passwordReset->email = $user->email;
         $passwordReset->token = $token;
         $passwordReset->save();
-         
-
+        
+        $url = ( 'https://paylidate.com/reset-password/'.$token);         
+        
         if ($user && $passwordReset)
-            $user->notify(new PasswordResetRequest($token)); 
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'We have e-mailed your password reset link!'
-        ]);
+        //$user->notify(new PasswordResetRequest($token)); 
+        
+        try {
+            
+            Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'We have e-mailed your password reset link!',
+                    
+                ]);
+            } catch (Exception $e) {
+               
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Email sending error'
+                ], 450);
+            }
+        
     }
 
     /**
@@ -63,14 +77,14 @@ class PasswordResetController extends Controller
         if (!$passwordReset)
             return response()->json([
                 'status' => 'failed',
-                'message' => 'This password reset token is invalid.'
+                'message' => 'This password reset token is invalid.ee'
             ], 400);
 
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
             return response()->json([
                 'status' => 'failed',
-                'message' => 'This password reset token is invalid.'
+                'message' => 'This password reset token is invalid.cc'
             ], 400);
         }
 
@@ -113,11 +127,25 @@ class PasswordResetController extends Controller
 
         $user->password = bcrypt($request->password);
         $user->save();        
+        //$passwordReset->delete();
+        
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $token->save();
+
         PasswordReset::where([
             ['token', $request->token],
             ['email', $request->email]
         ])->update(['token' => '']);
-        $user->notify(new PasswordResetSuccess($passwordReset));
-        return response()->json($user);
+
+        return response()->json([
+            'status' => 'success',            
+            'message' => 'password reset successful',
+            
+            // 'account' => $account
+        ]);
+    
+        
     }
 }

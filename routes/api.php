@@ -27,24 +27,24 @@ Route::namespace('Api')->group(function () {
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
 
-    Route::get('get-banks', 'PaymentController@banks');
-    Route::post('verify-account-number', 'PaymentController@verifyBankAccountNumber');
-    Route::Post('get-rate', 'PaymentController@get_rate');
-    Route::Post('pay-with-card', 'PaymentController@pay_with_card');
-    Route::Post('validate-payment', 'PaymentController@validate_payment');
-    Route::Post('verify-payment', 'PaymentController@verify_payment');
-
-    // password reset routes
-    Route::group(['middleware' => 'api', 'prefix' => 'password'], function () {
+    Route::group(['prefix' => 'password'], function () {
         Route::post('create', 'PasswordResetController@create');
         Route::get('find/{token}', 'PasswordResetController@find');
         Route::post('reset', 'PasswordResetController@reset');
     });
 
+    Route::Post('get-rate', 'PaymentController@get_rate');
+    Route::get('get-banks', 'PaymentController@banks');
+
+    // password reset routes    
+
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
         Route::post('user/update', 'AuthController@update');
+        
+        Route::post('resendVerificationEmail/{email}', 'AuthController@resendVerificationEmail');
+        Route::post('verifyEmail/{token}', 'AuthController@verifyEmail');
 
         // Route::resource('users', 'UsersController');
         // Route::post('user/avatar', 'UsersController@avatar');
@@ -73,9 +73,6 @@ Route::namespace('Api')->group(function () {
         Route::post('make-payment', 'PaymentController@make_payment');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
-
-        Route::post('user-bank', 'UserBankController@store');
-
 
         Route::post('fund', 'CardController@fund');
         Route::resource('user-bank', 'UserBankController');
