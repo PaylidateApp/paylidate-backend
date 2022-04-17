@@ -25,7 +25,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|email',
         ]);
-        
+        try {
         $user = User::where('email', $request->email)->first();
         
         if (!$user)
@@ -46,7 +46,7 @@ class PasswordResetController extends Controller
         if ($user && $passwordReset)
         //$user->notify(new PasswordResetRequest($token)); 
         
-        try {
+        
             
             Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
             return response()->json([
