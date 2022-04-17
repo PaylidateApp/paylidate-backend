@@ -11,6 +11,7 @@ use App\Notifications\PasswordResetRequest;
 use App\Notifications\PasswordResetSuccess;
 use App\User;
 use App\PasswordReset;
+use Illuminate\Support\Facades\DB;
 
 class PasswordResetController extends Controller
 {
@@ -25,7 +26,7 @@ class PasswordResetController extends Controller
         $request->validate([
             'email' => 'required|string|email',
         ]);
-        try {
+        
         $user = User::where('email', $request->email)->first();
         
         if (!$user)
@@ -40,26 +41,40 @@ class PasswordResetController extends Controller
         $passwordReset->email = $user->email;
         $passwordReset->token = $token;
         $passwordReset->save();
+
+        // $passwordReset = passwordReset::create([
+           
+        //     'email' => $request->email,
+        //     'token' => $token,
+        //     'created_at' => Carbon::now(),
+           
+
+        // ]);
+
+        DB::insert('insert into password_resets (email, token, created_at) values (?, ?, ?)', [$request->email, $token, Carbon::now()]);
         
         $url = ( 'https://paylidate.com/reset-password/'.$token);         
         
         if ($user && $passwordReset)
         //$user->notify(new PasswordResetRequest($token)); 
         
-        
-            
-            Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
-            return response()->json([
-                'status' => 'success',
-                'message' => 'We have e-mailed your password reset link!',
-                    
-                ]);
-            } catch (Exception $e) {
+        {
+            try {
+                Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'We have e-mailed your password reset link!',
+                        
+                    ]);
+            } 
+            catch (Exception $e) {
                
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Email sending error'
                 ], 450);
+            }
+
             }
         
     }
@@ -128,16 +143,13 @@ class PasswordResetController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();        
         //$passwordReset->delete();
-        
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
 
-        $token->save();
 
-        PasswordReset::where([
-            ['token', $request->token],
-            ['email', $request->email]
-        ])->update(['token' => '']);
+        DB::delete('delete from password_resets where email = ?',[$request->email]);
+        // PasswordReset::where([
+        //     ['token', $request->token],
+        //     ['email', $request->email]
+        // ])->update(['token' => '']);
 
         return response()->json([
             'status' => 'success',            
