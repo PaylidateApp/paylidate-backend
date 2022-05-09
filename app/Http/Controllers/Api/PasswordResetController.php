@@ -28,12 +28,12 @@ class PasswordResetController extends Controller
      */
     public function create(Request $request)
     {
-        $this->validate($request,[
+        $request->validate([
             'email' => 'required|email|exists:users',
         ]);
         
        $user = User::where('email', $request->email)->first();
-        //return $user;
+        return $user;
         if (!$user)
         return response()->json([
             'status' => 'failed',
