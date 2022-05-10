@@ -17,13 +17,14 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->bigInteger('product_id')->nullable();
+            $table->string('transaction_id')->nullable(); //from transaction table
             $table->string('payment_ref')->nullable();
-            $table->string('transaction_id')->nullable();
-            $table->string('transaction_ref')->nullable();
-            $table->string('status')->nullable();
+            $table->bigInteger('payment_id')->nullable();
+            $table->string('payment_status')->nullable();
             $table->longText('description')->nullable();
             $table->boolean('verified')->default(false);
+            $table->decimal('balance_before')->nullable()->default(0.00);
+            $table->decimal('balance_after')->nullable()->default(0.00);
             $table->timestamps();
             $table->softDeletes();
         });
