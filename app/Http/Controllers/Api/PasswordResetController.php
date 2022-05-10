@@ -33,7 +33,7 @@ class PasswordResetController extends Controller
         ]);
         
        $user = User::where('email', $request->email)->first();
-        return $user;
+        //return $user;
         if (!$user)
         return response()->json([
             'status' => 'failed',
