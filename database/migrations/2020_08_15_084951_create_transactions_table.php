@@ -16,13 +16,16 @@ class CreateTransactionsTable extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id');
-            $table->string('transaction_id')->nullable(); // transaction_id from flutterwave
-            $table->integer('quantity')->unsigned()->nullable()->default(0);
-            $table->string('transaction_ref')->nullable(); // transaction_ref from flutterwave
+            $table->bigInteger('product_id')->nullable();
+            $table->string('payment_ref')->nullable();
+            $table->string('transaction_id')->nullable();
+            $table->string('transaction_ref')->nullable();
             $table->string('status')->nullable();// pending, completed, failed
+            $table->string('type')->nullable();// fund, payment, refund
             $table->boolean('verified')->default(false);// true if the transaction is verified
-            $table->boolean('dispute')->nullable()->default(false);
-            $table->decimal('amount')->nullable()->default(0.00);            
+            $table->decimal('amount')->nullable()->default(0.00);
+            $table->decimal('balance_befor')->nullable()->default(0.00);
+            $table->decimal('balance_after')->nullable()->default(0.00);
             $table->longText('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
