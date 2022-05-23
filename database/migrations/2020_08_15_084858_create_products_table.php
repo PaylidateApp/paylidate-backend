@@ -22,8 +22,10 @@ class CreateProductsTable extends Migration
             $table->string('product_number')->nullable();
             $table->double('price', 15, 8)->nullable()->default(0.00);
             $table->integer('quantity')->unsigned()->nullable()->default(0);
+            $table->longText('description')->nullable();
             $table->string('type')->nullable();// product, or service
-            $table->boolean('payment_status')->nullable()->default(true);//true for available, true for not available       
+            $table->string('transaction_type')->nullable();// buy sell
+            $table->boolean('product_status')->nullable()->default(true);//true for available, true for not available       
             $table->timestamps();
             $table->softDeletes();
         });

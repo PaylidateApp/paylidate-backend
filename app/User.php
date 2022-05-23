@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'email_token'
     ];
 
     /**
@@ -47,6 +47,21 @@ class User extends Authenticatable
     public function account()
     {
         return $this->hasOne('App\UserAccount');
+    }
+   
+    public function products()
+    {
+        return $this->hasMany('App\Product');
+    }
+    
+    public function transactions()
+    {
+        return $this->hasMany('App\Transaction');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany('App\Payment');
     }
 
 }

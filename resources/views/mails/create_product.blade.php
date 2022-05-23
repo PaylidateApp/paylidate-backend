@@ -62,8 +62,10 @@
     <p>
         <ul>
             <li>Product name:{{$product['name']}}</li>
-            <li>Product Price:{{$product['price']}}</li>
-            <li>Product description:{{$product['description']}}</li>
+            <li>Product Price per product:{{$product['price']}}</li>
+            <li>Product quantities: {{$product['quantity']}}</li>
+            <li>Product description: {{$product['description']}}</li>
+            <li>Product link: <a href="{{ url('https://www.paylidate.com/product/'.$product['slug']) }}" >https://www.paylidate.com/product/{{$product['slug']}}</a></li>
         </ul>
     </p>
 

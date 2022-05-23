@@ -14,6 +14,8 @@ use App\UserAccount;
 use Auth;
 use App\VirtualCard;
 use Carbon\Carbon;
+use App\Transaction;
+
 
 /**
  * @group  Authentication management
@@ -233,6 +235,10 @@ class AuthController extends Controller
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(4);
         $token->save();
+
+        Transaction::where('seller_email', $request->email)->update([
+            'secondary_user_id' => $user->id,
+        ]);
 
         return response()->json([
             'status' => 'success',

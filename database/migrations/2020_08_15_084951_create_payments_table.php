@@ -16,13 +16,14 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id');
-            $table->string('transaction_id')->nullable(); //from transaction table
-            $table->string('payment_ref')->nullable();
-            $table->bigInteger('payment_id')->nullable();
-            $table->string('payment_status')->nullable();
-            $table->longText('description')->nullable();
+            $table->bigInteger('user_id'); // buyer user_id
+            $table->bigInteger('transaction_id')->nullable(); //from transaction table
+            $table->string('payment_ref')->nullable(); // from flutterwave
+            $table->string('payment_id')->nullable(); // from flutterwave
+            $table->string('payment_method')->default('flutterwave');
+            $table->string('currency')->default('NGN');
             $table->boolean('verified')->default(false);
+            $table->longText('description')->nullable();
             $table->decimal('balance_before')->nullable()->default(0.00);
             $table->decimal('balance_after')->nullable()->default(0.00);
             $table->timestamps();
