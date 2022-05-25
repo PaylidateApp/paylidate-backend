@@ -44,7 +44,7 @@ class Product extends Model
 
     // public function secondary_user()
     // {
-    //     return $this->belongsTo('App\User', 'secondary_user_id');
+    //     return $this->belongsTo('App\User', 'user_id');
     // }
 
     public function transaction()

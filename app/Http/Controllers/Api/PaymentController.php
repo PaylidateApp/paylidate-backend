@@ -169,6 +169,12 @@ class PaymentController extends Controller
        if($payment){
         $product->update([ 
             'quantity' => $product->quantity - $payment->transaction->quantity
+            
+        ]);
+
+        $payment->transaction->update([ 
+            'amount' => $payment->transaction->quantity *  $product->price,
+
         ]);
     }
 

@@ -15,8 +15,7 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('secondary_user_id')->nullable(); // secondary user
-            $table->string('seller_email')->nullable(); // this is use for a seller
+            $table->bigInteger('user_id')->nullable(); // transaction acceptor/decliner user_id
             $table->bigInteger('product_id'); 
            // $table->string('transaction_id')->nullable(); // transaction_id from flutterwave
             $table->integer('quantity')->unsigned()->nullable()->default(0); // total quantity purchased

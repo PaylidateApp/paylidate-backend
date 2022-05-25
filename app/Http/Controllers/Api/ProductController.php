@@ -27,7 +27,7 @@ class ProductController extends Controller
     public function index()
     {
         // $product = Product::where('user_id', auth('api')->user()->id)
-        //     ->orWhere('secondary_user_id', auth('api')->user()->id)
+        //     ->orWhere('user_id', auth('api')->user()->id)
         //     ->with('payment', 'secondary_user', 'user')
         //     ->orderBy('created_at', 'desc')
         //     ->get();
@@ -52,7 +52,7 @@ class ProductController extends Controller
     {
 
         $product = Product::where('id', $id)->update([
-            'secondary_user_id' => auth('api')->user()->id
+            'user_id' => auth('api')->user()->id
         ]);
         return response()->json([
             'status' => 'success',
@@ -234,7 +234,7 @@ class ProductController extends Controller
         try {
             $user = auth('api')->user();
             $user_id = $user->id;
-            $input              = $request->all();
+            $input = $request->all();
             $input['user_id']   = $user_id;
             $input['slug']   = date('dmyHis');
             $input['product_number']   = date('dmyHis');            
@@ -243,23 +243,25 @@ class ProductController extends Controller
             
             
             
-            if($product->transaction_type == 'buy'){
+            if($product->transaction_type == 'buy' && $product){
 
                 $secondary_user = User::where('email', $request->get('seller_email'))->first();
                 
                 $transaction['product_id'] = $product->id;
                 if($secondary_user){
                     
-                    $transaction['secondary_user_id'] = $secondary_user->id;
+                    $transaction['user_id'] = $secondary_user->id;
                 }
                 else{
                     
-                    $transaction['seller_email'] = $request['seller_email'];
+                    $input['email'] = $request['seller_email'];
+                    $user = User::create($input);
+                    $transaction['user_id'] = $user->id;                   
                    
                 }
                 $transaction['quantity'] = $product->quantity;
                 $transaction['transaction_ref'] = 'PD_'.Str::random(8).date('dmyHis');
-                $transaction['amount'] = $product->quantity * $product->price;
+                //$transaction['amount'] = $product->quantity * $product->price;
                 $new_transaction = Transaction::create($transaction);
                 
                 //return Transaction::where('id', $new_transaction->id)->with('product')->first();

@@ -31,7 +31,7 @@ class TransactionController extends Controller
            
 
             $transaction = $t->with('product', 'payment')->get()->filter(function ($value, $key) {
-                return ($value->product->user_id == auth('api')->user()->id || $value->secondary_user_id == auth('api')->user()->id) ? $value : null ;
+                return ($value->product->user_id == auth('api')->user()->id || $value->user_id == auth('api')->user()->id) ? $value : null ;
             });            
                                    
             
@@ -76,11 +76,11 @@ class TransactionController extends Controller
             $T_ref = 'PD_'.Str::random(8).date('dmyHis');
 
             $transaction = Transaction::create([
-                'secondary_user_id' => auth('api')->user()->id,
+                'user_id' => auth('api')->user()->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
                 'transaction_ref' => $T_ref,
-                'amount' => $request->quantity *  $product->price,
+                //'amount' => $request->quantity *  $product->price,
                 'description' => $request->description,
                 'accept_transaction' => true,
         ]);
@@ -122,7 +122,7 @@ class TransactionController extends Controller
     public function accept($id)
     {        
         $transaction = Transaction::where('id', $id)->first();
-        if($transaction->secondary_user_id == auth('api')->user()->id)
+        if($transaction->user_id == auth('api')->user()->id)
         {
             $transaction->update([ 
                 'accept_transaction' => true
@@ -153,7 +153,7 @@ class TransactionController extends Controller
     public function decline($id)
     {        
         $transaction = Transaction::where('id', $id)->first();
-        if($transaction->secondary_user_id == auth('api')->user()->id)
+        if($transaction->user_id == auth('api')->user()->id)
         {
             $transaction->update([
                 'accept_transaction' => false
