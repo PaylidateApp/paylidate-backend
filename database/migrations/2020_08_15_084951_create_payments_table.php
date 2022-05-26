@@ -23,6 +23,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_method')->default('flutterwave');
             $table->string('currency')->default('NGN');
             $table->boolean('verified')->default(false);
+            $table->boolean('withdrawn')->default(false); //true if seller has withdrawn money. false seller yet to withdraw money
             $table->longText('description')->nullable();
             $table->decimal('balance_before')->nullable()->default(0.00);
             $table->decimal('balance_after')->nullable()->default(0.00);
