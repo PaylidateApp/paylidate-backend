@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddNewColumnToProductsTable extends Migration
+class AddIdColumnToPasswordResets extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddNewColumnToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            if (!Schema::hasColumn('products', 'transaction_type')){
-                $table->string('transaction_type')->nullable()->after('type');
+        Schema::table('password_resets', function (Blueprint $table) {
+            if (!Schema::hasColumn('password_resets', 'id')){
+            $table->id();            
               };
         });
     }
@@ -27,8 +27,8 @@ class AddNewColumnToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn(['transaction_type']);
+        Schema::table('password_resets', function (Blueprint $table) {
+            //
         });
     }
 }

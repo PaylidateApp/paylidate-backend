@@ -14,6 +14,8 @@ use App\UserAccount;
 use Auth;
 use App\VirtualCard;
 use Carbon\Carbon;
+use App\Transaction;
+
 
 /**
  * @group  Authentication management
@@ -59,17 +61,43 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->get('email'))->first();
 
-        if ($user) {
-            return response()->json([
-                'status' => 'exist',
-                'message' => 'User already exist. please login',
-            ], 409);
-        } elseif ($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
                 'message' => $validator->errors()
             ], 406);
+        }
+        elseif ($user && $user->active == false) {
+            $user->update([
+                'name' => $request->name,
+                'phone' => $request->phone,
+                'password' => bcrypt($request->password),
+                'active' => true,
+            ]);
+            
+            Wallet::create([
+                'user_id' => $user->id,
+            ]);
+
+            $tokenResult = $user->createToken('Personal Access Token');
+            $token = $tokenResult->token;
+            $token->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'User created',
+                'access_token' => $tokenResult->accessToken,
+                'data' => $user->load('wallet'),
+                // 'account' => $virtual_account['data']
+            ]);
+        }
+        elseif ($user) {
+            return response()->json([
+                'status' => 'exist',
+                'message' => 'User already exist. please login',
+            ], 409);
         } 
+         
         else {
 
             $emailToken = Str::random(8).date('dmyHis');
@@ -85,76 +113,6 @@ class AuthController extends Controller
             Wallet::create([
                 'user_id' => $user->id,
             ]);
-
-            // if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
-            //     $ref = '';
-            //     $user_account = new UserAccount;
-            //     $virtual_account = $user_account->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
-
-            //     if ($virtual_account['status'] == 'success') {
-            //             $ref =  $virtual_account['data']['order_ref'];
-            //         }
-
-            //     UserAccount::create([
-            //         'user_id' => $user->id,
-            //         'ref' => $ref
-            //     ]);
-            // }
-
-            // $user_virtual_card = new VirtualCard;
-
-            // // create NGN virtual card for transactions
-            // $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
-            // $naira_card_id = null;
-
-            // if ($virtual_card['status'] == 'success') {
-            //     $naira_card_id = $virtual_card['data']['id'];
-            //     VirtualCard::create([
-            //         'user_id' => $user->id,
-            //         'card_id' => $virtual_card['data']['id'],
-            //         'account_id' => $virtual_card['data']['account_id'],
-            //         'currency' => $virtual_card['data']['currency'],
-            //         'default' => 1,
-            //     ]);
-            // }else {
-            //     // Mail::raw($virtual_card['message'], function ($message) {
-            // }
-
-           // create USD virtual card for transactions
-
-            // $virtual_card = $user_virtual_card->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
-            // $dollar_card_id = null;
-            // if ($virtual_card['status'] == 'success') {
-            //     $dollar_card_id = $virtual_card['data']['id'];
-            //     VirtualCard::create([
-            //         'user_id' => $user->id,
-            //         'card_id' => $virtual_card['data']['id'],
-            //         'account_id' => $virtual_card['data']['account_id'],
-            //         'currency' => $virtual_card['data']['currency'],
-            //         'default' => false,
-            //     ]);
-            // }else {
-
-            // }
-
-            // // withdraw from virtual card
-            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
-            // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
-
-            // try {
-            //     Mail::to($request->email)->send(new RegistrationMail($user, $verifyEmailLink));
-            //     return response()->json([
-            //         'status' => 'success',
-            //         'message' => 'User created. A link has been sent to your email please click it verify your email',
-                    
-            //     ]);
-            // } catch (Exception $e) {
-               
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'Email sending error'
-            //     ], 450);
-            // }
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
@@ -233,6 +191,8 @@ class AuthController extends Controller
         if ($request->remember_me)
             $token->expires_at = Carbon::now()->addWeeks(4);
         $token->save();
+
+        
 
         return response()->json([
             'status' => 'success',

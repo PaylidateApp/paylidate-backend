@@ -7,7 +7,9 @@ use App\Mail\CreateProductMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Product;
-use App\Payment;
+use App\Transaction;
+use App\User;
+use Illuminate\Support\Str;
 use Auth;
 
 /**
@@ -24,11 +26,15 @@ class ProductController extends Controller
      */
     public function index()
     {
+        // $product = Product::where('user_id', auth('api')->user()->id)
+        //     ->orWhere('user_id', auth('api')->user()->id)
+        //     ->with('payment', 'secondary_user', 'user')
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
         $product = Product::where('user_id', auth('api')->user()->id)
-            ->orWhere('secondary_user_id', auth('api')->user()->id)
-            ->with('payment', 'secondary_user', 'user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        ->orderBy('created_at', 'desc')
+        ->get();
+        
 
         return response()->json([
             'status' => 'success',
@@ -46,11 +52,8 @@ class ProductController extends Controller
     {
 
         $product = Product::where('id', $id)->update([
-            'secondary_user_id' => auth('api')->user()->id
+            'user_id' => auth('api')->user()->id
         ]);
-
-        $product = Product::where('id', $id)->first();
-
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -77,13 +80,11 @@ class ProductController extends Controller
 
     }
 
+    // Product available (enable or disable) 
     public function status($id, Request $request)
     {
-
-        $status = $request->status === 'delivered' ? 2 : 3;
-
         $product = Product::where('id', $id)->update([
-            'status' => $status
+            'product_status' => $request->status
         ]);
 
         return response()->json([
@@ -210,16 +211,68 @@ class ProductController extends Controller
      * @return [string] message
      */
 
+     // creating a product
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'type' => 'required|string',
+            'transaction_type' => 'required|string',
+            
+        ]);
+
+        
+        if($request->transaction_type == 'buy'){
+            $request->validate([
+                'seller_email' => 'required|string|email',                
+                
+            ]);
+        }
         
         try {
             $user = auth('api')->user();
             $user_id = $user->id;
-            $input              = $request->all();
+            $input = $request->all();
             $input['user_id']   = $user_id;
+            $input['slug']   = date('dmyHis');
+            $input['product_number']   = date('dmyHis');            
             
-            $product            = Product::create($input);
+            $product = Product::create($input);
+            
+            
+            
+            if($product->transaction_type == 'buy' && $product){
+
+                $secondary_user = User::where('email', $request->get('seller_email'))->first();
+                
+                $transaction['product_id'] = $product->id;
+                if($secondary_user){
+                    
+                    $transaction['user_id'] = $secondary_user->id;
+                }
+                else{
+                    
+                    $input['email'] = $request['seller_email'];
+                    $user = User::create($input);
+                    $transaction['user_id'] = $user->id;                   
+                   
+                }
+                $transaction['quantity'] = $product->quantity;
+                $transaction['transaction_ref'] = 'PD_'.Str::random(8).date('dmyHis');
+                //$transaction['amount'] = $product->quantity * $product->price;
+                $new_transaction = Transaction::create($transaction);
+                
+                //return Transaction::where('id', $new_transaction->id)->with('product')->first();
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'success',
+                    'data' => $product
+                ]);
+            }
+            
 
             // if ($request->payment_details) {
             //     Payment::create([
@@ -233,21 +286,28 @@ class ProductController extends Controller
             // }
             
 
-            Mail::to($user)->send(new CreateProductMail($user, $product));
+           // Mail::to($user)->send(new CreateProductMail($user, $product));
 
-        } catch (\Throwable $th) {
-            Mail::raw($th->getMessage(), function ($message) {
-                $message->from('hello@paylidate.com', 'Paylidate');
-                $message->to('syflex360@gmail.com');
-                $message->subject('Registration mail Failed');
-            });
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $product
+            ]);
+
+        } 
+
+        catch (Exception $e) {
+            return $e;
         }
+        // catch (\Throwable $th) {
+        //     Mail::raw($th->getMessage(), function ($message) {
+        //         $message->from('hello@paylidate.com', 'Paylidate');
+        //         $message->to('syflex360@gmail.com');
+        //         $message->subject('Registration mail Failed');
+        //     });
+        // }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product->load('payment', 'secondary_user', 'user')
-        ]);
+        
     }
 
     /**
@@ -294,6 +354,8 @@ class ProductController extends Controller
      *
      * @return [string] message
      */
+
+    // updating a product
     public function update(Request $request, $id)
     {
         $input = $request->all();
@@ -312,19 +374,36 @@ class ProductController extends Controller
 
      * @return \Illuminate\Http\Response
      */
+
+
+    // deleting a product only if it doesn't have a transaction
     public function destroy($id)
     {
-        $product = Product::where('id', $id)->delete();
+        
+        $product = Product::where('id', $id)->get();
+
+        if($product->transaction){
+        
+        return response()->json([
+            'status' => 'error',
+            'message' => 'You can not delete this Product'
+        ], 401);
+
+        }
+        else{
+            $product->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $product
+           
         ]);
+        }
     }
 
+    // getting a single product 
     public function get_product($slug)
     {
-        $product = Product::where('slug', $slug)->with('payment', 'secondary_user', 'user')->first();
+        $product = Product::where('slug', $slug)->with('transaction')->first();
         return response()->json([
             'status' => 'success',
             'message' => 'success',
