@@ -25,21 +25,23 @@ class TransactionController extends Controller
     {
         
         $transactions = Transaction::all();
-        
+        $fiterTransaction =[];
         foreach ($transactions as $t) {
            
 
             $transaction = $t->with('product', 'payment')->get()->filter(function ($value, $key) {
                 return ($value->product->user_id == auth('api')->user()->id || $value->user_id == auth('api')->user()->id) ? $value : null ;
-            });            
-                                   
+            });                        
             
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $transaction
-            ]); 
+            array_push($fiterTransaction, $transaction);            
+            
         }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $fiterTransaction[0]
+        ]); 
         
     }
 
