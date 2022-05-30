@@ -182,7 +182,8 @@ class TransactionController extends Controller
        // confirm transaction completion
        public function confirm($id)
        {        
-           $transaction = Transaction::where('id', $id)->first();
+           $transaction = Transaction::where('id', $id)->with('product')->first();
+           
            if($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id)
            {
                $transaction->update([
@@ -195,6 +196,18 @@ class TransactionController extends Controller
                    'data' => $transaction
                ]);
            }
+           elseif($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)
+                {
+                    $transaction->update([
+                        'status' => 1
+                    ]);
+        
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'success',
+                        'data' => $transaction
+                    ]);
+                }
            else{
    
                return response()->json([
