@@ -25,7 +25,7 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate();
-        return Transaction::all();
+        
         $transactions = Transaction::all();
          
         
@@ -46,22 +46,7 @@ class TransactionController extends Controller
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
         $product = Product::where('id', $request->product_id)->first();
@@ -106,6 +91,7 @@ class TransactionController extends Controller
         
     }
 
+    // get individual transaction
     public function get_transaction($T_ref)
     {
         
