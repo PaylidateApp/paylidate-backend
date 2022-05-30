@@ -40,7 +40,7 @@ class AuthController extends Controller
      */
     public function signup(Request $request)
     {
-        return user::all();
+        //return user::all();
 
 
         $messages = [
