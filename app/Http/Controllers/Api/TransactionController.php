@@ -25,7 +25,11 @@ class TransactionController extends Controller
     {
         
         $transactions = Transaction::all();
-         return  $transactions;
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $transactions
+        ]); 
         
         foreach ($transactions as $t) {
            
