@@ -25,7 +25,7 @@ class TransactionController extends Controller
     {
         
         $transactions = Transaction::all();
-         
+         return  $transactions;
         
         foreach ($transactions as $t) {
            
