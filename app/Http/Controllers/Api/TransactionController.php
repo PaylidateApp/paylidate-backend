@@ -25,8 +25,8 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate();
-        
-        $transactions = Transaction::all();
+
+        //$transactions = Transaction::all();
          
         
         foreach ($transactions as $t) {
