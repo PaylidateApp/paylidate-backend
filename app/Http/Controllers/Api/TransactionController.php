@@ -24,29 +24,23 @@ class TransactionController extends Controller
     public function index()
     {
         
-        $transactions = Transaction::all()->with('product', 'payment')->get();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $transactions
-        ]); 
-        $fiterTransaction =[];
+        $transactions = Transaction::all();
+         
+        
         foreach ($transactions as $t) {
            
 
             $transaction = $t->with('product', 'payment')->get()->filter(function ($value, $key) {
                 return ($value->product->user_id == auth('api')->user()->id || $value->user_id == auth('api')->user()->id) ? $value : null ;
-            });                        
+            });            
+                                   
             
-            array_push($fiterTransaction, $transaction);            
-            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]); 
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $fiterTransaction[0]
-        ]); 
         
     }
 
