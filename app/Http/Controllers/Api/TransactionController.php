@@ -24,7 +24,12 @@ class TransactionController extends Controller
     public function index()
     {
         
-        $transactions = Transaction::all();
+        $transactions = Transaction::all()->with('product', 'payment')->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $transactions
+        ]); 
         $fiterTransaction =[];
         foreach ($transactions as $t) {
            
