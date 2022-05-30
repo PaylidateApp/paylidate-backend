@@ -40,6 +40,8 @@ class AuthController extends Controller
      */
     public function signup(Request $request)
     {
+        return Transaction::all();
+
 
         $messages = [
             'name.required'    => 'Enter full name!',
