@@ -26,8 +26,7 @@ class TransactionController extends Controller
     {
         //Transaction::truncate();
 
-        //$transactions = Transaction::all();
-         
+        $transactions = Transaction::all();        
         
         foreach ($transactions as $t) {
            
