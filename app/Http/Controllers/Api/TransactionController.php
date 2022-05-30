@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Transaction;
+use App\Payment;
 use App\User;
 use Illuminate\Support\Str;
 use App\Product;
@@ -23,7 +24,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        
+        Payment::truncate();
+        Transaction::truncate();
         $transactions = Transaction::all();
          
         
