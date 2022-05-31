@@ -26,22 +26,15 @@ class TransactionController extends Controller
     {
         //Transaction::truncate();
 
-        $transactions = Transaction::all();        
-        
-        foreach ($transactions as $t) {
-           
+        $transactions = Transaction::with('product', 'payment')->get();
 
-            $transaction = $t->with('product', 'payment')->get()->filter(function ($value, $key) {
-                return ($value->product->user_id == auth('api')->user()->id || $value->user_id == auth('api')->user()->id) ? $value : null ;
-            });            
-                                   
-            
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $transaction
-            ]); 
-        }
+
+          return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $transactions
+        ]); 
+
         
     }
 
