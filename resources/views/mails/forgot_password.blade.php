@@ -51,6 +51,7 @@
         </head>
     <body>
     <div class="flex-center back-pad">
+        
         <div class="title content row">
             <b class="text-white content">Paylidate</b>
         </div>

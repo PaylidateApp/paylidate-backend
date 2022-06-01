@@ -57,7 +57,7 @@ class PasswordResetController extends Controller
         $url = ( 'https://paylidate.com/reset-password/'.$token);         
         
         if ($user && $passwordReset)
-        //$user->notify(new PasswordResetRequest($token)); 
+        
         
         {
             try {
