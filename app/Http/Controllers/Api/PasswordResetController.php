@@ -53,12 +53,7 @@ class PasswordResetController extends Controller
            
 
         ]);
-return response()->json([
-                    'status' => 'success',
-                    'message' => 'We have e-mailed your password reset link!',
-                        
-                    ]);
-        
+       
         $url = ( 'https://paylidate.com/reset-password/'.$token);         
         
         if ($user && $passwordReset)
@@ -66,6 +61,11 @@ return response()->json([
         
         {
             try {
+return response()->json([
+                    'status' => 'success',
+                    'message' => 'We have e-mailed your password reset link!',
+                        
+                    ]);
             Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
                 return response()->json([
                     'status' => 'success',
