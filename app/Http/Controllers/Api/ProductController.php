@@ -243,10 +243,9 @@ class ProductController extends Controller
             
             
             
-            if($product->transaction_type == 'buy' && $product){
-
-                $secondary_user = User::where('email', $request->get('seller_email'))->first();
+            if($product && $product->transaction_type == 'buy'){
                 
+                $secondary_user = User::where('email', $request->get('seller_email'))->first();
                 $transaction['product_id'] = $product->id;
                 if($secondary_user){
                     
@@ -255,7 +254,9 @@ class ProductController extends Controller
                 else{
                     
                     $input['email'] = $request['seller_email'];
+                    $input['password'] = 'defult';
                     $user = User::create($input);
+                    
                     $transaction['user_id'] = $user->id;                   
                    
                 }
