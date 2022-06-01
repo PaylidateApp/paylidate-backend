@@ -61,11 +61,6 @@ class PasswordResetController extends Controller
         
         {
             try {
-return response()->json([
-                    'status' => 'success',
-                    'message' => 'We have e-mailed your password reset link!',
-                        
-                    ]);
             Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
                 return response()->json([
                     'status' => 'success',
