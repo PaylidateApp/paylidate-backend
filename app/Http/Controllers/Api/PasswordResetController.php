@@ -29,11 +29,6 @@ class PasswordResetController extends Controller
 
         DB::delete('delete from password_resets where email = ?',[$request->email]);
         
-return response()->json([
-                    'status' => 'success',
-                    'message' => 'We have e-mailed your password reset link!',
-                        
-                    ]);
 
         $user = User::where('email', $request->email)->first();
         
@@ -49,6 +44,12 @@ return response()->json([
         // $passwordReset->email = $user->email;
         // $passwordReset->token = $token;
         // $passwordReset->save();
+
+return response()->json([
+                    'status' => 'success',
+                    'message' => 'We have e-mailed your password reset link!',
+                        
+                    ]);
 
         $passwordReset = passwordReset::create([
            
