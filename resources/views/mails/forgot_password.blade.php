@@ -57,12 +57,14 @@
     </div>
 
     <p style="font-size: 18px"><b>Hello {{$user['name']}}</b></p>
-    
+    <p>
         To reset your password, please click this
         <a href={{ $passwordResetLink }}>link</a> or visit
         <a href={{ $passwordResetLink }}>{{ $passwordResetLink }}</a> and reset your password.
+        
     </p>
-
+    <p style="color: red">Note that link expires in 10 minute</p>
+    
 
     <p><b>Thanks</b></p>
     <div class="flex-center back-pad">
