@@ -11,6 +11,7 @@ use App\Payment;
 use App\UserCard;
 use App\User;
 use App\VirtualCard;
+use App\Transaction;
 use App\Services\FlutterwaveService;
 use App\Product;
 use Auth;
@@ -75,49 +76,44 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        // $product = Product::where('slug',$request->slug)->first('id');
 
-    //     Payment::create([
-    //         'user_id' => $user->id,
-    //         // 'product_id' => 0,
-    //         // 'payment_ref' => $request->flw_ref,
-    //         'transaction_id' => $request->transaction_id,
-    //         'transaction_ref' => $request->tx_ref,
-    //         // 'status' => $request->status,
-    //         // 'description' => $request->description,
-    //    ]);
-
-        $user = new User;
-        $response = $this->flutterwaveService->getTransaction($request->transaction_id);
-
-        // create an instance of UserCard and insert 'first_6digits','last_4digits','issuer','country','type','token','expiry'
-        $userCard = new UserCard();
-        $userCard->first_6digits =  $response['data']['card']['first_6digits'];
-        $userCard->last_4digits = $response['data']['card']['last_4digits'];
-        $userCard->issuer = $response['data']['card']['issuer'];
-        $userCard->country = $response['data']['card']['country'];
-        $userCard->type = $response['data']['card']['type'];
-        $userCard->token = $response['data']['card']['token'];
-        $userCard->expiry = $response['data']['card']['expiry'];
-        $userCard->user_id = auth('api')->user()->id;
-        $userCard->save();
-
-        // get card_id from VirtualCard where id is equal to user-id
-        $virtualCard = new VirtualCard;
+        $payment = Payment::create([
+            'user_id' => auth('api')->user()->id,
+            'payment_ref' => $request->flw_T_ref,
+            'payment_id' => $request->flw_T_id,
+            'transaction_id' => $request->transaction_id,
+            //'transaction_ref' => $request->tx_ref,
+            // 'status' => $request->status,
+            'description' => $request->description,
+       ]);
 
 
-        $card = $virtualCard->where('user_id', auth('api')->user()->id)->where('default', 1)->first('card_id');
+       $response = $this->flutterwaveService->verify_payment( $request->flw_T_id);
 
-        // fund virtual card with payment
-        $this->flutterwaveService->fundVirtualCard($card_id = $card->card_id, $amount = $response['data']['amount'], $debit_currency = $response['data']['currency']);
+       
+       
+       if ($response['data']['status'] === "successful"
+        && $response['data']['amount'] === $payment->transaction->amount
+        && $response['data']['currency'] === $payment->currency) {
 
-        // Mail::to(auth('api')->user())->send(new AddMoneyMail(auth('api')->user()->name, $response['data']['amount'], $response['data']['currency']));
+            $verified_payment = Payment::where('id', $payment->id)->update([
+                'verified' => true //payment verified
+            ]);
+    
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $verified_payment
+            ]);
+        } 
+        
+        else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment not verified',            
+            ]);
+        }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $response['data']
-        ]);
     }
 
 
@@ -138,43 +134,65 @@ class PaymentController extends Controller
      * @return [string] message
      */
     public function make_payment(Request $request)
-    {
-        $user = auth('api')->user();
-        $virtual_card = new VirtualCard;
+    {        
 
+        try{
 
+            $old_payment = Payment::where('payment_id', $request->payment_id)->first();
 
-        // get card_id from VirtualCard where id is equal to user-id
-        $get_virtual_card_id = $virtual_card->where('user_id', $user->id)->where('default', 1)->first('card_id');
-
-        // get virtual card balance
-        $get_virtual_card = $this->flutterwaveService->getvirtualCard($get_virtual_card_id->card_id);
-
-        if ($request->amount <= $get_virtual_card['data']['amount']) {
-
-            // withdraw from virtual card
-            $withdraw_from_card = $this->flutterwaveService->withdrawFromVirtualCard($card_id =  $get_virtual_card_id->card_id, $amount = $request->amount);
-
-            // get product
-            $product = Product::where('slug', $request->slug)->first('id');
-            Product::where('slug', $request->slug)->update(['payment_status' => 1]);
-            if ($user->id != $product->user_id) {
-                Product::where('slug', $request->slug)->update(['secondary_user_id' => $user->id]);
-            }
-
-        }else {
+        if($old_payment && $old_payment->verified == true){
             return response()->json([
-                'status' => 'failed',
-                'message' => 'Amount connot be more than wallet balnce',
-                'data' => []
+                'status' => 'error',
+                'message' => 'Invalid payment verification',            
             ]);
         }
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $withdraw_from_card
+        if($old_payment){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'This Payment has been verified',            
+            ]);
+        }
+
+        $payment = Payment::create([
+            'user_id' => auth('api')->user()->id,
+            'payment_ref' => $request->payment_ref,
+            'payment_id' => $request->payment_id,
+            'transaction_id' => $request->transaction_id,
+            'verified' => true,
+            // 'status' => $request->status,
+            'description' => $request->description,
+       ]);
+
+       $product = product::where('id', $payment->transaction->product_id)->first();
+
+       if($payment){
+        $product->update([ 
+            'quantity' => $product->quantity - $payment->transaction->quantity
+            
         ]);
+
+        $payment->transaction->update([ 
+            'amount' => $payment->transaction->quantity *  $product->price,
+
+        ]);
+    }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $payment
+            ]);
+
+            }
+            catch (Exception $e) {
+               return $e;
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'An error occured while trying to verify your payment. Please contact paylidate.com ',            
+                ]);
+            }
+
     }
 
 
@@ -404,7 +422,7 @@ class PaymentController extends Controller
 
     public function verify_payment(Request $request){
 
-        $response = $this->flutterwaveService->verify_payment($request->txRef);
+        $response = $this->flutterwaveService->verify_payment( $request->flw_T_id);
 
         return response()->json([
             'status' => 'success',

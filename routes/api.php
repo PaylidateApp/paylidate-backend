@@ -26,6 +26,9 @@ Route::namespace('Api')->group(function () {
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
+    
+    Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
+   
 
     Route::group(['prefix' => 'password'], function () {
         Route::post('create', 'PasswordResetController@create');
@@ -66,7 +69,11 @@ Route::namespace('Api')->group(function () {
         Route::get('product/open-dispute/{id}', 'ProductController@open_dispute');
         Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');
 
-
+        Route::post('transaction/accept/{id}', 'TransactionController@accept');
+        Route::post('transaction/decline/{id}', 'TransactionController@decline');
+        Route::post('transaction/confirm/{id}', 'TransactionController@confirm');
+        Route::post('transaction/cancel/{id}', 'TransactionController@cancel');
+        
         Route::resource('payment', 'PaymentController');
         Route::resource('card', 'CardController');
         Route::post('payment/link', 'PaymentController@getPaymentLink');

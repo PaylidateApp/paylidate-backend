@@ -13,11 +13,6 @@ use App\User;
 use App\PasswordReset;
 use Illuminate\Support\Facades\DB;
 
-
-
-use Hash;
-use Illuminate\Support\Str;
-
 class PasswordResetController extends Controller
 {
     /**
@@ -29,34 +24,44 @@ class PasswordResetController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'email' => 'required|string|email',
         ]);
+
+        DB::delete('delete from password_resets where email = ?',[$request->email]);
         
-       $user = User::where('email', $request->email)->first();
-        //return $user;
+
+        $user = User::where('email', $request->email)->first();
+        
         if (!$user)
         return response()->json([
             'status' => 'failed',
             'message' => 'We cannot find a user with that e-mail address.'
-        ], 401);
+        ], 404);
         
-        $token = \Str::random(60);
+        $token = \Str::random(60). $user->id;
         
-        DB::table('password_resets')->insert([
-            'email' => $request->email, 
-            'token' => $token, 
-            'created_at' => Carbon::now()
-          ]);
+        // $passwordReset = new PasswordReset;
+        // $passwordReset->email = $user->email;
+        // $passwordReset->token = $token;
+        // $passwordReset->save();
 
+        $passwordReset = passwordReset::create([
+           
+            'email' => $request->email,
+            'token' => $token,
+            'created_at' => Carbon::now(),
+           
 
+        ]);
+       
         $url = ( 'https://paylidate.com/reset-password/'.$token);         
         
-        if ($user)
-        //$user->notify(new PasswordResetRequest($token)); 
+        if ($user && $passwordReset)
+        
         
         {
             try {
-                Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
+            Mail::to( $request->email)->send(new ForgotPasswordMail($user, $url));
                 return response()->json([
                     'status' => 'success',
                     'message' => 'We have e-mailed your password reset link!',
@@ -91,11 +96,13 @@ class PasswordResetController extends Controller
                 'message' => 'This password reset token is invalid.'
             ], 400);
 
-        if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
-            $passwordReset->delete();
+        if (Carbon::parse($passwordReset->created_at)->addMinutes(10)->isPast()) {
+            
+        DB::delete('delete from password_resets where email = ?',[$passwordReset->email]);
+
             return response()->json([
-                'status' => 'failed',
-                'message' => 'This password reset token is invalid.'
+                'status' => 'expired',
+                'message' => 'Password reset token expired'
             ], 400);
         }
 
@@ -120,10 +127,7 @@ class PasswordResetController extends Controller
             'token' => 'required|string'
         ]);
 
-        $passwordReset = PasswordReset::where([
-            ['token', $request->token],
-            ['email', $request->email]
-        ])->first();
+        $passwordReset = PasswordReset::where('token', $request->token)->first();
 
         if (!$passwordReset)
             return response()->json([
@@ -138,21 +142,14 @@ class PasswordResetController extends Controller
 
         $user->password = bcrypt($request->password);
         $user->save();        
-        //$passwordReset->delete();
+        
 
-
-        DB::table('password_resets')->where(['email'=> $request->email])->delete();
-  
-        // PasswordReset::where([
-        //     ['token', $request->token],
-        //     ['email', $request->email]
-        // ])->update(['token' => '']);
+        DB::delete('delete from password_resets where email = ?',[$request->email]);
 
         return response()->json([
             'status' => 'success',            
-            'message' => 'password reset successful',
-            
-            // 'account' => $account
+            'message' => 'Password reset successful. Please login',
+
         ]);
     
         
