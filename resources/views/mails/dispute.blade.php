@@ -82,9 +82,9 @@
     </p>
     
     <p>
-    Click or visit <a href="{{ url('https://www.paylidate.com/escrow-transaction/'.$transaction['transation_ref']) }}" >https://www.paylidate.com/product/{{$transaction['transation_ref']}}</a> to view transaction
+    Click or visit <a href="{{ url('https://www.paylidate.com/escrow-transaction/'.$transaction['transation_ref']) }}" >https://www.paylidate.com/escrow-transaction/{{$transaction['transation_ref']}}</a> to view transaction
     </p>
-    
+
     <p><b>Thanks</b></p>
     <div class="flex-center back-pad">
         <div class="content links row">
