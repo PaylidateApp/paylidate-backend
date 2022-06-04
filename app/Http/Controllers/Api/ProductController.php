@@ -276,7 +276,7 @@ class ProductController extends Controller
             
 
 
-           // Mail::to($user)->send(new CreateProductMail($user, $product));
+           Mail::to($user)->send(new CreateProductMail($user, $product));
 
             return response()->json([
                 'status' => 'success',
