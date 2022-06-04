@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Mail\ForgotPasswordMail;
-
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 use App\Notifications\PasswordResetRequest;

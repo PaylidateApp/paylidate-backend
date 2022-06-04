@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Dispute;
 use Illuminate\Http\Request;
 
-class DisputeController extends Controller
+class commandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +13,11 @@ class DisputeController extends Controller
      */
     public function index()
     {
-        //
+        if($password == '12345secret')
+        {
+            \Artisan::call('migrate');
+            dd('Command executed succefull');
+        }
     }
 
     /**
@@ -41,10 +44,10 @@ class DisputeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Dispute  $dispute
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Dispute $dispute)
+    public function show($id)
     {
         //
     }
@@ -52,10 +55,10 @@ class DisputeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Dispute  $dispute
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Dispute $dispute)
+    public function edit($id)
     {
         //
     }
@@ -64,10 +67,10 @@ class DisputeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Dispute  $dispute
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Dispute $dispute)
+    public function update(Request $request, $id)
     {
         //
     }
@@ -75,10 +78,10 @@ class DisputeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Dispute  $dispute
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Dispute $dispute)
+    public function destroy($id)
     {
         //
     }

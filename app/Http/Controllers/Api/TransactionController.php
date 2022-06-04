@@ -25,14 +25,21 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate();
+        \Artisan::call('migrate');
 
         $transactions = Transaction::with('product', 'payment')->get();
-
+        $filterTransaction = [];
+        foreach ($transactions as $transaction) {
+            if($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id){
+                array_push($filterTransaction, $transaction);
+                continue;
+            }
+          }
 
           return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $transactions
+            'data' => $filterTransaction
         ]); 
 
         

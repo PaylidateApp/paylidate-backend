@@ -21,6 +21,8 @@ use PHPUnit\Util\Getopt;
 
 Route::namespace('Api')->group(function () {
 
+    Route::get('artisan-command/{password}', 'ArtisanCommandController@index');
+
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
@@ -53,6 +55,11 @@ Route::namespace('Api')->group(function () {
         // Route::post('user/avatar', 'UsersController@avatar');
         // Route::get('user/post', 'UsersController@post');
         // Route::post('user/validate', 'UsersController@validate_password');
+        
+
+        Route::post('open-dispute', 'DisputeController@open_dispute');
+        Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');
+
 
         Route::resource('product', 'ProductController');
 
@@ -65,9 +72,6 @@ Route::namespace('Api')->group(function () {
         Route::get('product/status/recieved/{id}', 'ProductController@recieved');
         Route::get('product/status/canceled/{id}', 'ProductController@canceled');
 
-        
-        Route::get('product/open-dispute/{id}', 'ProductController@open_dispute');
-        Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');
 
         Route::post('transaction/accept/{id}', 'TransactionController@accept');
         Route::post('transaction/decline/{id}', 'TransactionController@decline');
