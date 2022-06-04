@@ -31,6 +31,6 @@ class ForgotPasswordMail extends Mailable
     public function build()
     {
         return $this->from('no_reply@paylidate.com', 'Paylidate')
-        ->subject('Reset Paasword')->view('mails.forgot_password');
+        ->subject('Reset Pasword')->view('mails.forgot_password');
     }
 }
