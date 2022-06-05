@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CreateProductMail;
+use App\Mail\SellerAcceptTransactionMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Product;
@@ -237,7 +238,9 @@ class ProductController extends Controller
             $input = $request->all();
             $input['user_id']   = $user_id;
             $input['slug']   = date('dmyHis');
-            $input['product_number']   = date('dmyHis');            
+            $input['product_number']   = date('dmyHis');  
+
+                
             
             $product = Product::create($input);
             
@@ -254,10 +257,11 @@ class ProductController extends Controller
                 else{
                     
                     $input['email'] = $request['seller_email'];
-                    $input['password'] = 'defult';
-                    $user = User::create($input);
-                    
-                    $transaction['user_id'] = $user->id;                   
+                    $input['password'] = 'defualt';
+                    $new_user = User::create($input);
+
+                    $secondary_user['email'] = $new_user->email; 
+                    $transaction['user_id'] = $new_user->id;                   
                    
                 }
                 $transaction['quantity'] = $product->quantity;
@@ -265,7 +269,21 @@ class ProductController extends Controller
                 //$transaction['amount'] = $product->quantity * $product->price;
                 $new_transaction = Transaction::create($transaction);
                 
-                //return Transaction::where('id', $new_transaction->id)->with('product')->first();
+                $newTransaction = Transaction::where('id', $new_transaction->id)->with('product')->first();
+
+            $emailTransaction['id'] = $new_transaction->id;
+            $emailTransaction['transation_ref'] = $new_transaction->transaction_ref;
+            $emailTransaction['product_id'] = $new_transaction->product_id;
+            $emailTransaction['product_name'] = $new_transaction->product->name;
+            $emailTransaction['product_number'] = $new_transaction->product->product_number;
+            $emailTransaction['type'] = $new_transaction->product->type;
+            $emailTransaction['total_quantity'] = $new_transaction->quantity;
+            $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
+            $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
+
+
+            Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $newTransaction));
+           Mail::to($user)->send(new CreateProductMail($user, $product));
                 
                 return response()->json([
                     'status' => 'success',
