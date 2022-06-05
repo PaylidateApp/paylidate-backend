@@ -63,34 +63,33 @@ class TransactionController extends Controller
                 ]);
             }
             
-            $T_ref = 'PD_'.Str::random(8).date('dmyHis');
+            $t_ref = 'PD_'.Str::random(8).date('dmyHis');
 
             $newTransaction = Transaction::create([
                 'user_id' => auth('api')->user()->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
-                'transaction_ref' => $T_ref,
+                'transaction_ref' => $t_ref,
                 //'amount' => $request->quantity *  $product->price,
                 'description' => $request->description,
                 'accept_transaction' => true,
         ]);
         
-        $transaction = Transaction::where('transaction_ref', $T_ref)->with('product')->first();
-
         $user = auth('api')->user();  
 
+        $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product')->first();
             $seller_user = $transaction->product->user;
 
-            $emailTransaction['id'] = $transaction->id;
-            $emailTransaction['transaction_ref'] = $T_ref;
-            $emailTransaction['product_id'] = $transaction->product_id;
-            $emailTransaction['product_name'] = $transaction->product->name;
-            $emailTransaction['product_number'] = $transaction->product->product_number;
-            $emailTransaction['type'] = $transaction->product->type;
-            $emailTransaction['total_quantity'] = $transaction->quantity;
-            $emailTransaction['total_price'] = $transaction->product->price * $transaction->quantity;
-            $emailTransaction['description'] = $transaction->description ? $transaction->description : 'No description';
-           
+            $emailTransaction['id'] = $new_transaction->id;
+            $emailTransaction['transaction_ref'] = $t_ref;
+            $emailTransaction['product_id'] = $new_transaction->product_id;
+            $emailTransaction['product_name'] = $new_transaction->product->name;
+            $emailTransaction['product_number'] = $new_transaction->product->product_number;
+            $emailTransaction['type'] = $new_transaction->product->type;
+            $emailTransaction['total_quantity'] = $new_transaction->quantity;
+            $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
+            $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
+
             Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
             Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
             
