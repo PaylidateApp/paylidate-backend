@@ -78,7 +78,7 @@ class TransactionController extends Controller
         $user = auth('api')->user();  
 
         $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product')->first();
-            $seller_user = $transaction->product->user;
+            $seller_user = $new_transaction->product->user;
 
             $emailTransaction['id'] = $new_transaction->id;
             $emailTransaction['transaction_ref'] = $t_ref;
