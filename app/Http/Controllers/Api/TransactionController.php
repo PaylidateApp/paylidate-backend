@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CreateTransactionMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Transaction;
 use App\Payment;
 use App\User;
 use Illuminate\Support\Str;
+use Auth;
 use App\Product;
 
 /**
@@ -48,6 +51,7 @@ class TransactionController extends Controller
     
     public function store(Request $request)
     {
+        
         $product = Product::where('id', $request->product_id)->first();
 
             if($request->quantity > $product->quantity)
@@ -58,10 +62,10 @@ class TransactionController extends Controller
                     
                 ]);
             }
-
+            
             $T_ref = 'PD_'.Str::random(8).date('dmyHis');
 
-            $transaction = Transaction::create([
+            $newTransaction = Transaction::create([
                 'user_id' => auth('api')->user()->id,
                 'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
@@ -71,12 +75,31 @@ class TransactionController extends Controller
                 'accept_transaction' => true,
         ]);
         
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $transaction
-        ]);
+        $transaction = $newTransaction->with('product')->first();
+        $user = auth('api')->user();  
 
+            $seller_user = $newTransaction->product->user;
+
+            $emailTransaction['id'] = $transaction->id;
+            $emailTransaction['transaction_ref'] = $T_ref;
+            $emailTransaction['product_id'] = $transaction->product_id;
+            $emailTransaction['product_name'] = $transaction->product->name;
+            $emailTransaction['product_number'] = $transaction->product->product_number;
+            $emailTransaction['type'] = $transaction->product->type;
+            $emailTransaction['total_quantity'] = $transaction->quantity;
+            $emailTransaction['total_price'] = $transaction->product->price * $transaction->quantity;
+            $emailTransaction['description'] = $transaction->description ? $transaction->description : 'No description';
+           
+            Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
+            Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
+            
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        
     }
 
     /**

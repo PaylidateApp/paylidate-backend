@@ -283,7 +283,7 @@ class ProductController extends Controller
 
 
             Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $newTransaction));
-           Mail::to($user)->send(new CreateProductMail($user, $product));
+             Mail::to($user)->send(new CreateProductMail($user, $product));
                 
                 return response()->json([
                     'status' => 'success',
