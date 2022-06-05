@@ -265,14 +265,15 @@ class ProductController extends Controller
                    
                 }
                 $transaction['quantity'] = $product->quantity;
-                $transaction['transaction_ref'] = 'PD_'.Str::random(8).date('dmyHis');
+                $t_ref = 'PD_'.Str::random(8).date('dmyHis');
+                $transaction['transaction_ref'] = $t_ref;
                 //$transaction['amount'] = $product->quantity * $product->price;
-                $new_transaction = Transaction::create($transaction);
+                Transaction::create($transaction);
                 
-                $newTransaction = Transaction::where('id', $new_transaction->id)->with('product')->first();
+                $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product')->first();
 
             $emailTransaction['id'] = $new_transaction->id;
-            $emailTransaction['transation_ref'] = $new_transaction->transaction_ref;
+            $emailTransaction['transaction_ref'] = $t_ref;
             $emailTransaction['product_id'] = $new_transaction->product_id;
             $emailTransaction['product_name'] = $new_transaction->product->name;
             $emailTransaction['product_number'] = $new_transaction->product->product_number;

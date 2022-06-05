@@ -75,10 +75,11 @@ class TransactionController extends Controller
                 'accept_transaction' => true,
         ]);
         
-        $transaction = $newTransaction->with('product')->first();
+        $transaction = Transaction::where('transaction_ref', $T_ref)->with('product')->first();
+
         $user = auth('api')->user();  
 
-            $seller_user = $newTransaction->product->user;
+            $seller_user = $transaction->product->user;
 
             $emailTransaction['id'] = $transaction->id;
             $emailTransaction['transaction_ref'] = $T_ref;

@@ -62,7 +62,7 @@
     <p>
         <ul>
             <li>Transaction id:  {{$transaction['id']}}</li>
-            <li>Transaction ref:  {{$transaction['transation_ref']}}</li>
+            <li>Transaction ref:  {{$transaction['transaction_ref']}}</li>
             <li>Product id:  {{$transaction['product_id']}}</li>
             <li>Product name:  {{$transaction['product_name']}}</li>
             <li>Product number:  {{$transaction['product_number']}}</li>
