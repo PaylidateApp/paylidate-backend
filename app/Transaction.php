@@ -30,4 +30,8 @@ class Transaction extends Model
     {
         return $this->hasOne('App\Payment');
     }
+    public function dispute()
+    {
+        return $this->hasOne('App\Dispute');
+    }
 }

@@ -44,6 +44,11 @@ class User extends Authenticatable
         return $this->hasOne('App\Wallet');
     }
 
+    public function dispute()
+    {
+        return $this->hasOne('App\Dispute');
+    }
+
     public function account()
     {
         return $this->hasOne('App\UserAccount');

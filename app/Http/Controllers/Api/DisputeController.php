@@ -19,21 +19,53 @@ class DisputeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        // $account = UserAccount::where('user_id', Auth::user()->id)->first();
+    public function getTransactionDisputes($transaction_id)
+    {        
 
-        // $response = Curl::to('https://api.flutterwave.com/v3/virtual-account-numbers/'. $account->ref)
-        //     ->withHeader('Content-Type: application/json')
-        //     ->withHeader('Authorization: Bearer FLWSECK_TEST-2b3f3862386bce594393f94c261f8184-X')
-        //     ->asJson( true )
-        //     ->get();
+        $dispute = Dispute::where('transaction_id', $transaction_id)->with('user', 'transaction')
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-        // return response()->json([
-        //     'status' => 'success',
-        //     'account' => $response['data']
-        // ]);
+
+        if(!$dispute){
+            return response()->json([
+                'status' => 'Not found',
+                'message' => 'Not found',
+                
+            ], 404);
+        }
+        $transaction = Transaction::where('id', $transaction_id)->with('product')->get();
+        
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $dispute
+        ]);
+        
+        if($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id  )        
+        {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+
+        }
+
+        return response()->json([
+            'status' => 'Not allow',
+            'message' => 'Unauthorize',
+            
+        ], 401);
     }
+    public function index($transaction_id)
+    {
+      
+
+    }
+
+    
 
     /**
      * Show the form for creating a new resource.
@@ -132,7 +164,8 @@ class DisputeController extends Controller
      */
     public function show($id)
     {
-        //
+        return 'dfdwofod';
+        
     }
 
     /**

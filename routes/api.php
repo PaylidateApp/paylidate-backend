@@ -58,6 +58,8 @@ Route::namespace('Api')->group(function () {
         
 
         Route::post('open-dispute', 'DisputeController@open_dispute');
+        Route::get('transaction-disputes/{transaction_id}', 'DisputeController@getTransactionDisputes');
+
         Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');
 
 
@@ -91,6 +93,7 @@ Route::namespace('Api')->group(function () {
     });
    
 });
+Route::get('get-users', 'UserController@index');
 Route::group(['middleware' =>'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
