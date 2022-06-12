@@ -6,12 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\UserBank;
 use Illuminate\Validation\ValidationException;
+use App\Services\FlutterwaveService;
 use Auth;
 
 
 
 class UserBankController extends Controller
 {
+
+    protected $flutterwaveService;
+
+    public function __construct(){
+
+        $this->flutterwaveService = new FlutterwaveService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +27,8 @@ class UserBankController extends Controller
      */
     public function index()
     {
-        //
+        $response = $this->flutterwaveService->verifyBankAccountNumber( "0690000032", "044");
+        return $response;
     }
 
     /**
@@ -27,9 +36,9 @@ class UserBankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function verify_account_number()
     {
-        //
+        $response = $this->flutterwaveService->verifyBankAccountNumber( "0690000032", "044");
     }
 
     /**
