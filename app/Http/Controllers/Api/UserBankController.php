@@ -27,8 +27,7 @@ class UserBankController extends Controller
      */
     public function index()
     {
-        $response = $this->flutterwaveService->verifyBankAccountNumber( "0690000032", "044");
-        return $response;
+        
     }
 
     /**
@@ -36,9 +35,13 @@ class UserBankController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function verify_account_number()
+    public function verify_account_number(Request $request)
     {
-        $response = $this->flutterwaveService->verifyBankAccountNumber( "0690000032", "044");
+        $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_number, $request->bank_code);
+        return response()->json([
+            $response
+
+        ]);
     }
 
     /**

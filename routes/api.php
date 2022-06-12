@@ -88,7 +88,9 @@ Route::namespace('Api')->group(function () {
         Route::resource('account', 'UserAccountController');
 
         Route::post('fund', 'CardController@fund');
+
         Route::resource('user-bank', 'UserBankController');
+        Route::post('verify-account', 'UserBankController@verify_account_number');
 
     });
    
