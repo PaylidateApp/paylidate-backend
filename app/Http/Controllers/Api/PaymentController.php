@@ -427,7 +427,7 @@ class PaymentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $response
+            'data' => $response['data']
         ]);
     }
 
