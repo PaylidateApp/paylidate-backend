@@ -38,9 +38,11 @@ class UserBankController extends Controller
     public function verify_account_number(Request $request)
     {
         $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_number, $request->bank_code);
+        
         return response()->json([
-            $response
-
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $response['data']
         ]);
     }
 
