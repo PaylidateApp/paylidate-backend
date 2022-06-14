@@ -26,4 +26,9 @@ class Payment extends Model
         return $this->belongsTo('App\Transaction');
     }
 
+    public function withdrawal()
+    {
+        return $this->hasOne('App\Withdrawal');
+    }
+
 }

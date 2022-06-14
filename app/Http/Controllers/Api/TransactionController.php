@@ -7,6 +7,8 @@ use App\Mail\CreateTransactionMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Transaction;
+use App\Withdrawal;
+use App\UserBank;
 use App\Payment;
 use App\User;
 use Illuminate\Support\Str;
@@ -120,6 +122,17 @@ class TransactionController extends Controller
         $transaction = Transaction::where('transaction_ref', $T_ref)->with('product', 'payment', 'secondary_user')->first();
    
         $transaction ['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
+        $userID;
+        if($transaction->product->transaction_type == 'sell')
+        {
+            $userID = $transaction->product->user_id;
+        }
+        else{
+            $userID = $transaction->user_id;
+        }
+       $transaction ['bank'] = UserBank::where('user_id', $userID)->first();
+       $transaction ['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
+
 
         return response()->json([
             'status' => 'success',

@@ -14,7 +14,7 @@ class FlutterwaveService
     public function virtualCard($currency, $amount, $name){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post('https://api.flutterwave.com/v3/virtual-cards', [
+        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
             "currency" => $currency,
             "amount" => $amount,
             "billing_name" => $name
@@ -27,7 +27,7 @@ class FlutterwaveService
     public function getvirtualCard($card_id){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->get('https://api.flutterwave.com/v3/virtual-cards');
+        ])->get(env('FLW_BASE_URL').'/v3/virtual-cards');
 
         return $response;
     }
@@ -91,7 +91,7 @@ class FlutterwaveService
     public function banks(){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get('https://api.flutterwave.com/v3/banks/NG');
+            ])->get(env('FLW_BASE_URL').'/v3/banks/NG');
 
         return $response;
     }
@@ -99,7 +99,7 @@ class FlutterwaveService
     public function verifyBankAccountNumber($account_num, $bank_code){
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post('https://api.flutterwave.com/v3/accounts/resolve', [
+        ])->post(env('FLW_BASE_URL').'/v3/accounts/resolve', [
             "account_number" => $account_num,
             "account_bank" => $bank_code,
            
@@ -215,6 +215,30 @@ class FlutterwaveService
 
         return $response;
 
+    }
+
+
+    public function transfer_to_bank($account_bank, $account_number, $amount, $narration, $currency = 'NGN', $reference, $callback_url, $debit_currency = 'NGN'){
+       try{
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL').'/v3/transfers', [
+            
+            "account_bank"=> $account_bank,
+            "account_number"=> $account_number,
+            "amount"=> $amount,
+            "narration"=> $narration,
+            "currency"=> $currency,
+            "reference"=> $reference,
+            "callback_url"=> $callback_url,
+            "debit_currency"=> $debit_currency
+        ]);
+
+        return $response;
+         }
+        catch (\Exception $e) {
+            return $e;
+        }
     }
 
 

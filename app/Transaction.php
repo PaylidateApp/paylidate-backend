@@ -34,4 +34,10 @@ class Transaction extends Model
     {
         return $this->hasOne('App\Dispute');
     }
+
+    public function withdrawal()
+    {
+        return $this->hasOnce('App\Withdrawal');
+    }
+    
 }

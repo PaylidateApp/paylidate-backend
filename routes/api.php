@@ -92,6 +92,12 @@ Route::namespace('Api')->group(function () {
         Route::resource('user-bank', 'UserBankController');
         Route::post('verify-account', 'UserBankController@verify_account_number');
 
+       // Route::resource('withdraw', 'WithdrawalController');
+        Route::get('withdraw-requests', 'WithdrawalController@index');
+        Route::post('request-withdrawal', 'WithdrawalController@request_withdrawal');
+        Route::post('withdraw', 'WithdrawalController@transfer_to_bank');
+
+
     });
    
 });

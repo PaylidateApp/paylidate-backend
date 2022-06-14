@@ -10,4 +10,9 @@ class UserBank extends Model
         'user_id','bank_name','account_number','bank_code','account_name','branch_name'
     ];
     protected $hidden = ['created_at', 'updated_at',  'user_id','branch_name'];
+
+    public function withdrawal()
+    {
+        return $this->hasMany('App\Withdrawal');
+    }
 }

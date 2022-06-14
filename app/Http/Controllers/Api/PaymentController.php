@@ -224,20 +224,8 @@ class PaymentController extends Controller
         //
     }
 
-    /**
-     * Update a Specified Payment
-     *
-     *
-     * @urlParam  id string required the id of the payment
-     *
-     * @bodyParam quantity int string
-     * @bodyParam type string required  either make-payment/receive-payment
-     * @bodyParam status boolean true for paid false un-paid,  false by default
-     * @bodyParam expires string expires in a week by default
-     * @bodyParam description string
-     *
-     * @return [string] message
-     */
+
+    
     public function update(Request $request, $id)
     {
         $input = $request->all();
@@ -265,31 +253,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    /* public function getPaymentLink(Request $request){
-        $user =  auth('api')->user();
-        $meta = new stdClass();
-        $meta->consumer_id =  $user->id;
-        $meta->consumer_mac = "";
 
-        $customer = new stdClass();
-        $customer->email =  $user->email;
-        $customer->phonenumber =  $user->phone;
-        $customer->name =  $user->name;
-
-        $customizations = new stdClass();
-        $customizations->title = "Paylidate Payment";
-        $customizations->description = "";
-        $customizations->logo = "";
-
-        $response = $this->flutterwaveService->getPaymentLink($user->name, $request->amount, $request->currency, $request->redirect_url,  $customer, $customizations);
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $response['data']
-        ]);
-    }
- */
 
     // Initiate card payment
     public function pay_with_card(Request $request){
@@ -451,15 +415,4 @@ class PaymentController extends Controller
         ]);
     }
 
-    
-    public function verifyBankAccountNumber(Request $request){
-
-        $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_num, $request->bank_code);
-        return $response;
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $response['data']
-        ]);
-    }
 }
