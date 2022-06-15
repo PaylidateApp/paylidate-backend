@@ -42,13 +42,25 @@ class WithdrawalController extends Controller
     public function request_withdrawal(Request $request)
     {
         $request->validate([
-            'transaction_id' => 'required|numeric|unique:transactions',
-            'payment_id' => 'required|numeric|unique:payment',
+            'transaction_id' => 'required|numeric',
+            'payment_id' => 'required|numeric',
             'user_bank_id' => 'required|numeric',
             'narration' => 'required|string',
             'debit_currency' => 'required|string',           
             
         ]);
+        try{
+            $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
+            $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
+           
+            if($transaction || $payment){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'You have made a withdrawal request on this transaction already',
+                    
+                ], 422);
+            }
+
             $user = auth('api')->user();
             $user_id = $user->id;
             $input = $request->all();
@@ -60,6 +72,10 @@ class WithdrawalController extends Controller
                 'message' => 'success',
                 'data' => $withdrawal
             ]);
+        }
+        catch (\Exception $e) {
+            return $e;
+        }
     }
 
     public function transfer_to_bank(Request $request){
