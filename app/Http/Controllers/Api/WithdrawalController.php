@@ -42,8 +42,12 @@ class WithdrawalController extends Controller
     public function request_withdrawal(Request $request)
     {
         $request->validate([
-            
-                        
+            'transaction_id' => 'required|numeric',
+             'payment_id' => 'required|numeric',
+            'user_bank_id' => 'required|numeric',
+            'narration' => 'required|string',
+            'debit_currency' => 'required|string',           
+                   
         ]);
 return hello;
         try{
