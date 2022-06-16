@@ -51,7 +51,7 @@ class WithdrawalController extends Controller
                    
         ]);
 
-     return $reqiest->all();
+     return $request->all();
         try{
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
