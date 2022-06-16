@@ -43,11 +43,7 @@ class WithdrawalController extends Controller
     {
         $request->validate([
             
-            'payment_id' => 'required|numeric',
-            'user_bank_id' => 'required|numeric',
-            'narration' => 'required|string',
-            'debit_currency' => 'required|string',           
-            
+                        
         ]);
 return hello;
         try{
