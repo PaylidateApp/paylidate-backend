@@ -41,6 +41,7 @@ class WithdrawalController extends Controller
 
     public function request_withdrawal(Request $request)
     {
+      return 'djfjfj';
         $request->validate([
             'transaction_id' => 'required|numeric',
              'payment_id' => 'required|numeric',
@@ -49,7 +50,7 @@ class WithdrawalController extends Controller
             'debit_currency' => 'required|string',           
                    
         ]);
-return hello;
+
         try{
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
