@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Withdrawal;
-use App\User;
 use App\Services\FlutterwaveService;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
@@ -30,14 +29,6 @@ class WithdrawalController extends Controller
 
     public function index()
     {
-        Withdrawal::truncate();
-        $transaction = User::where('email', 'hello@paylidate.com')->first();
-        $transaction->update([
-                    'is_admin' => true
-                ]);
-        $transaction->update([
-                    'is_staff' => true
-                ]);
         $withdrawal_requests = Withdrawal::with('user', 'transaction', 'payment', 'bank')->orderBy('created_at')->get();
 
         return response()->json([
