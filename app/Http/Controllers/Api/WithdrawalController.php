@@ -57,11 +57,12 @@ class WithdrawalController extends Controller
             'bank_id' => 'required|numeric',
             'narration' => 'required|string',
             'debit_currency' => 'required|string',           
-            
+                   
         ]);
 
         
 
+   
         try{
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
