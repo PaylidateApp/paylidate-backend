@@ -33,19 +33,6 @@ class TransactionController extends Controller
         \Artisan::call('migrate');
 
 
-        $bank=[];
-
-        $bank['user_id'] = 5;
-        $bank['bank_name'] = "Stanbic IBTC Bank";
-        $bank['account_name'] = "JOSHUA UGBEDEOJO ATTAH";
-        $bank['account_number'] = "0040398625";
-        $bank['branch_name'] = "221";
-        $bank['bank_code'] = "221";
-
-        Bank::create($bank->all());
-
-        
-            Withdrawal::where('id', 5)->update(['status'=>false]);
 
         $transactions = Transaction::with('product', 'payment')->orderBy('created_at', 'desc')->get();
         $filterTransaction = [];
