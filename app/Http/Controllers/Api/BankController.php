@@ -27,6 +27,7 @@ class BankController extends Controller
      */
     public function index()
     {
+        return Bank::all();
         
     }
 
