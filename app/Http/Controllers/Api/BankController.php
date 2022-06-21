@@ -4,14 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\UserBank;
+use App\Bank;
 use Illuminate\Validation\ValidationException;
 use App\Services\FlutterwaveService;
 use Auth;
 
 
 
-class UserBankController extends Controller
+class BankController extends Controller
 {
 
     protected $flutterwaveService;
@@ -74,7 +74,7 @@ class UserBankController extends Controller
             }
             $request['user_id'] = auth('api')->user()->id;
 
-            $user_bank = UserBank::create($request->all());
+            $user_bank = Bank::create($request->all());
 
             if($user_bank){
                 return response()->json([
@@ -107,7 +107,7 @@ class UserBankController extends Controller
     public function show($id)
     {
         
-        $user_account = UserBank::where('user_id',$id)->first();
+        $user_account = Bank::where('user_id',$id)->first();
         if($user_account){
             return response()->json([
                 'status' => 'success',
@@ -160,7 +160,7 @@ class UserBankController extends Controller
         $user_id= auth('api')->user()->id;
 
 
-        $updateUserBank = UserBank::where('user_id',$id)->update(['user_id'=>$user_id, 'account_name'=>$request->account_name,'branch_name'=>$request->branch_name, 'bank_name'=>$request->bank_name, 'account_number'=>$request->account_number, 'bank_code'=>$request->bank_code, ]);
+        $updateUserBank = Bank::where('user_id',$id)->update(['user_id'=>$user_id, 'account_name'=>$request->account_name,'branch_name'=>$request->branch_name, 'bank_name'=>$request->bank_name, 'account_number'=>$request->account_number, 'bank_code'=>$request->bank_code, ]);
     
         
         if($updateUserBank){

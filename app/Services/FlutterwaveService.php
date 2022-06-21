@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 
 class FlutterwaveService
@@ -218,7 +219,7 @@ class FlutterwaveService
     }
 
 
-    public function transfer_to_bank($account_bank, $account_number, $amount, $narration, $currency = 'NGN', $reference, $callback_url, $debit_currency = 'NGN'){
+    public function transfer_to_bank($account_bank, $account_number, $amount, $narration, $currency = 'NGN', $reference, $debit_currency = 'NGN'){
        try{
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
@@ -229,8 +230,7 @@ class FlutterwaveService
             "amount"=> $amount,
             "narration"=> $narration,
             "currency"=> $currency,
-            "reference"=> $reference,
-            "callback_url"=> $callback_url,
+            "reference"=> 'PD_'.Str::random(8).date('dmyHis'),
             "debit_currency"=> $debit_currency
         ]);
 

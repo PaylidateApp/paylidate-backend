@@ -8,13 +8,13 @@ class Withdrawal extends Model
 {
 
     protected $fillable = [
-        'user_id','payment_id','transaction_id','user_bank_id','narration',
-        'debit_currency'
+        'user_id','payment_id','transaction_id','bank_id','narration',
+        'debit_currency','f_withdrawal_id', 'status'
      ];
 
     public function bank()
     {
-        return $this->belongsTo('App\UserBank', 'user_bank_id');
+        return $this->belongsTo('App\Bank');
     }
 
     public function user()

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Transaction;
 use App\Withdrawal;
-use App\UserBank;
+use App\Bank;
 use App\Payment;
 use App\User;
 use Illuminate\Support\Str;
@@ -31,6 +31,21 @@ class TransactionController extends Controller
     {
         //Transaction::truncate();
         \Artisan::call('migrate');
+
+
+        $bank=[];
+
+        $bank['user_id'] = 5;
+        $bank['bank_name'] = "Stanbic IBTC Bank";
+        $bank['account_name'] = "JOSHUA UGBEDEOJO ATTAH";
+        $bank['account_number'] = "0040398625";
+        $bank['branch_name'] = "221";
+        $bank['bank_code'] = "221";
+
+        Bank::create($bank->all());
+
+        
+            Withdrawal::where('id', 5)->update(['status'=>false]);
 
         $transactions = Transaction::with('product', 'payment')->orderBy('created_at', 'desc')->get();
         $filterTransaction = [];
@@ -130,7 +145,7 @@ class TransactionController extends Controller
         else{
             $userID = $transaction->user_id;
         }
-       $transaction ['bank'] = UserBank::where('user_id', $userID)->first();
+       $transaction ['bank'] = Bank::where('user_id', $userID)->first();
        $transaction ['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
 
 
