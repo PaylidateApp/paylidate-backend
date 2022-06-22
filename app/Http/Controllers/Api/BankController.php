@@ -61,12 +61,11 @@ class BankController extends Controller
             
             'account_name' => 'required|string|',
             'bank_name' => 'required|string|',
-            'account_number' => 'required|max:10|min:10|unique:user_banks',
+            'account_number' => 'required|max:10|min:10|unique:banks',
             'bank_code' => 'required|max:3|min:3',
 
         ]);
         
-
 
         try {
 
