@@ -34,14 +34,7 @@ class DisputeController extends Controller
                 
             ], 404);
         }
-        $transaction = Transaction::where('id', $transaction_id)->with('product')->get();
-        
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $dispute
-        ]);
+        $transaction = Transaction::where('id', $transaction_id)->with('product')->first();
         
         if($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id  )        
         {
