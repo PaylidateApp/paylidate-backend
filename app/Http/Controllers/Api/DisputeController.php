@@ -77,8 +77,8 @@ class DisputeController extends Controller
         if(auth('api')->user()->id != $request->user_id)  {
             return response()->json([
                 'status' => 'Not allow',
-                'message' => 'Unauthorize',
-                
+                'message' => 'Unauthorize',                
+                'data' => ''
             ], 401);
         }
         Dispute::where('id', $request->id)->update([
