@@ -23,7 +23,7 @@ class DisputeController extends Controller
     {        
 
         $dispute = Dispute::where('transaction_id', $transaction_id)->with('user', 'transaction')
-        ->orderBy('created_at', 'desc')
+        ->orderBy('dispute_solved')
         ->get();
 
 
@@ -65,9 +65,53 @@ class DisputeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function resolveDispute(Request $request)
     {
-        //
+        $request->validate([
+            'user_id' => 'required',
+            'id' => 'required',
+            'transaction_id' => 'required',
+            
+        ]);
+
+        if(auth('api')->user()->id != $request->user_id)  {
+            return response()->json([
+                'status' => 'Not allow',
+                'message' => 'Unauthorize',
+                
+            ], 401);
+        }
+        Dispute::where('id', $request->id)->update([
+            'dispute_solved' => true
+        ]);
+        $dispute = Dispute::where('id', $request->id)->with('user', 'transaction')->get();
+
+        $dispute_presence = Dispute::where([['transaction_id', '=', $request->transaction_id], ['dispute_solved', '=', false]])->first();
+
+
+        if($dispute_presence){
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+        }
+        else{
+            
+            Transaction::where('id', $request->transaction_id)->update([
+                'dispute' => false
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+        }
+        
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
     }
 
     /**
@@ -85,9 +129,22 @@ class DisputeController extends Controller
             
         ]);
 
+        //return $request->transaction['user_id'];
+
         try {
             $user = auth('api')->user();
             $user_id = $user->id;
+
+            if($user_id == $request->transaction['user_id'] || $user_id == $request->transaction['product']['user_id'])  {
+                
+            }
+            else{
+                return response()->json([
+                    'status' => 'Not allow',
+                    'message' => 'Unauthorize',
+                    
+                ], 401);
+            }
             
             $input['subject']   = $request->subject;
             $input['user_id']   = $user_id;

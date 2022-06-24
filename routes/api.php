@@ -58,6 +58,7 @@ Route::namespace('Api')->group(function () {
         
 
         Route::post('open-dispute', 'DisputeController@open_dispute');
+        Route::post('resolve-dispute', 'DisputeController@resolveDispute');
         Route::get('transaction-disputes/{transaction_id}', 'DisputeController@getTransactionDisputes');
 
         Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');

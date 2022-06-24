@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Transaction;
+use App\Dispute;
 use App\User;
 use App\Product;
 
@@ -78,74 +80,89 @@ class AdminController extends Controller
         ]);
     }
 
-    public function index()
-    {
-        return view('welcome');
+  
+    // Dispute section
+
+    public function getTransactionDisputes($transaction_id)
+    {        
+
+        $dispute = Dispute::where('transaction_id', $transaction_id)->with('user', 'transaction')
+        ->orderBy('dispute_solved')
+        ->get();
+
+
+        if(!$dispute){
+            return response()->json([
+                'status' => 'Not found',
+                'message' => 'Not found',
+                
+            ], 404);
+        }
+        $transaction = Transaction::where('id', $transaction_id)->with('product')->first();
+        
+        if(auth('api')->user()->is_admin == true)        
+        {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+
+        }
+
+        return response()->json([
+            'status' => 'Not allow',
+            'message' => 'Unauthorize',
+            
+        ], 401);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function resolveDispute(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'id' => 'required',
+            'transaction_id' => 'required',
+            
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        if(auth('api')->user()->is_admin == true)  {
+            return response()->json([
+                'status' => 'Not allow',
+                'message' => 'Unauthorize',
+                
+            ], 401);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+        Dispute::where('id', $request->id)->update([
+            'dispute_solved' => true
+        ]);
+        $dispute = Dispute::where('id', $request->id)->with('user', 'transaction')->get();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+        $dispute_presence = Dispute::where([['transaction_id', '=', $request->transaction_id], ['dispute_solved', '=', false]])->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        if($dispute_presence){
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+        }
+        else{
+            
+            Transaction::where('id', $request->transaction_id)->update([
+                'dispute' => false
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $dispute
+            ]);
+        }
+        
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
     }
 }
