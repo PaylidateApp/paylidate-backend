@@ -67,20 +67,20 @@ class DisputeController extends Controller
      */
     public function resolveDispute(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required',
-            'id' => 'required',
-            'transaction_id' => 'required',
+        // $request->validate([
+        //     'user_id' => 'required',
+        //     'id' => 'required',
+        //     'transaction_id' => 'required',
             
-        ]);
+        // ]);
 
-        if(auth('api')->user()->id != $request->user_id)  {
-            return response()->json([
-                'status' => 'Not allow',
-                'message' => 'Unauthorize',
+        // if(auth('api')->user()->id != $request->user_id)  {
+        //     return response()->json([
+        //         'status' => 'Not allow',
+        //         'message' => 'Unauthorize',
                 
-            ], 401);
-        }
+        //     ], 401);
+        // }
         Dispute::where('id', $request->id)->update([
             'dispute_solved' => true
         ]);
