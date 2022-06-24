@@ -65,7 +65,7 @@ class DisputeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function resolveDispute(Request $request)
+    public function resolve_dispute(Request $request)
     {
         // $request->validate([
         //     'user_id' => 'required',
