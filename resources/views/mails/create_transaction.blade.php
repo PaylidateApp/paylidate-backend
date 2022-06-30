@@ -78,7 +78,11 @@
         </ul>
     </p>
 
+    @if ($user['id'] == auth()->user()->id)
+    <p>Proceed to make the payment by clicking this link <a href="{{ url('https://www.paylidate.com/escrow-transaction/'.$transaction['transaction_ref']) }}"> https://www.paylidate.com/escrow-transaction/{{$transaction['transaction_ref']}}</a> to view transaction </p>
+    @else
     <p>You can click or visit <a href="{{ url('https://www.paylidate.com/escrow-transaction/'.$transaction['transaction_ref']) }}"> https://www.paylidate.com/escrow-transaction/{{$transaction['transaction_ref']}}</a> to view transaction </p>
+    @endif
 
 
     <p><b>Thanks</b></p>
