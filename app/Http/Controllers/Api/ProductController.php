@@ -283,7 +283,7 @@ class ProductController extends Controller
             $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
 
 
-            Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $newTransaction));
+            Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $emailTransaction));
              Mail::to($user)->send(new CreateProductMail($user, $product));
                 
                 return response()->json([

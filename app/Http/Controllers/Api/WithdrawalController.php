@@ -6,6 +6,8 @@ use App\Withdrawal;
 use App\Services\FlutterwaveService;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\ValidationException;
+use App\Mail\RequestWithdrawal;
+use Illuminate\Support\Facades\Mail;
 use App\Bank;
 use App\Payment;
 use Auth;
@@ -82,6 +84,11 @@ class WithdrawalController extends Controller
             $input['status']   = false;
             
             $withdrawal = Withdrawal::create($input);
+            
+            Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
+            Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
+            Mail::to('sirlawattah@gmail.com')->send(new RequestWithdrawal('Lawrence', $request->transaction_id));
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
