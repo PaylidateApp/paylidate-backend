@@ -59,10 +59,10 @@ class BankController extends Controller
 
         $request->validate([
             
-            'account_name' => 'required|string|',
-            'bank_name' => 'required|string|',
-            'account_number' => 'required|max:10|min:10|unique:banks',
-            'bank_code' => 'required|max:3|min:3',
+            'account_name' => 'required|string',
+            'bank_name' => 'required|string',
+            'account_number' => 'required|max:10|min:10',
+            'bank_code' => 'required|min:3',
 
         ]);
         
@@ -91,7 +91,7 @@ class BankController extends Controller
 
            
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e;
         }
 
@@ -120,8 +120,8 @@ class BankController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Account details not found',  
-                'data' => null                  
-            ]);
+                                
+            ], 404);
         }
     }
 
@@ -147,10 +147,10 @@ class BankController extends Controller
     {
         $request->validate([
             
-            'account_name' => 'required|string|',
-            'bank_name' => 'required|string|',
+            'account_name' => 'required|string',
+            'bank_name' => 'required|string',
             'account_number' => 'required|max:10|min:10',
-            'bank_code' => 'required|max:3|min:3',
+            'bank_code' => 'required|min:3',
 
         ]);
 
