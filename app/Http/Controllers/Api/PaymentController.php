@@ -405,7 +405,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function banks(Request $request){
+    public function banks(){
         $response = $this->flutterwaveService->banks();
    
         return response()->json([

@@ -166,7 +166,8 @@ class BankController extends Controller
         if($updateUserBank){
             return response()->json([
                 'status' => 'success',
-                'message' => 'Update successful',                    
+                'message' => 'Update successful',      
+                'data' => $updateUserBank
             ]);
         }
         
