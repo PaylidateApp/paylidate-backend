@@ -17,7 +17,7 @@ class UserController extends Controller
     {
 
         //DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);
-        DB::update(
+/*         DB::update(
             'update migrations set batch = 6 where id = ?',
             ['29']
         );
@@ -28,7 +28,9 @@ class UserController extends Controller
         DB::update(
             'update migrations set batch = 6 where id = ?',
             ['31']
-        );
+        ); */
+
+         \Artisan::call('migrate:rollback --step=3');
 
     $migrations = DB::select('select * from migrations');
     $wallets = DB::select('select * from wallets');
