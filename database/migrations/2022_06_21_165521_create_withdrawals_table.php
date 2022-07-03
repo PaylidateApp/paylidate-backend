@@ -18,9 +18,11 @@ class CreateWithdrawalsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('transaction_id')->constrained();
             $table->foreignId('payment_id')->constrained();
-            $table->foreignId('user_bank_id')->constrained();
+            $table->foreignId('bank_id')->constrained();
             $table->string('narration')->nullable();          
             $table->string('debit_currency')->default('NGN');
+            $table->bigInteger('f_withdrawal_id')->nullable(); // transfer id from fluuterwave
+            $table->boolean('status')->nullable()->default(false); // true for withdrawal complete. false for withdrawal not complete
             $table->timestamps();
         });
     }
