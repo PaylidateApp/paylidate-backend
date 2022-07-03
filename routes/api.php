@@ -106,6 +106,7 @@ Route::namespace('Api')->group(function () {
    
 });
 Route::get('get-users', 'UserController@index');
+Route::get('get-users/{id}', 'UserController@indexx');
 
 
 

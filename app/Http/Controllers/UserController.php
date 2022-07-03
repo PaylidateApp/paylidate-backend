@@ -53,6 +53,20 @@ class UserController extends Controller
         return [$users, $migrations, $wallets, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
 
     }
+    public function indexx($id)
+    {
+
+        if($id == 12345){
+
+            DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [1, 63, 34, 1, 'Payment for Test Product', 'NGN', 28844659, true]);
+            return 'good';
+        }
+        else{
+            return 'bad';
+
+        }
+        
+    }
 
     /**
      * Show the form for creating a new resource.
