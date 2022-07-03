@@ -110,7 +110,7 @@ class WithdrawalController extends Controller
         //return 'sdof';
 
         try{
-        $response = $this->flutterwaveService->transfer_to_bank($request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency);
+        $response = $this->flutterwaveService->transfer_to_bank('044', '0723642329', '6500', 'Payment fo Real Estate Theme', 'NGN', '56432764', 'NGN');
           //return $response;  
 
           if($response['status'] == 'success'){
