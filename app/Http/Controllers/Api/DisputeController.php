@@ -199,7 +199,7 @@ class DisputeController extends Controller
 
         } 
 
-        catch (Exception $e) {
+        catch (\Exception $e) {
             return $e;
         }
 

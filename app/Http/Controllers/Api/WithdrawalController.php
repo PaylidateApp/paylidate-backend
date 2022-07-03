@@ -63,12 +63,12 @@ class WithdrawalController extends Controller
         ]);
 
         
-
+        
    
         try{
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
-           
+            
             if($transaction || $payment){
                 return response()->json([
                     'status' => 'error',
@@ -83,7 +83,13 @@ class WithdrawalController extends Controller
             $input['user_id']   = $user_id;
             $input['status']   = false;
             
+            
             $withdrawal = Withdrawal::create($input);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $withdrawal
+            ]);
             
             Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
             Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
