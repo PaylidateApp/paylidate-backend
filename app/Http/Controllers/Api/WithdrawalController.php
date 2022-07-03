@@ -63,12 +63,12 @@ class WithdrawalController extends Controller
         ]);
 
         
-        
+
    
         try{
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
-            
+           
             if($transaction || $payment){
                 return response()->json([
                     'status' => 'error',
@@ -83,13 +83,7 @@ class WithdrawalController extends Controller
             $input['user_id']   = $user_id;
             $input['status']   = false;
             
-            
             $withdrawal = Withdrawal::create($input);
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $withdrawal
-            ]);
             
             Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
             Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
@@ -106,39 +100,33 @@ class WithdrawalController extends Controller
         }
     }
 
-    public function transfer_to_bank(){
+    public function transfer_to_bank(Request $request){
         //return 'sdof';
+
         try{
-            $response = $this->flutterwaveService->transfer_to_bank('044', '0690000040', 6500, 'Payment fo Real Estate Theme', 'NGN', '56432764', 'NGN');
-            
-          return $response;  
+        $response = $this->flutterwaveService->transfer_to_bank($request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency);
+          //return $response;  
 
-          return response()->json([
-            'status' => $response['status'],
-            'message' => $response['message'],
-            'data' => $response['data']
-        ]);
+          if($response['status'] == 'success'){
 
-        //   if($response['status'] == 'success'){
-
-        //     $payment = Payment::where('id',$request->payment_id)->update(['withdrawn'=>true]);
+            $payment = Payment::where('id',$request->payment_id)->update(['withdrawn'=>true]);
             
 
-        //     $withdrawal = Withdrawal::find($request->id); 
-        //     $withdrawal->update([ 
-        //         'status' => true,
-        //         'f_withdrawal_id' => $response['data']['id']
-        //     ]);
+            $withdrawal = Withdrawal::find($request->id); 
+            $withdrawal->update([ 
+                'status' => true,
+                'f_withdrawal_id' => $response['data']['id']
+            ]);
 
             
             
 
-        //     return response()->json([
-        //         'status' => $response['status'],
-        //         'message' => $response['message'],
-        //         'data' => $response['data']
-        //     ]);
-        // }
+            return response()->json([
+                'status' => $response['status'],
+                'message' => $response['message'],
+                'data' => $response['data']
+            ]);
+        }
         return response()->json([
             'status' => 'error',
             'message' => $response['message']

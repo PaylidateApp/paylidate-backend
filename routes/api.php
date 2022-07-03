@@ -23,7 +23,7 @@ Route::namespace('Api')->group(function () {
 
     Route::get('artisan-command/{password}', 'ArtisanCommandController@index');
 
-Route::get('transfer', 'WithdrawalController@transfer_to_bank');
+//Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
 
     Route::post('login', 'AuthController@login');
