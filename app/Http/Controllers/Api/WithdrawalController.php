@@ -113,6 +113,12 @@ class WithdrawalController extends Controller
         $response = $this->flutterwaveService->transfer_to_bank('044', '0723642329', '6500', 'Payment fo Real Estate Theme', 'NGN', '56432764', 'NGN');
           //return $response;  
 
+          return response()->json([
+            'status' => $response['status'],
+            'message' => $response['message'],
+            'data' => $response['data']
+        ]);
+
           if($response['status'] == 'success'){
 
             $payment = Payment::where('id',$request->payment_id)->update(['withdrawn'=>true]);
