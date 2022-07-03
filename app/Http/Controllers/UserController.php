@@ -17,7 +17,6 @@ class UserController extends Controller
     {
         
     $migrations = DB::select('select * from migrations');
-    $wallets = DB::select('select * from wallets');
     $users = DB::select('select * from users');
     $products = DB::select('select * from products');
     $transactions = DB::select('select * from transactions');
@@ -26,7 +25,7 @@ class UserController extends Controller
     $withdrawals = DB::select('select * from withdrawals');
     $banks = DB::select('select * from banks');
  
-        return [$users, $migrations, $wallets, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
+        return [$users, $migrations,  $products, $transactions, $payments, $disputes, $withdrawals, $banks];
 
     }
 
