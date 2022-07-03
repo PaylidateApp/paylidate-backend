@@ -23,6 +23,9 @@ Route::namespace('Api')->group(function () {
 
     Route::get('artisan-command/{password}', 'ArtisanCommandController@index');
 
+Route::get('transfer', 'WithdrawalController@transfer_to_bank');
+
+
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
@@ -103,6 +106,9 @@ Route::namespace('Api')->group(function () {
    
 });
 Route::get('get-users', 'UserController@index');
+
+
+
 Route::group(['middleware' =>'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
