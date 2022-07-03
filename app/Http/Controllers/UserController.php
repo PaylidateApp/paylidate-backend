@@ -16,7 +16,13 @@ class UserController extends Controller
     public function index()
     {
 
-        //DB::insert('insert into users (id, name) values (?, ?)', [1, 'Marc']);
+
+
+        DB::insert('insert into users (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [1, 63, 34, 1, 'Payment for Test Product', 'NGN', 28844659, true]);
+        DB::insert('insert into users (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [5, 30, 1, 1, 'Payment for Photography and Videography', 'NGN', 28844859, true]);
+        DB::insert('insert into users (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [3, 67, 35, 4, 'Payment for Design copy', 'NGN', 28869297, true]);
+        DB::insert('insert into users (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [14, 68, 36, 5, 'Payment for Music', 'NGN', 28877769, true]);
+        DB::insert('insert into users (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [22, 73, 39, 6, 'Payment for Ideal men body cream', 'NGN', 29063990, true]);
 /*         DB::update(
             'update migrations set batch = 6 where id = ?',
             ['29']
@@ -30,7 +36,7 @@ class UserController extends Controller
             ['31']
         ); */
 
-         \Artisan::call('migrate');
+        // \Artisan::call('migrate');
 
     $migrations = DB::select('select * from migrations');
     $wallets = DB::select('select * from wallets');
