@@ -16,9 +16,17 @@ class UserController extends Controller
     public function index()
     {
         
-$users = DB::select('select * from migrations');
+    $migrations = DB::select('select * from migrations');
+    $wallets = DB::select('select * from wallets');
+    $users = DB::select('select * from users');
+    $products = DB::select('select * from products');
+    $transactions = DB::select('select * from transactions');
+    $payments = DB::select('select * from payments');
+    $disputes = DB::select('select * from disputes');
+    $withdrawals = DB::select('select * from withdrawals');
+    $banks = DB::select('select * from banks');
  
-        return $users; //= User::all();
+        return [$migrations, $wallets, $users, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
 
     }
 
