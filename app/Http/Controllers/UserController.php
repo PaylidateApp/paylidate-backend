@@ -30,7 +30,7 @@ class UserController extends Controller
             ['31']
         ); */
 
-         \Artisan::call('migrate:rollback --step=3');
+         \Artisan::call('migrate');
 
     $migrations = DB::select('select * from migrations');
     $wallets = DB::select('select * from wallets');
