@@ -225,13 +225,13 @@ class FlutterwaveService
             'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
         ])->post(env('FLW_BASE_URL').'/v3/transfers', [
             
-            "account_bank"=> $account_bank,
-            "account_number"=> $account_number,
-            "amount"=> $amount,
-            "narration"=> $narration,
-            "currency"=> $currency,
+            "account_bank"=> '044',
+            "account_number"=> '0690000040',
+            "amount"=> 6500,
+            "narration"=> 'Payment fo Real Estate Theme',
+            "currency"=> 'NGN',
             "reference"=> 'PD_'.Str::random(8).date('dmyHis'),
-            "debit_currency"=> $debit_currency
+            "debit_currency"=> 'NGN'
         ]);
 
         return $response;

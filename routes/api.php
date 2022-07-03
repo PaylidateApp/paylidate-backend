@@ -103,8 +103,6 @@ Route::namespace('Api')->group(function () {
    
 });
 Route::get('get-users', 'UserController@index');
-Route::get('transfer_to_bank', 'WithdrawalController@transfer_to_bank');
-
 Route::group(['middleware' =>'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
