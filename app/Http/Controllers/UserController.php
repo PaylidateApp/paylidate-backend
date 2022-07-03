@@ -26,7 +26,7 @@ class UserController extends Controller
     $withdrawals = DB::select('select * from withdrawals');
     $banks = DB::select('select * from banks');
  
-        return [$migrations, $wallets, $users, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
+        return [$users, $migrations, $wallets, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
 
     }
 
