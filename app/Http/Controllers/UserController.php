@@ -16,7 +16,7 @@ class UserController extends Controller
     public function index()
     {
         
-$users = DB::select('select * from users');
+$users = DB::select('select * from migrations');
  
         return $users; //= User::all();
 
