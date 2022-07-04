@@ -15,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        $users = DB::select('select * from users');
 
+        return $users;
         DB::delete('delete from withdrawals');
        
 
@@ -26,9 +28,7 @@ class UserController extends Controller
         DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [22, 73, 39, 6, 'Payment for Ideal men body cream', 'NGN', 29063990, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
         DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [33, 77, 40, 7, 'Payment for Real Estate Theme"', 'NGN', 29655266, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
 
-        $users = DB::select('select * from withdrawals');
-
-        return $users;
+      
         /*         DB::update(
             'update migrations set batch = 6 where id = ?',
             ['29']
