@@ -16,16 +16,20 @@ class UserController extends Controller
     public function index()
     {
 
+        DB::delete('delete from withdrawals');
+       
+
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [1, 63, 34, 1, 'Payment for Test Product', 'NGN', 28844659, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [5, 30, 1, 1, 'Payment for Photography and Videography', 'NGN', 28844859, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [3, 67, 35, 4, 'Payment for Design copy', 'NGN', 28869297, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [14, 68, 36, 5, 'Payment for Music', 'NGN', 28877769, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [22, 73, 39, 6, 'Payment for Ideal men body cream', 'NGN', 29063990, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status, created_at, updated_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [33, 77, 40, 7, 'Payment for Real Estate Theme"', 'NGN', 29655266, true, '2022-07-04 09:22:10', '2022-07-04 09:22:10']);
+
         $users = DB::select('select * from withdrawals');
 
         return $users;
-
-        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [1, 63, 34, 1, 'Payment for Test Product', 'NGN', 28844659, true]);
-        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [5, 30, 1, 1, 'Payment for Photography and Videography', 'NGN', 28844859, true]);
-        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [3, 67, 35, 4, 'Payment for Design copy', 'NGN', 28869297, true]);
-        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [14, 68, 36, 5, 'Payment for Music', 'NGN', 28877769, true]);
-        DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [22, 73, 39, 6, 'Payment for Ideal men body cream', 'NGN', 29063990, true]);
-/*         DB::update(
+        /*         DB::update(
             'update migrations set batch = 6 where id = ?',
             ['29']
         );
