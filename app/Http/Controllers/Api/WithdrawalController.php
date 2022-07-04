@@ -87,6 +87,7 @@ class WithdrawalController extends Controller
             
             Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
             Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
+            Mail::to('holyphilzy@gmail.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
             Mail::to('sirlawattah@gmail.com')->send(new RequestWithdrawal('Lawrence', $request->transaction_id));
             
             return response()->json([
