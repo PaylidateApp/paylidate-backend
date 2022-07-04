@@ -57,7 +57,7 @@ class UserController extends Controller
         return [$users, $migrations, $wallets, $products, $transactions, $payments, $disputes, $withdrawals, $banks];
 
     }
-    public function indexx($id)
+    public function indexx1($id)
     {
 
         if($id == 12345){
