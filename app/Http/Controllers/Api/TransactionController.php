@@ -14,6 +14,7 @@ use App\User;
 use Illuminate\Support\Str;
 use Auth;
 use App\Product;
+use App\Referer;
 
 /**
  * @group  Transaction management
@@ -30,79 +31,100 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate()
-       // \Artisan::call('migrate');
+        // \Artisan::call('migrate');
 
 
-        $transactions = Transaction::with('product', 'payment')->orderBy('created_at', 'desc')->get();
+        $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
         $filterTransaction = [];
         foreach ($transactions as $transaction) {
-            if($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id){
-                array_push($filterTransaction, $transaction);
+            if ($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id) {
+        $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
+        array_push($filterTransaction, $transaction);
                 continue;
             }
-          }
+        }
 
-          return response()->json([
+        return response()->json([
             'status' => 'success',
             'message' => 'success',
             'data' => $filterTransaction
-        ]); 
-
-        
+        ]);
     }
 
-    
+
     public function store(Request $request)
     {
-        
+
         $product = Product::where('id', $request->product_id)->first();
 
-            if($request->quantity > $product->quantity)
-            {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'You can not request more than the availble quantity',
-                    
-                ]);
-            }
-            
-            $t_ref = 'PD_'.Str::random(8).date('dmyHis');
-
-            $newTransaction = Transaction::create([
-                'user_id' => auth('api')->user()->id,
-                'product_id' => $request->product_id,
-                'quantity' => $request->quantity,
-                'transaction_ref' => $t_ref,
-                //'amount' => $request->quantity *  $product->price,
-                'description' => $request->description,
-                'accept_transaction' => true,
-        ]);
-        
-        $user = auth('api')->user();  
-
-        $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product')->first();
-            $seller_user = $new_transaction->product->user;
-
-            $emailTransaction['id'] = $new_transaction->id;
-            $emailTransaction['transaction_ref'] = $t_ref;
-            $emailTransaction['product_id'] = $new_transaction->product_id;
-            $emailTransaction['product_name'] = $new_transaction->product->name;
-            $emailTransaction['product_number'] = $new_transaction->product->product_number;
-            $emailTransaction['type'] = $new_transaction->product->type;
-            $emailTransaction['total_quantity'] = $new_transaction->quantity;
-            $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
-            $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
-
-            Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
-            Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
-            
-            
+        if ($request->quantity > $product->quantity) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $new_transaction
+                'status' => 'error',
+                'message' => 'You can not request more than the availble quantity',
+
             ]);
-        
+        }
+
+        $refer_user = User::where('referral_token', $request->referral_token)->first();
+        //return $request->all();
+
+        if ($request->referral_token == auth('api')->user()->referral_token) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You cannot use your referral link to create a product',
+
+            ], 401);
+        }
+
+        $referral_id = null;
+        if ($refer_user) {
+
+            $referral = Referer::create([
+                'user_id' => $refer_user->id,
+                'amount' => 0.00,
+
+            ]);
+
+            $referral_id = $referral->id;
+        }
+
+        $t_ref = 'PD_' . Str::random(8) . date('dmyHis');
+
+        Transaction::create([
+            'user_id' => auth('api')->user()->id,
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'transaction_ref' => $t_ref,
+            'referer_id' => $referral_id,
+            'description' => $request->description,
+            'accept_transaction' => true,
+        ]);
+
+        $user = auth('api')->user();
+
+        $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product', 'referral')->first();
+        $seller_user = $new_transaction->product->user;
+
+        $emailTransaction['id'] = $new_transaction->id;
+        $emailTransaction['referral'] = $new_transaction->referral;
+        $emailTransaction['transaction_ref'] = $t_ref;
+        $emailTransaction['product_id'] = $new_transaction->product_id;
+        $emailTransaction['product_name'] = $new_transaction->product->name;
+        $emailTransaction['product_number'] = $new_transaction->product->product_number;
+        $emailTransaction['type'] = $new_transaction->product->type;
+        $emailTransaction['total_quantity'] = $new_transaction->quantity;
+        $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
+        $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
+
+        Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
+        Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $new_transaction
+        ]);
     }
 
     /**
@@ -113,26 +135,25 @@ class TransactionController extends Controller
      */
     public function show()
     {
-        
     }
 
     // get individual transaction
     public function get_transaction($T_ref)
     {
-        
+
         $transaction = Transaction::where('transaction_ref', $T_ref)->with('product', 'payment', 'secondary_user')->first();
-   
-        $transaction ['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
+
+        $transaction['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
         $userID;
-        if($transaction->product->transaction_type == 'sell')
-        {
+        if ($transaction->product->transaction_type == 'sell') {
             $userID = $transaction->product->user_id;
-        }
-        else{
+        } else {
             $userID = $transaction->user_id;
         }
-       $transaction ['bank'] = Bank::where('user_id', $userID)->first();
-       $transaction ['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
+
+        $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
+        $transaction['bank'] = Bank::where('user_id', $userID)->first();
+        $transaction['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
 
 
         return response()->json([
@@ -144,11 +165,10 @@ class TransactionController extends Controller
 
     // accept transaction
     public function accept($id)
-    {        
+    {
         $transaction = Transaction::where('id', $id)->first();
-        if($transaction->user_id == auth('api')->user()->id)
-        {
-            $transaction->update([ 
+        if ($transaction->user_id == auth('api')->user()->id) {
+            $transaction->update([
                 'accept_transaction' => true
             ]);
 
@@ -157,16 +177,14 @@ class TransactionController extends Controller
                 'message' => 'success',
                 'data' => $transaction
             ]);
-        }
-        else{
+        } else {
 
             return response()->json([
                 'status' => 'error',
                 'message' => 'Not Allow',
-                
-            ], 401);
 
-        }              
+            ], 401);
+        }
 
         //Mail::to($user)->send(new CreateProductMail($user, $product));
 
@@ -175,10 +193,9 @@ class TransactionController extends Controller
 
     // Decline transaction
     public function decline($id)
-    {        
+    {
         $transaction = Transaction::where('id', $id)->first();
-        if($transaction->user_id == auth('api')->user()->id)
-        {
+        if ($transaction->user_id == auth('api')->user()->id) {
             $transaction->update([
                 'accept_transaction' => false
             ]);
@@ -188,101 +205,95 @@ class TransactionController extends Controller
                 'message' => 'success',
                 'data' => $transaction
             ]);
-        }
-        else{
+        } else {
 
             return response()->json([
                 'status' => 'error',
                 'message' => 'Not Allow',
-                
-            ], 401);
 
-        }              
+            ], 401);
+        }
 
         //Mail::to($user)->send(new CreateProductMail($user, $product));
 
     }
 
-       // confirm transaction completion
-       public function confirm($id)
-       {        
-           $transaction = Transaction::where('id', $id)->with('product')->first();
-           
-           if($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id)
-           {
-               $transaction->update([
-                   'status' => 1
-               ]);
-   
-               return response()->json([
-                   'status' => 'success',
-                   'message' => 'success',
-                   'data' => $transaction
-               ]);
-           }
-           elseif($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)
-                {
-                    $transaction->update([
-                        'status' => 1
-                    ]);
-        
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'success',
-                        'data' => $transaction
-                    ]);
-                }
-           else{
-   
-               return response()->json([
-                   'status' => 'error',
-                   'message' => 'Not Allow',
-                   
-               ], 401);
-   
-           }              
-   
-           //Mail::to($user)->send(new CreateProductMail($user, $product));
-   
-       }
+    // confirm transaction completion
+    public function confirm($id)
+    {
+        $transaction = Transaction::where('id', $id)->with('product')->first();
 
-    
-        // cancel transaction
-        public function cancel($id)
-        {        
-            $transaction = Transaction::where('id', $id)->first();
-            if($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id)
-            {
-                $transaction->update([
-                    'status' => 2
-                ]);
+        if ($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) {
+            $transaction->update([
+                'status' => 1
+            ]);
 
-                if($transaction){
-                    $product = Product::where('id', $transaction->product_id)->first();
-                    $product ->update([
-                        'quantity' => $product->quantity + $transaction->quantity
-                    ]);
-                }
-    
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'success',
-                    'data' => $transaction
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        } elseif ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id) {
+            $transaction->update([
+                'status' => 1
+            ]);
+            Referer::where('id', $transaction->referer_id)->update([
+                'transaction_status' => true
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not Allow',
+
+            ], 401);
+        }
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
+    }
+
+
+    // cancel transaction
+    public function cancel($id)
+    {
+        $transaction = Transaction::where('id', $id)->first();
+        if ($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) {
+            $transaction->update([
+                'status' => 2
+            ]);
+
+            if ($transaction) {
+                $product = Product::where('id', $transaction->product_id)->first();
+                $product->update([
+                    'quantity' => $product->quantity + $transaction->quantity
                 ]);
             }
-            else{
-    
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Not Allow',
-                    
-                ], 401);
-    
-            }              
-    
-            //Mail::to($user)->send(new CreateProductMail($user, $product));
-    
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not Allow',
+
+            ], 401);
         }
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
+    }
 
 
     public function edit($id)

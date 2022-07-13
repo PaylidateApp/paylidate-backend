@@ -33,9 +33,9 @@ class ProductController extends Controller
         //     ->orderBy('created_at', 'desc')
         //     ->get();
         $product = Product::where('user_id', auth('api')->user()->id)
-        ->orderBy('created_at', 'desc')
-        ->get();
-        
+            ->orderBy('created_at', 'desc')
+            ->get();
+
 
         return response()->json([
             'status' => 'success',
@@ -121,7 +121,6 @@ class ProductController extends Controller
             'message' => 'success',
             'data' => $product
         ]);
-        
     }
 
     public function recieved($id, Request $request)
@@ -171,48 +170,8 @@ class ProductController extends Controller
         //Mail::to($user)->send(new CreateProductMail($user, $product));
 
     }
-    public function resolve_dispute($id, Request $request)
-    {
-        $product = Product::where('id', $id)->update([
-            'dispute' => 2 //resolve dispute
-        ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-
-        //Mail::to($user)->send(new CreateProductMail($user, $product));
-
-    }
-
-
-    /**
-     * Create Product
-     *
-     * The Product creation
-     *
-     * @bodyParam   name            string  required    Product Name
-     * @bodyParam   slug            string  Product     Slug Required if is_payment is true
-     * @bodyParam   image           string  Product     Image
-     * @bodyParam   product_number  string  Product     Number / Skew
-     * @bodyParam   price           string  required    Unit Price of the product
-     * @bodyParam   quantity        int     required    Total Unit of product if empty it will default to one(1)
-     * @bodyParam   delivery_period string              Possible Dilivery days (5)
-     * @bodyParam   clients_email   string              Adds multiple emails to tonify/invite
-     * @bodyParam   payment_details array               Required if user is creating and making payment at the same time
-     * @bodyParam   payment_details.transaction_id  string      Transaction ID (Sub-property of payment_details)
-     * @bodyParam   payment_details.tx_ref          string      Transaction refrence (Sub-property of payment_details)
-     * @bodyParam   payment_details.status          string      Transaction status (Sub-property of payment_details)
-     * @bodyParam   payment_details.description     string      Transaction Decsription (Sub-property of payment_details)
-     * @bodyParam   description     string              Product Description
-     *
-     *
-     * @return [string] message
-     */
-
-     // creating a product
+    // creating a product
     public function store(Request $request)
     {
         $request->validate([
@@ -221,91 +180,94 @@ class ProductController extends Controller
             'quantity' => 'required|numeric',
             'type' => 'required|string',
             'transaction_type' => 'required|string',
-            
+
         ]);
 
-        
-        if($request->transaction_type == 'buy'){
+
+        if ($request->transaction_type == 'buy') {
             $request->validate([
-                'seller_email' => 'required|string|email',                
-                
+                'seller_email' => 'required|string|email',
+
             ]);
+
+            $input['referral_amount'] = 0.00;
         }
-        
+
+        if (!empty($request->referral_amount) && $request->referral_amount >= $request->price) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Referral bonus must be less than product price',
+
+            ], 400);
+        }
+
         try {
             $user = auth('api')->user();
             $user_id = $user->id;
             $input = $request->all();
             $input['user_id']   = $user_id;
             $input['slug']   = date('dmyHis');
-            $input['product_number']   = date('dmyHis');  
+            $input['product_number']   = date('dmyHis');
 
-                
-            
+
             $product = Product::create($input);
-            
-            
-            
-            if($product && $product->transaction_type == 'buy'){
-                
+
+
+            if ($product && $product->transaction_type == 'buy') {
+
                 $secondary_user = User::where('email', $request->get('seller_email'))->first();
                 $transaction['product_id'] = $product->id;
-                if($secondary_user){
-                    
+                if ($secondary_user) {
+
                     $transaction['user_id'] = $secondary_user->id;
-                }
-                else{
-                    
+                } else {
+
                     $input['email'] = $request['seller_email'];
                     $input['password'] = 'defualt';
                     $new_user = User::create($input);
 
-                    $secondary_user['email'] = $new_user->email; 
-                    $transaction['user_id'] = $new_user->id;                   
-                   
+                    $secondary_user['email'] = $new_user->email;
+                    $transaction['user_id'] = $new_user->id;
                 }
                 $transaction['quantity'] = $product->quantity;
-                $t_ref = 'PD_'.Str::random(8).date('dmyHis');
+                $t_ref = 'PD_' . Str::random(8) . date('dmyHis');
                 $transaction['transaction_ref'] = $t_ref;
                 //$transaction['amount'] = $product->quantity * $product->price;
                 Transaction::create($transaction);
-                
+
                 $new_transaction = Transaction::where('transaction_ref', $t_ref)->with('product')->first();
 
-            $emailTransaction['id'] = $new_transaction->id;
-            $emailTransaction['transaction_ref'] = $t_ref;
-            $emailTransaction['product_id'] = $new_transaction->product_id;
-            $emailTransaction['product_name'] = $new_transaction->product->name;
-            $emailTransaction['product_number'] = $new_transaction->product->product_number;
-            $emailTransaction['type'] = $new_transaction->product->type;
-            $emailTransaction['total_quantity'] = $new_transaction->quantity;
-            $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
-            $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
+                $emailTransaction['id'] = $new_transaction->id;
+                $emailTransaction['transaction_ref'] = $t_ref;
+                $emailTransaction['product_id'] = $new_transaction->product_id;
+                $emailTransaction['product_name'] = $new_transaction->product->name;
+                $emailTransaction['product_number'] = $new_transaction->product->product_number;
+                $emailTransaction['type'] = $new_transaction->product->type;
+                $emailTransaction['total_quantity'] = $new_transaction->quantity;
+                $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
+                $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
 
 
-            Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $emailTransaction));
-             Mail::to($user)->send(new CreateProductMail($user, $product));
-                
+                Mail::to($secondary_user['email'])->send(new SellerAcceptTransactionMail($secondary_user['email'], $user->email, $emailTransaction));
+                Mail::to($user)->send(new CreateProductMail($user, $product));
+
                 return response()->json([
                     'status' => 'success',
                     'message' => 'success',
                     'data' => $product
                 ]);
             }
-            
 
 
-           Mail::to($user)->send(new CreateProductMail($user, $product));
+
+            Mail::to($user)->send(new CreateProductMail($user, $product));
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
                 'data' => $product
             ]);
-
-        } 
-
-        catch (Exception $e) {
+        } catch (\Exception $e) {
             return $e;
         }
         // catch (\Throwable $th) {
@@ -316,7 +278,7 @@ class ProductController extends Controller
         //     });
         // }
 
-        
+
     }
 
     /**
@@ -388,24 +350,22 @@ class ProductController extends Controller
     // deleting a product only if it doesn't have a transaction
     public function destroy($id)
     {
-        
+
         $product = Product::where('id', $id)->get();
 
-        if($product->transaction){
-        
-        return response()->json([
-            'status' => 'error',
-            'message' => 'You can not delete this Product'
-        ], 401);
+        if ($product->transaction) {
 
-        }
-        else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You can not delete this Product'
+            ], 401);
+        } else {
             $product->delete();
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-           
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+
+            ]);
         }
     }
 

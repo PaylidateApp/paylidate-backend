@@ -23,7 +23,7 @@ Route::namespace('Api')->group(function () {
 
     Route::get('artisan-command/{password}', 'ArtisanCommandController@index');
 
-//Route::get('transfer', 'WithdrawalController@transfer_to_bank');
+    //Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
 
     Route::post('login', 'AuthController@login');
@@ -31,9 +31,9 @@ Route::namespace('Api')->group(function () {
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
-    
+
     Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
-   
+
 
     Route::group(['prefix' => 'password'], function () {
         Route::post('create', 'PasswordResetController@create');
@@ -50,7 +50,7 @@ Route::namespace('Api')->group(function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
         Route::post('user/update', 'AuthController@update');
-        
+
         Route::post('resendVerificationEmail/{email}', 'AuthController@resendVerificationEmail');
         Route::post('verifyEmail/{token}', 'AuthController@verifyEmail');
 
@@ -58,7 +58,7 @@ Route::namespace('Api')->group(function () {
         // Route::post('user/avatar', 'UsersController@avatar');
         // Route::get('user/post', 'UsersController@post');
         // Route::post('user/validate', 'UsersController@validate_password');
-        
+
 
         Route::post('open-dispute', 'DisputeController@open_dispute');
         Route::post('resolve-dispute', 'DisputeController@resolve_dispute');
@@ -83,10 +83,10 @@ Route::namespace('Api')->group(function () {
         Route::post('transaction/decline/{id}', 'TransactionController@decline');
         Route::post('transaction/confirm/{id}', 'TransactionController@confirm');
         Route::post('transaction/cancel/{id}', 'TransactionController@cancel');
-        
+
         Route::resource('payment', 'PaymentController');
         Route::resource('card', 'CardController');
-        Route::post('payment/link', 'PaymentController@getPaymentLink');
+        //Route::post('payment/link', 'PaymentController@getPaymentLink');
         Route::post('make-payment', 'PaymentController@make_payment');
         Route::resource('transaction', 'TransactionController');
         Route::resource('account', 'UserAccountController');
@@ -96,26 +96,27 @@ Route::namespace('Api')->group(function () {
         Route::resource('user-bank', 'BankController');
         Route::post('verify-account', 'BankController@verify_account_number');
 
-       // Route::resource('withdraw', 'WithdrawalController');
+        // Route::resource('withdraw', 'WithdrawalController');
         Route::get('withdraw-requests', 'WithdrawalController@index');
         Route::post('request-withdrawal', 'WithdrawalController@request_withdrawal');
         Route::post('transfer_to_bank', 'WithdrawalController@transfer_to_bank');
 
 
+        Route::get('referral-bonus', 'RefererController@index');
+
+        Route::post('request-referral-bonus-withdrawal', 'ReferralWidrawalController@request_withdrawal');
+
+        Route::get('referral-withdraw-requests', 'ReferralWidrawalController@index');
+        Route::post('transfer-referral-bonus-to-bank', 'ReferralWidrawalController@transfer_to_bank');
     });
-   
 });
 Route::get('get-users', 'UserController@index');
 Route::get('get-users/{id}', 'UserController@indexx');
 
 
 
-Route::group(['middleware' =>'auth:api', 'prefix' => 'admin'], function () {
+Route::group(['middleware' => 'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
     Route::get('users/total', 'AdminController@numbers_of_users');
-    
-
-
 });
-

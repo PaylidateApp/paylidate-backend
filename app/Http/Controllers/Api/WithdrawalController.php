@@ -25,7 +25,8 @@ class WithdrawalController extends Controller
 
     protected $flutterwaveService;
 
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->flutterwaveService = new FlutterwaveService;
     }
@@ -33,21 +34,18 @@ class WithdrawalController extends Controller
 
     public function index()
     {
-     try{
-        $withdrawalRequests = Withdrawal::with('user', 'transaction', 'payment', 'bank')->orderBy('created_at')->get();
-        
-        
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $withdrawalRequests
-        ]); 
+        try {
+            $withdrawalRequests = Withdrawal::with('user', 'transaction', 'payment', 'bank')->orderBy('created_at')->get();
 
-    }
-    catch (\Exception $e) {
-        return $e;
-    }
-        
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $withdrawalRequests
+            ]);
+        } catch (\Exception $e) {
+            return $e;
+        }
     }
 
     public function request_withdrawal(Request $request)
@@ -58,22 +56,22 @@ class WithdrawalController extends Controller
             'payment_id' => 'required|numeric',
             'bank_id' => 'required|numeric',
             'narration' => 'required|string',
-            'debit_currency' => 'required|string',           
-                   
+            'debit_currency' => 'required|string',
+
         ]);
 
-        
 
-   
-        try{
+
+
+        try {
             $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
             $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
-           
-            if($transaction || $payment){
+
+            if ($transaction || $payment) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'You have made a withdrawal request on this transaction already',
-                    
+
                 ], 422);
             }
 
@@ -82,59 +80,58 @@ class WithdrawalController extends Controller
             $input = $request->all();
             $input['user_id']   = $user_id;
             $input['status']   = false;
-            
+
             $withdrawal = Withdrawal::create($input);
-            
+
             Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
             Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
             Mail::to('holyphilzy@gmail.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
             Mail::to('sirlawattah@gmail.com')->send(new RequestWithdrawal('Lawrence', $request->transaction_id));
-            
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
                 'data' => $withdrawal
             ]);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function transfer_to_bank(Request $request){
+    public function transfer_to_bank(Request $request)
+    {
         //return 'sdof';
 
-        try{
-        $response = $this->flutterwaveService->transfer_to_bank($request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency);
-          //return $response;  
+        try {
+            $response = $this->flutterwaveService->transfer_to_bank($request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency);
+            //return $response;  
 
-          if($response['status'] == 'success'){
+            if ($response['status'] == 'success') {
 
-            $payment = Payment::where('id',$request->payment_id)->update(['withdrawn'=>true]);
-            
+                $payment = Payment::where('id', $request->payment_id)->update(['withdrawn' => true]);
 
-            $withdrawal = Withdrawal::find($request->id); 
-            $withdrawal->update([ 
-                'status' => true,
-                'f_withdrawal_id' => $response['data']['id']
-            ]);
 
-            
-            
+                $withdrawal = Withdrawal::find($request->id);
+                $withdrawal->update([
+                    'status' => true,
+                    'f_withdrawal_id' => $response['data']['id']
+                ]);
 
+
+
+
+                return response()->json([
+                    'status' => $response['status'],
+                    'message' => $response['message'],
+                    'data' => $response['data']
+                ]);
+            }
             return response()->json([
-                'status' => $response['status'],
-                'message' => $response['message'],
-                'data' => $response['data']
-            ]);
-        }
-        return response()->json([
-            'status' => 'error',
-            'message' => $response['message']
-            
-        ], 422);
-        }
-        catch (\Exception $e) {
+                'status' => 'error',
+                'message' => $response['message']
+
+            ], 422);
+        } catch (\Exception $e) {
             return $e;
         }
     }

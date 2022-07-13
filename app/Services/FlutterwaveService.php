@@ -8,14 +8,15 @@ use Illuminate\Support\Facades\Http;
 class FlutterwaveService
 {
 
-    public function __construct(){
-
+    public function __construct()
+    {
     }
 
-    public function virtualCard($currency, $amount, $name){
+    public function virtualCard($currency, $amount, $name)
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards', [
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/virtual-cards', [
             "currency" => $currency,
             "amount" => $amount,
             "billing_name" => $name
@@ -24,19 +25,21 @@ class FlutterwaveService
         return $response;
     }
 
-    
-    public function getvirtualCard($card_id){
+
+    public function getvirtualCard($card_id)
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->get(env('FLW_BASE_URL').'/v3/virtual-cards');
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->get(env('FLW_BASE_URL') . '/v3/virtual-cards');
 
         return $response;
     }
 
-    public function withdrawFromVirtualCard($card_id, $amount){
+    public function withdrawFromVirtualCard($card_id, $amount)
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $card_id .'/withdraw', [
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/virtual-cards/' . $card_id . '/withdraw', [
             "amount" => $amount,
         ]);
 
@@ -44,10 +47,11 @@ class FlutterwaveService
     }
 
     // fund virtual card with payment
-    public function fundVirtualCard($card_id, $amount, $debit_currency = 'NGN'){
+    public function fundVirtualCard($card_id, $amount, $debit_currency = 'NGN')
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-cards/'. $card_id .'/fund', [
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/virtual-cards/' . $card_id . '/fund', [
             "amount" => $amount,
             "debit_currency" => $debit_currency,
         ]);
@@ -57,12 +61,13 @@ class FlutterwaveService
 
 
 
-    public function getPaymentLink($name, $amount, $currency, $redirect_url, $meta, $customer, $customizations){
-       
+    public function getPaymentLink($name, $amount, $currency, $redirect_url, $meta, $customer, $customizations)
+    {
+
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/payments', [
-            "tx_ref" => $name."-tx-".time(),
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/payments', [
+            "tx_ref" => $name . "-tx-" . time(),
             "amount" => $amount,
             "currency" => $currency,
             "redirect_url" => $redirect_url,
@@ -73,59 +78,63 @@ class FlutterwaveService
         ]);
 
         return $response;
-
     }
 
 
-    public function getRate($amount, $destination_currency, $source_currency){
+    public function getRate($amount, $destination_currency, $source_currency)
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/transfers/rates', [
-                'amount' => $amount,
-                'destination_currency' => $destination_currency,
-                'source_currency' => $source_currency
-            ]);
-
-        return $response;
-    }
-
-    public function banks(){
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/banks/NG');
-
-        return $response;
-    }
-
-    public function verifyBankAccountNumber($account_num, $bank_code){
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/accounts/resolve', [
-            "account_number" => $account_num,
-            "account_bank" => $bank_code,
-           
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->get(env('FLW_BASE_URL') . '/v3/transfers/rates', [
+            'amount' => $amount,
+            'destination_currency' => $destination_currency,
+            'source_currency' => $source_currency
         ]);
 
         return $response;
     }
 
-    public function createVirtualAccount($email, $is_permanent, $name){
+    public function banks()
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/virtual-account-numbers', [
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->get(env('FLW_BASE_URL') . '/v3/banks/NG');
+
+        return $response;
+    }
+
+    public function verifyBankAccountNumber($account_num, $bank_code)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/accounts/resolve', [
+            "account_number" => $account_num,
+            "account_bank" => $bank_code,
+
+        ]);
+
+        return $response;
+    }
+
+    public function createVirtualAccount($email, $is_permanent, $name)
+    {
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->post(env('FLW_BASE_URL') . '/v3/virtual-account-numbers', [
             "email" => $email,
             "is_permanent" => $is_permanent,
-            "tx_ref" => $name.'-'.time(),
+            "tx_ref" => $name . '-' . time(),
             "narration" => $name,
         ]);
 
         return $response;
     }
 
-    public function getTransaction($transaction_id){
+    public function getTransaction($transaction_id)
+    {
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-            ])->get(env('FLW_BASE_URL').'/v3/transactions/'. $transaction_id .'\/verify/');
+            'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+        ])->get(env('FLW_BASE_URL') . '/v3/transactions/' . $transaction_id . '\/verify/');
 
         return $response;
     }
@@ -149,28 +158,29 @@ class FlutterwaveService
         return base64_encode($encData);
     }
 
-    public function payviacard($data){
-    
+    public function payviacard($data)
+    {
+
         error_reporting(E_ALL);
-        ini_set('display_errors',1);
-        
-        
+        ini_set('display_errors', 1);
+
+
         $SecKey = env('FLW_SECRET_KEY');
-        
-        $key = $this->getKey($SecKey); 
-        
+
+        $key = $this->getKey($SecKey);
+
         $dataReq = json_encode($data);
-        
-        $post_enc = $this->encrypt3Des( $dataReq, $key );
-        
-         $response = Http::withHeaders([
-            "Content-Type"=> "application/json"
+
+        $post_enc = $this->encrypt3Des($dataReq, $key);
+
+        $response = Http::withHeaders([
+            "Content-Type" => "application/json"
         ])->post(env('RAVE_BASE_URL') . '/flwv3-pug/getpaidx/api/charge', [
             'PBFPubKey' => env('FLW_PUBLIC_KEY'),
             'client' => $post_enc,
             'alg' => '3DES-24'
         ]);
-        
+
         $response = json_decode($response, true);
 
         return $response;
@@ -184,18 +194,17 @@ class FlutterwaveService
         ini_set('display_errors', 1);
 
         $response = Http::withHeaders([
-            "Content-Type"=> "application/json"
+            "Content-Type" => "application/json"
         ])->post(env('RAVE_BASE_URL') . '/flwv3-pug/getpaidx/api/validatecharge', [
             "PBFPubKey" => env('FLW_PUBLIC_KEY'),
             "transaction_reference" => $flwRef,
             "otp" => $otp
         ]);
 
-        
+
         $response = json_decode($response, true);
 
         return $response;
-
     }
 
     public function verify_payment($txRef)
@@ -205,42 +214,38 @@ class FlutterwaveService
         ini_set('display_errors', 1);
 
         $response = Http::withHeaders([
-            "Content-Type"=> "application/json"
+            "Content-Type" => "application/json"
         ])->post(env('RAVE_BASE_URL') . "/flwv3-pug/getpaidx/api/v2/verify", [
             'SECKEY' => env('FLW_SECRET_KEY'),
             "txref" => $txRef,
         ]);
-       
+
 
         $response = json_decode($response, true);
 
         return $response;
-
     }
 
 
-    public function transfer_to_bank($account_bank, $account_number, $amount, $narration, $currency = 'NGN', $reference, $debit_currency = 'NGN'){
-       try{
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer '.env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL').'/v3/transfers', [
-            
-            "account_bank"=> $account_bank,
-            "account_number"=> $account_number,
-            "amount"=> $amount,
-            "narration"=> $narration,
-            "currency"=> $currency,
-            "reference"=> 'PD_'.Str::random(8).date('dmyHis'),
-            "debit_currency"=> $debit_currency
-        ]);
+    public function transfer_to_bank($account_bank, $account_number, $amount, $narration, $currency = 'NGN', $debit_currency = 'NGN')
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
+            ])->post(env('FLW_BASE_URL') . '/v3/transfers', [
 
-        return $response;
-         }
-        catch (\Exception $e) {
+                "account_bank" => $account_bank,
+                "account_number" => $account_number,
+                "amount" => $amount,
+                "narration" => $narration,
+                "currency" => $currency,
+                "reference" => 'PD_' . Str::random(8) . date('dmyHis'),
+                "debit_currency" => $debit_currency
+            ]);
+
+            return $response;
+        } catch (\Exception $e) {
             return $e;
         }
     }
-
-
-
 }

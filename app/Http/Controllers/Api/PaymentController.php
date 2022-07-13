@@ -8,10 +8,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AddMoneyMail;
 use App\Payment;
-use App\UserCard;
-use App\User;
-use App\VirtualCard;
-use App\Transaction;
+use App\Referer;
 use App\Services\FlutterwaveService;
 use App\Product;
 use Auth;
@@ -28,7 +25,8 @@ class PaymentController extends Controller
 {
     protected $flutterwaveService;
 
-    public function __construct(){
+    public function __construct()
+    {
 
         $this->flutterwaveService = new FlutterwaveService;
     }
@@ -54,8 +52,6 @@ class PaymentController extends Controller
      */
     public function create()
     {
-
-
     }
 
 
@@ -74,47 +70,47 @@ class PaymentController extends Controller
      *
      * @return [string] message
      */
-    public function store(Request $request)
-    {
+    // public function store(Request $request)
+    // {
 
-        $payment = Payment::create([
-            'user_id' => auth('api')->user()->id,
-            'payment_ref' => $request->flw_T_ref,
-            'payment_id' => $request->flw_T_id,
-            'transaction_id' => $request->transaction_id,
-            //'transaction_ref' => $request->tx_ref,
-            // 'status' => $request->status,
-            'description' => $request->description,
-       ]);
+    //     $payment = Payment::create([
+    //         'user_id' => auth('api')->user()->id,
+    //         'payment_ref' => $request->flw_T_ref,
+    //         'payment_id' => $request->flw_T_id,
+    //         'transaction_id' => $request->transaction_id,
+    //         //'transaction_ref' => $request->tx_ref,
+    //         // 'status' => $request->status,
+    //         'description' => $request->description,
+    //    ]);
 
 
-       $response = $this->flutterwaveService->verify_payment( $request->flw_T_id);
+    //    $response = $this->flutterwaveService->verify_payment( $request->flw_T_id);
 
-       
-       
-       if ($response['data']['status'] === "successful"
-        && $response['data']['amount'] === $payment->transaction->amount
-        && $response['data']['currency'] === $payment->currency) {
 
-            $verified_payment = Payment::where('id', $payment->id)->update([
-                'verified' => true //payment verified
-            ]);
-    
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $verified_payment
-            ]);
-        } 
-        
-        else {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Payment not verified',            
-            ]);
-        }
 
-    }
+    //    if ($response['data']['status'] === "successful"
+    //     && $response['data']['amount'] === $payment->transaction->amount
+    //     && $response['data']['currency'] === $payment->currency) {
+
+    //         $verified_payment = Payment::where('id', $payment->id)->update([
+    //             'verified' => true //payment verified
+    //         ]);
+
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'message' => 'success',
+    //             'data' => $verified_payment
+    //         ]);
+    //     } 
+
+    //     else {
+    //         return response()->json([
+    //             'status' => 'error',
+    //             'message' => 'Payment not verified',            
+    //         ]);
+    //     }
+
+    // }
 
 
 
@@ -134,65 +130,68 @@ class PaymentController extends Controller
      * @return [string] message
      */
     public function make_payment(Request $request)
-    {        
+    {
 
-        try{
+        try {
 
             $old_payment = Payment::where('payment_id', $request->payment_id)->first();
 
-        if($old_payment && $old_payment->verified == true){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid payment verification',            
+            if ($old_payment && $old_payment->verified == true) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid payment verification',
+                ]);
+            }
+
+            if ($old_payment) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'This Payment has been verified',
+                ]);
+            }
+
+            $payment = Payment::create([
+                'user_id' => auth('api')->user()->id,
+                'payment_ref' => $request->payment_ref,
+                'payment_id' => $request->payment_id,
+                'transaction_id' => $request->transaction_id,
+                'verified' => true,
+                // 'status' => $request->status,
+                'description' => $request->description,
             ]);
-        }
 
-        if($old_payment){
-            return response()->json([
-                'status' => 'error',
-                'message' => 'This Payment has been verified',            
-            ]);
-        }
+            $product = product::where('id', $payment->transaction->product_id)->first();
 
-        $payment = Payment::create([
-            'user_id' => auth('api')->user()->id,
-            'payment_ref' => $request->payment_ref,
-            'payment_id' => $request->payment_id,
-            'transaction_id' => $request->transaction_id,
-            'verified' => true,
-            // 'status' => $request->status,
-            'description' => $request->description,
-       ]);
+            if ($payment) {
+                $product->update([
+                    'quantity' => $product->quantity - $payment->transaction->quantity
 
-       $product = product::where('id', $payment->transaction->product_id)->first();
+                ]);
 
-       if($payment){
-        $product->update([ 
-            'quantity' => $product->quantity - $payment->transaction->quantity
-            
-        ]);
+                $transaction_amount = $payment->transaction->quantity *  $product->price;
+                $referral_amount = $payment->transaction->quantity * $product->referral_amount;
+                $payment->transaction->update([
+                    'amount' => $transaction_amount - $referral_amount,
 
-        $payment->transaction->update([ 
-            'amount' => $payment->transaction->quantity *  $product->price,
+                ]);
 
-        ]);
-    }
+                Referer::where('id', $payment->transaction->referer_id)->update([
+                    'amount' => $referral_amount,
+                ]);
+            }
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
                 'data' => $payment
             ]);
-
-            }
-            catch (Exception $e) {
-               return $e;
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'An error occured while trying to verify your payment. Please contact paylidate.com ',            
-                ]);
-            }
-
+        } catch (Exception $e) {
+            //return $e;
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occured while trying to verify your payment. Please contact paylidate.com ',
+            ]);
+        }
     }
 
 
@@ -225,7 +224,7 @@ class PaymentController extends Controller
     }
 
 
-    
+
     public function update(Request $request, $id)
     {
         $input = $request->all();
@@ -256,23 +255,23 @@ class PaymentController extends Controller
 
 
     // Initiate card payment
-    public function pay_with_card(Request $request){
+    public function pay_with_card(Request $request)
+    {
         $user = auth('api')->user();
         $meta = new stdClass();
         $meta->consumer_id =  $user->name;
         $meta->consumer_mac = "";
         $name = explode(' ', $user->name);
         $lastName = "";
-        if(count($name)>1){
+        if (count($name) > 1) {
             $lastName = $name[0];
         }
 
-        if(strlen($request->cardno)){
-
+        if (strlen($request->cardno)) {
         }
-  
+
         $data = array(
-        
+
             'PBFPubKey' => env('FLW_PUBLIC_KEY'),
             'cardno' => $request->cardno,
             'currency' => $request->currency,
@@ -288,92 +287,87 @@ class PaymentController extends Controller
             "lastname" => $lastName,
             'txRef' => 'PD' . $user->id . date('dmyHis'),
             'meta' => $meta,
-            'redirect_url' => $request->redirect_url,           
-        
+            'redirect_url' => $request->redirect_url,
+
         );
-        
+
 
         try {
-            
-        //return 'helllooo';
 
-        $response = $this->flutterwaveService->payviacard($data);
-    
+            //return 'helllooo';
 
-         if(empty($response['data']) || $response["status"] != "success" || isset($response['data']['code'])){
-            return $response;
-            return response()->json([
-                 'status' => 'error',
-                 'message' => 'An error occured while trying to initiate transaction. Please try again',
-                
-             ], 417);
-         }
-       
-        if($response["status"] == "success" && isset($response["data"]['authurl']) && $response["data"]['authurl'] != 'N/A') {
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Payment initiated successfully',
-                        'data' => $response['data']
-                    ]);
-                  
-            }
-
-            
-        if($response["status"] == "success" && $response["data"]["suggested_auth"] == "PIN") {
-           // $new_data = [...$data];
-            $data["suggested_auth"] = "PIN";
             $response = $this->flutterwaveService->payviacard($data);
 
-                    return response()->json([
+
+            if (empty($response['data']) || $response["status"] != "success" || isset($response['data']['code'])) {
+                return $response;
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'An error occured while trying to initiate transaction. Please try again',
+
+                ], 417);
+            }
+
+            if ($response["status"] == "success" && isset($response["data"]['authurl']) && $response["data"]['authurl'] != 'N/A') {
+                return response()->json([
                     'status' => 'success',
                     'message' => 'Payment initiated successfully',
                     'data' => $response['data']
-                ]);                
-            
-         
-        }
-        
-       if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "NOAUTH_INTERNATIONAL") {
-       
-        throw ValidationException::withMessages([
-            'error' => ['This card can not be charge']
-        ]);    
+                ]);
+            }
 
 
-            $data["suggested_auth"] = "NOAUTH_INTERNATIONAL";
-            $data["billingzip"] = "07205";
-            $data["billingcity"] = "Hillside";
-            $data["billingaddress"] = "470 Mundet PI";
-            $data["billingstate"] = "NJ";
-            $data["billingcountry"] = "US";
+            if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "PIN") {
+                // $new_data = [...$data];
+                $data["suggested_auth"] = "PIN";
+                $response = $this->flutterwaveService->payviacard($data);
 
-            
-            $response = $this->flutterwaveService->payviacard($data);
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Payment initiated successfully',
+                    'data' => $response['data']
+                ]);
+            }
+
+            if ($response["status"] == "success" && $response["data"]["suggested_auth"] == "NOAUTH_INTERNATIONAL") {
+
+                throw ValidationException::withMessages([
+                    'error' => ['This card can not be charge']
+                ]);
+
+
+                $data["suggested_auth"] = "NOAUTH_INTERNATIONAL";
+                $data["billingzip"] = "07205";
+                $data["billingcity"] = "Hillside";
+                $data["billingaddress"] = "470 Mundet PI";
+                $data["billingstate"] = "NJ";
+                $data["billingcountry"] = "US";
+
+
+                $response = $this->flutterwaveService->payviacard($data);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Payment initiated successfully',
+                    'data' => $response['data']
+                ]);
+
+                return $response;
+            }
+        } catch (Exception $e) {
+            return $e;
 
             return response()->json([
-            'status' => 'success',
-            'message' => 'Payment initiated successfully',
-            'data' => $response['data']
-        ]);
+                'status' => 'error',
+                'message' => 'An error occured while trying to initiate transaction. Please try again',
 
-        return $response;
-
+            ], 417);
         }
-    } catch (Exception $e) {
-        return $e;
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'An error occured while trying to initiate transaction. Please try again',
-            
-        ], 417);
-    }
-         
-        
     }
 
-    
-    public function validate_payment(Request $request){
+
+    public function validate_payment(Request $request)
+    {
         $response = $this->flutterwaveService->validate_payment($request->flwRef, $request->otp);
 
         return response()->json([
@@ -381,12 +375,12 @@ class PaymentController extends Controller
             'message' => 'Payment validation successful',
             'data' => $response['data']
         ]);
-
     }
 
-    public function verify_payment(Request $request){
+    public function verify_payment(Request $request)
+    {
 
-        $response = $this->flutterwaveService->verify_payment( $request->flw_T_id);
+        $response = $this->flutterwaveService->verify_payment($request->flw_T_id);
 
         return response()->json([
             'status' => 'success',
@@ -395,9 +389,10 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function get_rate(Request $request){
+    public function get_rate(Request $request)
+    {
         $response = $this->flutterwaveService->getRate($request->amount, $request->destination_currency, $request->source_currency);
-        
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -405,14 +400,14 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function banks(){
+    public function banks()
+    {
         $response = $this->flutterwaveService->banks();
-   
+
         return response()->json([
             'status' => 'success',
             'message' => 'success',
             'data' => $response['data']
         ]);
     }
-
 }

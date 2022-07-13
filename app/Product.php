@@ -11,8 +11,8 @@ class Product extends Model
     use HasSlug;
 
     protected $fillable = [
-        'user_id','name','image','product_number','slug','price','quantity','type','transaction_type',
-       'product_status','description'
+        'user_id', 'name', 'image', 'product_number', 'referral_amount', 'slug', 'price', 'quantity', 'type', 'transaction_type',
+        'product_status', 'description'
     ];
 
     public function user()
@@ -23,7 +23,7 @@ class Product extends Model
     /**
      * Get the options for generating the slug.
      */
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
@@ -51,5 +51,4 @@ class Product extends Model
     {
         return $this->hasMany('App\Transaction');
     }
-
 }

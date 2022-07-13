@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'email_token', 'password','phone','avatar','active','is_admin','is_staff'
+        'name', 'email', 'email_token', 'password', 'phone', 'avatar', 'active', 'is_admin', 'is_staff', 'referral_token'
     ];
 
     /**
@@ -53,12 +53,16 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\UserAccount');
     }
-   
+    public function bank()
+    {
+        return $this->hasOne('App\Bank');
+    }
+
     public function products()
     {
         return $this->hasMany('App\Product');
     }
-    
+
     public function transactions()
     {
         return $this->hasMany('App\Transaction');
@@ -74,4 +78,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Withdrawal');
     }
 
+    public function referral()
+    {
+        return $this->hasMany('App\Referer');
+    }
 }

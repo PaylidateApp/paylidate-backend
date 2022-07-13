@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $fillable = [
-        'user_id','product_id','quantity','transaction_ref','status',
-       'amount','accept_transaction','dispute','description'
+        'user_id', 'product_id', 'quantity', 'transaction_ref', 'status',
+        'amount', 'accept_transaction', 'dispute', 'description', 'referer_id'
     ];
 
     public function secondary_user()
@@ -26,6 +26,11 @@ class Transaction extends Model
         return $this->belongsTo('App\Product');
     }
 
+    public function referral()
+    {
+        return $this->belongsTo('App\Referer');
+    }
+
     public function payment()
     {
         return $this->hasOne('App\Payment');
@@ -39,5 +44,4 @@ class Transaction extends Model
     {
         return $this->hasOnce('App\Withdrawal');
     }
-    
 }
