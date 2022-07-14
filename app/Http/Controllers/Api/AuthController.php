@@ -146,15 +146,15 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        \Artisan::call('migrate');
-        $userss = User::all();
-        foreach ($userss as $user) {
-            $user->update(
-                [
-                    'referral_token' => Str::random(10) . date('dmyHis'),
-                ]
-            );
-        }
+        // \Artisan::call('migrate');
+        // $userss = User::all();
+        // foreach ($userss as $user) {
+        //     $user->update(
+        //         [
+        //             'referral_token' => Str::random(10) . date('dmyHis'),
+        //         ]
+        //     );
+        // }
 
         $credentials = request(['email', 'password']);
         //$credentials['active'] = 1;
