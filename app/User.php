@@ -78,6 +78,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Withdrawal');
     }
 
+    public function referral_bonus_withdrawal()
+    {
+        return $this->hasMany('App\ReferralWidrawal');
+    }
+
     public function referral()
     {
         return $this->hasMany('App\Referer');

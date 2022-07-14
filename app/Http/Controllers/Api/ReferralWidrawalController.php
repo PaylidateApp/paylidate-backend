@@ -106,6 +106,9 @@ class ReferralWidrawalController extends Controller
                     'f_withdrawal_id' => $response['data']['id']
                 ]);
 
+                Referer::where('transfer_status', false)->update([
+                    'transfer_status' => true
+                ]);
 
 
 

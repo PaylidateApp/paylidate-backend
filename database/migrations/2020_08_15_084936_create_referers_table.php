@@ -19,6 +19,7 @@ class CreateReferersTable extends Migration
             $table->decimal('amount')->default(0.00); // total referral amount for a transaction           
             $table->boolean('withdrawal_status')->default(false); // 0= request pendding, 1= withdrawal complete
             $table->boolean('transaction_status')->default(false); // false= not complete, true= for complete
+            $table->boolean('transfer_status')->default(false); // false= not complete, true= for complete
             $table->timestamps();
         });
     }
