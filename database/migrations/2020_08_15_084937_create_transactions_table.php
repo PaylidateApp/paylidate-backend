@@ -17,12 +17,10 @@ class CreateTransactionsTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->nullable(); // transaction acceptor/decliner user_id
             $table->bigInteger('product_id'); 
-           // $table->string('transaction_id')->nullable(); // transaction_id from flutterwave
             $table->integer('quantity')->unsigned()->nullable()->default(0); // total quantity purchased
             $table->string('transaction_ref')->nullable(); //Auto generate
-            $table->integer('status')->unsigned()->default(0);// 0=pending, 1=completed, 2=failed
-            //$table->boolean('verified')->default(false);// true if the transaction is verified and complete
-            $table->boolean('accept_transaction')->nullable(); // accpting a transation
+            $table->integer('status')->unsigned()->default(0);// 0=pending, 1=completed, 2=failed or canceled
+            $table->boolean('accept_transaction')->nullable(); // accepting a transation
             $table->boolean('dispute')->nullable()->default(false);
             $table->decimal('amount')->nullable()->default(0.00); // total amount           
             $table->longText('description')->nullable();

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
-       'user_id','product_id','payment_id','transaction_id','payment_ref','status','description',
+       'user_id','product_id','payment_id','transaction_id','payment_ref','status', 'refund','description',
        'payment_method','currency','verified','balance_before','balance_after'
     ];
 
@@ -29,6 +29,10 @@ class Payment extends Model
     public function withdrawal()
     {
         return $this->hasOne('App\Withdrawal');
+    }
+    public function refund()
+    {
+        return $this->hasOne('App\Refund');
     }
 
 }

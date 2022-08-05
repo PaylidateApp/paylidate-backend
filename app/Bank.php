@@ -15,6 +15,10 @@ class Bank extends Model
     {
         return $this->hasMany('App\Withdrawal');
     }
+    public function refund()
+    {
+        return $this->hasMany('App\Refund');
+    }
     public function referral_bonus_withdrawal()
     {
         return $this->hasMany('App\ReferralWidrawal');

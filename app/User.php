@@ -73,6 +73,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Payment');
     }
 
+    public function refund()
+    {
+        return $this->hasMany('App\Refund');
+    }
     public function withdrawal()
     {
         return $this->hasMany('App\Withdrawal');

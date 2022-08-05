@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use Auth;
 use App\Product;
 use App\Referer;
+use App\Refund;
 
 /**
  * @group  Transaction management
@@ -38,8 +39,8 @@ class TransactionController extends Controller
         $filterTransaction = [];
         foreach ($transactions as $transaction) {
             if ($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id) {
-        $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
-        array_push($filterTransaction, $transaction);
+                $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
+                array_push($filterTransaction, $transaction);
                 continue;
             }
         }
@@ -77,6 +78,7 @@ class TransactionController extends Controller
         }
 
         $referral_id = null;
+        // this block of code check if there is referal banus, then it create a referal for that transaction
         if ($refer_user) {
 
             $referral = Referer::create([
@@ -127,15 +129,6 @@ class TransactionController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-    }
 
     // get individual transaction
     public function get_transaction($T_ref)
@@ -150,10 +143,12 @@ class TransactionController extends Controller
         } else {
             $userID = $transaction->user_id;
         }
-
+        
+        
         $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
-        $transaction['bank'] = Bank::where('user_id', $userID)->first();
+        $transaction['bank'] = Bank::where('user_id', auth('api')->user()->id)->first();
         $transaction['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
+        $transaction['refund'] = Refund::where('transaction_id', $transaction->id)->first();
 
 
         return response()->json([
@@ -222,7 +217,8 @@ class TransactionController extends Controller
     public function confirm($id)
     {
         $transaction = Transaction::where('id', $id)->with('product')->first();
-
+        
+            // This condition checks the id if the authenticated user is one buying thr poduct
         if ($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) {
             $transaction->update([
                 'status' => 1
@@ -265,7 +261,7 @@ class TransactionController extends Controller
     public function cancel($id)
     {
         $transaction = Transaction::where('id', $id)->first();
-        if ($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) {
+        if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
             $transaction->update([
                 'status' => 2
             ]);

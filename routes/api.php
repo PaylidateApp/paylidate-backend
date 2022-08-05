@@ -102,10 +102,14 @@ Route::namespace('Api')->group(function () {
         Route::post('transfer_to_bank', 'WithdrawalController@transfer_to_bank');
 
 
+        Route::get('refund-requests', 'RefundController@index');
+        Route::post('request-refund', 'RefundController@request_Refund');
+        Route::post('transfer_to_bank', 'RefundController@transfer_to_bank');
+
+
         Route::get('referral-bonus', 'RefererController@index');
 
         Route::post('request-referral-bonus-withdrawal', 'ReferralWidrawalController@request_withdrawal');
-
         Route::get('referral-withdraw-requests', 'ReferralWidrawalController@index');
         Route::post('transfer-referral-bonus-to-bank', 'ReferralWidrawalController@transfer_to_bank');
     });

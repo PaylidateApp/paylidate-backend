@@ -2,27 +2,23 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Withdrawal;
+use App\Refund;
+use Illuminate\Http\Request;
 use App\Services\FlutterwaveService;
 use App\Http\Controllers\Controller;
-//use Illuminate\Validation\ValidationException;
-use App\Mail\RequestWithdrawal;
-use Illuminate\Support\Facades\Mail;
+//use App\Mail\RequestRefund;
+//use Illuminate\Support\Facades\Mail;
 //use App\Bank;
 use App\Payment;
 //use Auth;
-use Illuminate\Http\Request;
 
-
-
-class WithdrawalController extends Controller
+class RefundController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
     protected $flutterwaveService;
 
     public function __construct()
@@ -35,20 +31,20 @@ class WithdrawalController extends Controller
     public function index()
     {
         try {
-            $withdrawalRequests = Withdrawal::with('user', 'transaction', 'payment', 'bank')->orderBy('created_at')->get();
+            $RefundRequests = Refund::with('user', 'transaction', 'payment', 'bank')->orderBy('created_at')->get();
 
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
-                'data' => $withdrawalRequests
+                'data' => $RefundRequests
             ]);
         } catch (\Exception $e) {
             return $e;
         }
     }
 
-    public function request_withdrawal(Request $request)
+    public function request_Refund(Request $request)
     {
 
         $request->validate([
@@ -64,13 +60,13 @@ class WithdrawalController extends Controller
 
 
         try {
-            $transaction = Withdrawal::where('transaction_id', $request->transaction_id)->first();
-            $payment = Withdrawal::where('payment_id', $request->payment_id)->first();
+            $transaction = Refund::where('transaction_id', $request->transaction_id)->first();
+            $payment = Refund::where('payment_id', $request->payment_id)->first();
 
             if ($transaction || $payment) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'You have made a withdrawal request on this transaction already',
+                    'message' => 'You have made a refund request on this transaction already',
 
                 ], 422);
             }
@@ -81,17 +77,17 @@ class WithdrawalController extends Controller
             $input['user_id']   = $user_id;
             $input['status']   = false;
 
-            $withdrawal = Withdrawal::create($input);
+            $refund = Refund::create($input);
 
-            Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
-            Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
-            Mail::to('holyphilzy@gmail.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
-            Mail::to('sirlawattah@gmail.com')->send(new RequestWithdrawal('Lawrence', $request->transaction_id));
+            //Mail::to($user->email)->send(new RequestWithdrawal($user->name, $request->transaction_id));
+            //Mail::to('hello@paylidate.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
+            //Mail::to('holyphilzy@gmail.com')->send(new RequestWithdrawal('Admin', $request->transaction_id));
+            //Mail::to('sirlawattah@gmail.com')->send(new RequestWithdrawal('Lawrence', $request->transaction_id));
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
-                'data' => $withdrawal
+                'data' => $refund
             ]);
         } catch (\Exception $e) {
             return $e;
@@ -108,11 +104,11 @@ class WithdrawalController extends Controller
 
             if ($response['status'] == 'success') {
 
-                $payment = Payment::where('id', $request->payment_id)->update(['withdrawn' => true]);
+                $payment = Payment::where('id', $request->payment_id)->update(['refund' => true]);
 
 
-                $withdrawal = Withdrawal::find($request->id);
-                $withdrawal->update([
+                $refund = Refund::find($request->id);
+                $refund->update([
                     'status' => true,
                     'f_withdrawal_id' => $response['data']['id']
                 ]);
@@ -160,10 +156,10 @@ class WithdrawalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Withdrawal  $withdrawal
+     * @param  \App\Refund  $refund
      * @return \Illuminate\Http\Response
      */
-    public function show(Withdrawal $withdrawal)
+    public function show(Refund $refund)
     {
         //
     }
@@ -171,10 +167,10 @@ class WithdrawalController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Withdrawal  $withdrawal
+     * @param  \App\Refund  $refund
      * @return \Illuminate\Http\Response
      */
-    public function edit(Withdrawal $withdrawal)
+    public function edit(Refund $refund)
     {
         //
     }
@@ -183,10 +179,10 @@ class WithdrawalController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Withdrawal  $withdrawal
+     * @param  \App\Refund  $refund
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Withdrawal $withdrawal)
+    public function update(Request $request, Refund $refund)
     {
         //
     }
@@ -194,10 +190,10 @@ class WithdrawalController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Withdrawal  $withdrawal
+     * @param  \App\Refund  $refund
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Withdrawal $withdrawal)
+    public function destroy(Refund $refund)
     {
         //
     }

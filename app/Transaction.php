@@ -44,4 +44,8 @@ class Transaction extends Model
     {
         return $this->hasOnce('App\Withdrawal');
     }
+    public function refund()
+    {
+        return $this->hasOnce('App\Refund');
+    }
 }
