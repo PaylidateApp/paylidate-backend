@@ -99,12 +99,12 @@ Route::namespace('Api')->group(function () {
         // Route::resource('withdraw', 'WithdrawalController');
         Route::get('withdraw-requests', 'WithdrawalController@index');
         Route::post('request-withdrawal', 'WithdrawalController@request_withdrawal');
-        Route::post('transfer_to_bank', 'WithdrawalController@transfer_to_bank');
+        Route::post('transfer-to-bank', 'WithdrawalController@transfer_to_bank');
 
 
         Route::get('refund-requests', 'RefundController@index');
         Route::post('request-refund', 'RefundController@request_Refund');
-        Route::post('transfer_to_bank', 'RefundController@transfer_to_bank');
+        Route::post('transfer-to-buyer-bank', 'RefundController@transfer_to_bank');
 
 
         Route::get('referral-bonus', 'RefererController@index');
