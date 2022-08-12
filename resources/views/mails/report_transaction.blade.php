@@ -51,21 +51,38 @@
         </head>
     <body>
     <div class="flex-center back-pad">
+        
         <div class="title content row">
             <b class="text-white content">Paylidate</b>
         </div>
     </div>
-    
-    <p style="font-size: 18px"><b>Hello {{$user_name}}</b></p>
-    
-    @if ($user_name == 'Admin' || $user_name == 'Lawrence')
-    <p style="font-size: 16px"><b>A withdrawal request with Transactio_id {{$transaction_id}} has been made by a customer</b></p>
-    @else
-    <p style="font-size: 16px"><b>Your withdrawal request with Transactio_id {{$transaction_id}} was succesaful, expect your money into your banck account any time soon </b></p>
-    @endif
-    
-    <p><b>Thanks</b></p>
 
+    <p style="font-size: 18px"><b>Hello {{$user_name}}</b></p>
+    @if ($type == 'report')
+        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} was reported by the buyer for {{$report}}</b></p>
+        <br>
+        @if ($user_name == 'Admin' || $user_name == 'Lawrence')
+        
+        <p style="font-size: 12px; color:red"><b>NOTE: Your have just 24 hours to raise a dispute on this transaction else the trasaction will be cancelled and the buyer will get a refund</b></p>
+
+        @else
+
+        <p style="font-size: 12px; color:red"><b>NOTE: The seller has just 24 hours to raise a dispute on this transaction else the trasaction will be cancelled and the buyer will get a refund</b></p>
+
+        @endif
+
+    @else
+        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} that was reported by the buyer for "{{$report}}" hase been resolve and transaction process can continue</b></p>
+        <br>
+       
+    @endif
+
+    
+    <p>
+    Click or visit <a href="{{ url('https://www.paylidate.com/escrow-transaction/'.$transation_ref)}}" >https://www.paylidate.com/escrow-transaction/{{$transation_ref}}</a> to view transaction
+    </p>
+
+    <p><b>Thanks</b></p>
     <div class="flex-center back-pad">
         <div class="content links row">
             <a href="https://www.paylidate.com/login">Login</a>|

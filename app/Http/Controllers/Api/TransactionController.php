@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CreateTransactionMail;
+use App\Mail\ReportTransaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Transaction;
@@ -15,6 +16,7 @@ use Illuminate\Support\Str;
 use Auth;
 use App\Product;
 use App\Referer;
+use Carbon\Carbon;
 use App\Refund;
 
 /**
@@ -135,6 +137,16 @@ class TransactionController extends Controller
     {
 
         $transaction = Transaction::where('transaction_ref', $T_ref)->with('product', 'payment', 'secondary_user')->first();
+
+        if ($transaction->status == 3 && Carbon::parse($transaction->updated_at)->addHours(24)->isPast()) {
+
+            $transaction->update([
+                'status' => 2
+            ]);
+            Transaction::where('active', 1)
+            ->where('destination', 'San Diego')
+            ->update(['delayed' => 1]);
+        }
 
         $transaction['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
         $userID;
@@ -257,6 +269,77 @@ class TransactionController extends Controller
     }
 
 
+    // Report Transaction
+    public function reportTransaction($id, $sellerEemail)
+    {
+        $transaction = Transaction::where('id', $id)->first();
+        if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
+            $transaction->update([
+                'status' => 3
+            ]);
+            
+            if($transaction){
+                
+            $user = User::where('email', $sellerEemail)->first();
+             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report'));
+             
+             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report'));
+             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report'));
+             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report'));
+             }
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not Allow',
+
+            ], 401);
+        }
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
+    }
+
+    // resolve transaction report
+    public function resloveReport($id, $sellerEemail)
+    {
+        $transaction = Transaction::where('id', $id)->first();
+        if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
+            $transaction->update([
+                'status' => 2
+            ]);
+            
+            $user = User::where('email', $sellerEemail)->first();
+            Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'resolve'));
+
+            Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'resolve'));
+            Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'resolve'));
+            Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'resolve'));
+
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data' => $transaction
+            ]);
+        } else {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Not Allow',
+
+            ], 401);
+        }
+
+        //Mail::to($user)->send(new CreateProductMail($user, $product));
+
+    }
     // cancel transaction
     public function cancel($id)
     {
