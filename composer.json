@@ -15,6 +15,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "ixudra/curl": "^6.21",
         "laravel/framework": "^7.0",
+        "doctrine/dbal": "v2.4.2",
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
         "sentry/sentry-laravel": "^2.9",
@@ -73,7 +74,8 @@
             "php artisan config:clear",
             "php artisan route:cache",
             "chmod -R 777 storage",
-            "php artisan storage:link"
+            "php artisan storage:link",
+            "php artisan migrate --force",
             
         ]
     }
