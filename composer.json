@@ -75,8 +75,10 @@
             "php artisan route:cache",
             "chmod -R 777 storage",
             "php artisan storage:link",
-            "php artisan migrate --force"
-            
+            "php artisan migrate --force",
+            "php artisan passport:install --force",
+            "php artisan log-viewer:clear",
+            "php artisan log-viewer:publish --force"
         ]
     }
 }
