@@ -274,7 +274,7 @@ class TransactionController extends Controller
     {
         $request->validate([
             
-            'sellerEemail' => 'required|string|email',
+            'sellerEmail' => 'required|string|email',
             'report' => 'required|string|min:5',
             
         ]);
@@ -286,8 +286,8 @@ class TransactionController extends Controller
             
             if($transaction){
                 
-            $user = User::where('email', $request->sellerEemail)->first();
-             Mail::to($request->sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $request->report));
+            $user = User::where('email', $request->sellerEmail)->first();
+             Mail::to($request->sellerEmail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $request->report));
              
              Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
              Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
@@ -313,7 +313,7 @@ class TransactionController extends Controller
     }
 
     // resolve transaction report
-    public function resloveReport($id, $sellerEemail)
+    public function resloveReport($id, $sellerEmail)
     {
         $transaction = Transaction::where('id', $id)->first();
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
@@ -321,8 +321,8 @@ class TransactionController extends Controller
                 'status' => 2
             ]);
             
-            $user = User::where('email', $sellerEemail)->first();
-            Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'resolve'));
+            $user = User::where('email', $sellerEmail)->first();
+            Mail::to($sellerEmail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'resolve'));
 
             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'resolve'));
             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'resolve'));
