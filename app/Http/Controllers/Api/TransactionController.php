@@ -270,7 +270,7 @@ class TransactionController extends Controller
 
 
     // Report Transaction
-    public function reportTransaction($id, $sellerEemail)
+    public function reportTransaction($id, $sellerEemail, $report)
     {
         $transaction = Transaction::where('id', $id)->first();
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
@@ -281,11 +281,11 @@ class TransactionController extends Controller
             if($transaction){
                 
             $user = User::where('email', $sellerEemail)->first();
-             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report'));
+             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, $report, 'report'));
              
-             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report'));
-             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report'));
-             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report'));
+             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, $report, 'report'));
+             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, $report, 'report'));
+             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, $report, 'report'));
              }
 
             return response()->json([

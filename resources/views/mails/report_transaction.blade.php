@@ -59,7 +59,7 @@
 
     <p style="font-size: 18px"><b>Hello {{$user_name}}</b></p>
     @if ($type == 'report')
-        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} was reported by the buyer for {{$report}}</b></p>
+        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} was reported by the buyer for "{{$report}}"</b></p>
         <br>
         @if ($user_name == 'Admin' || $user_name == 'Lawrence')
         
@@ -72,7 +72,7 @@
         @endif
 
     @else
-        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} that was reported by the buyer for "{{$report}}" hase been resolve and transaction process can continue</b></p>
+        <p style="font-size: 15px"><b>The transaction with Transaction Ref {{ transation_ref }} that was reported by the buyer for "{{$report}}" has been resolve and transaction process can continue</b></p>
         <br>
        
     @endif

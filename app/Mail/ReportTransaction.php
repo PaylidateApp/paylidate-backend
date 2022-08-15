@@ -18,13 +18,15 @@ class ReportTransaction extends Mailable
      */
     public $user_name;
     public $type;
+    public $report;
     public $transaction_ref;
 
-    public function __construct($user_name, $transaction_ref, $type)
+    public function __construct($user_name, $transaction_ref, $type,  $report = null )
     {
 
         $this->user_name = $user_name;
         $this->type = $type;
+        $this->report = $report;
         $this->transaction_ref = $transaction_ref;
     }
 
