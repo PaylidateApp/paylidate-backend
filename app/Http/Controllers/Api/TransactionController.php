@@ -270,8 +270,14 @@ class TransactionController extends Controller
 
 
     // Report Transaction
-    public function reportTransaction($id, $sellerEemail, $report)
+    public function reportTransaction($id, Request $request)
     {
+        $request->validate([
+            
+            'sellerEemail' => 'required|string|email',
+            'report' => 'required|string|min:5',
+            
+        ]);
         $transaction = Transaction::where('id', $id)->first();
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
             $transaction->update([
@@ -280,12 +286,12 @@ class TransactionController extends Controller
             
             if($transaction){
                 
-            $user = User::where('email', $sellerEemail)->first();
-             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $report));
+            $user = User::where('email', $request->sellerEemail)->first();
+             Mail::to($request->sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $request->report));
              
-             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $report));
-             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $report));
-             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report', $report));
+             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
+             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
+             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report', $request->report));
              }
 
             return response()->json([
