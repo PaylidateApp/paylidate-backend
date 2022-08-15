@@ -281,11 +281,11 @@ class TransactionController extends Controller
             if($transaction){
                 
             $user = User::where('email', $sellerEemail)->first();
-             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, $report, 'report'));
+             Mail::to($sellerEemail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $report));
              
-             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, $report, 'report'));
-             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, $report, 'report'));
-             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, $report, 'report'));
+             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $report));
+             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $report));
+             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report', $report));
              }
 
             return response()->json([
