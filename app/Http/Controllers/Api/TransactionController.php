@@ -138,16 +138,14 @@ class TransactionController extends Controller
 
         $transaction = Transaction::where('transaction_ref', $T_ref)->with('product', 'payment', 'secondary_user')->first();
 
-        if ($transaction->status == 3 && Carbon::parse($transaction->updated_at)->addHours(24)->isPast()) {
+        if ($transaction->transaction_reported_at && $transaction->status == 3 && Carbon::parse($transaction->transaction_reported_at)->addHours(24)->isPast()) {
 
-            $transaction->update([
-                'status' => 2
-            ]);
-            Transaction::where('active', 1)
-            ->where('destination', 'San Diego')
-            ->update(['delayed' => 1]);
+                $transaction->update([
+                    'status' => 3
+                ]);                
+            
         }
-
+        
         $transaction['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
         $userID;
         if ($transaction->product->transaction_type == 'sell') {
@@ -156,7 +154,9 @@ class TransactionController extends Controller
             $userID = $transaction->user_id;
         }
         
-        
+        $seller =User::where('id', $userID)->first();
+
+        $transaction['seller_email'] = $seller->email;            
         $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
         $transaction['bank'] = Bank::where('user_id', auth('api')->user()->id)->first();
         $transaction['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
