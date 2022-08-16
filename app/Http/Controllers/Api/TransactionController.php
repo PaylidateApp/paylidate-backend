@@ -34,7 +34,7 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate()
-        // \Artisan::call('migrate');
+         \Artisan::call('migrate');
 
 
         $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
@@ -141,7 +141,7 @@ class TransactionController extends Controller
         if ($transaction->transaction_reported_at && $transaction->status == 3 && Carbon::parse($transaction->transaction_reported_at)->addHours(24)->isPast()) {
 
                 $transaction->update([
-                    'status' => 3
+                    'status' => 4
                 ]);                
             
         }
@@ -282,7 +282,8 @@ class TransactionController extends Controller
         //return $transaction;
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
             $transaction->update([
-                'status' => 3
+                'status' => 3,
+                'transaction_reported_at'=>Carbon::now()
             ]);
             
             if($transaction){
