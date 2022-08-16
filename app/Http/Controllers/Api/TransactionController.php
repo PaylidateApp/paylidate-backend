@@ -279,7 +279,7 @@ class TransactionController extends Controller
             
         ]);
         $transaction = Transaction::where('id', $id)->first();
-        return $transaction->transaction_reff;
+        return $id;
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
             $transaction->update([
                 'status' => 3
