@@ -59,7 +59,7 @@ Route::namespace('Api')->group(function () {
         // Route::get('user/post', 'UsersController@post');
         // Route::post('user/validate', 'UsersController@validate_password');
 
-        Route::post('send-dispute-chat', 'DisputeChatController@open_dispute');
+        Route::post('send-dispute-chat', 'DisputeChatController@store');
 
         Route::post('open-dispute', 'DisputeController@open_dispute');
         Route::post('resolve-dispute', 'DisputeController@resolve_dispute');
