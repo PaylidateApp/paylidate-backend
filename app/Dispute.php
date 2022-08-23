@@ -15,6 +15,10 @@ class Dispute extends Model
     {
         return $this->belongsTo('App\Transaction');
     }
+    public function dispute_chat()
+    {
+        return $this->hasMany('App\DisputeChat');
+    }
 
     public function user()
     {

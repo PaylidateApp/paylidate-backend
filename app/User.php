@@ -48,6 +48,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Dispute');
     }
+    public function dispute_chat()
+    {
+        return $this->hasMany('App\DisputeChat');
+    }
 
     public function account()
     {

@@ -22,7 +22,7 @@ class DisputeController extends Controller
     public function getTransactionDisputes($transaction_id)
     {        
 
-        $dispute = Dispute::where('transaction_id', $transaction_id)->with('user', 'transaction')
+        $dispute = Dispute::where('transaction_id', $transaction_id)->with('user', 'transaction', 'dispute_chat')
         ->orderBy('dispute_solved')
         ->get();
 

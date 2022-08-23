@@ -35,9 +35,10 @@ class Transaction extends Model
     {
         return $this->hasOne('App\Payment');
     }
-    public function dispute()
+
+     public function dispute_chat()
     {
-        return $this->hasOne('App\Dispute');
+        return $this->hasMany('App\DisputeChat');
     }
 
     public function withdrawal()
