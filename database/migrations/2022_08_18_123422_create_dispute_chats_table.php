@@ -18,7 +18,8 @@ class CreateDisputeChatsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('transaction_id')->constrained();
             $table->foreignId('dispute_id')->constrained();
-            $table->string('message');
+            $table->longText('message');
+            $table->longText('sender');
             $table->timestamps();
         });
     }

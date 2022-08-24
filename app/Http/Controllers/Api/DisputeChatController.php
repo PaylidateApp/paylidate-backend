@@ -64,6 +64,7 @@ class DisputeChatController extends Controller
             'transaction_id' => $request->transaction_id,
             'dispute_id' => $request->dispute_id,
             'message' => $request->message,
+            'sender' => auth('api')->user()->name,
 
         ]);
         if($disputeChat){            

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DisputeChat extends Model
 {
     protected $fillable = [
-        'user_id','transaction_id','message', 'dispute_id'
+        'user_id','transaction_id','message', 'dispute_id', 'sender'
      ];
 
     public function user()
