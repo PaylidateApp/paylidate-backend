@@ -72,7 +72,7 @@ Route::namespace('Api')->group(function () {
 
         Route::get('product/accept/{id}', 'ProductController@accept');
         Route::get('product/status/{id}', 'ProductController@status');
-        Route::get('product/paid/{id}', 'ProductController@paid');
+        Route::post('product/update/{id}', 'ProductController@update');
 
         Route::get('product/status/delivery/{id}', 'ProductController@delivery');
         Route::get('product/status/delivered/{id}', 'ProductController@delivered');
