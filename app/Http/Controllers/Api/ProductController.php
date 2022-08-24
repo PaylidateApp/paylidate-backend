@@ -65,21 +65,7 @@ class ProductController extends Controller
 
     }
 
-    public function paid($id)
-    {
 
-        $product = Product::where('slug', $id)->update([
-            'payment_status' => 1
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-        //Mail::to($user)->send(new CreateProductMail($user, $product));
-
-    }
 
     // Product available (enable or disable) 
     public function status($id, Request $request)
@@ -110,68 +96,7 @@ class ProductController extends Controller
 
     }
 
-    public function delivery($id, Request $request)
-    {
-        $product = Product::where('id', $id)->update([
-            'delivery_status' => 1 //in transit
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-    }
-
-    public function recieved($id, Request $request)
-    {
-        $product = Product::where('id', $id)->update([
-            'delivery_status' => 3 //in transit
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-        //Mail::to($user)->send(new CreateProductMail($user, $product));
-
-    }
-
-    public function canceled($id, Request $request)
-    {
-        $product = Product::where('id', $id)->update([
-            'delivery_status' => 4 //canceled
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-
-        //Mail::to($user)->send(new CreateProductMail($user, $product));
-
-    }
-
-
-    public function open_dispute($id, Request $request)
-    {
-        $product = Product::where('id', $id)->update([
-            'dispute' => 1 //open dispute
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'success',
-            'data' => $product
-        ]);
-
-        //Mail::to($user)->send(new CreateProductMail($user, $product));
-
-    }
-
-    // creating a product
+     // creating a product
     public function store(Request $request)
     {
         $request->validate([
@@ -281,13 +206,7 @@ class ProductController extends Controller
 
     }
 
-    /**
-     * Get Single Product
-     *
-     *  * @urlParam id string required
-     *
-     * @return [json] user object
-     */
+    // getting single product
     public function show($slug)
     {
         $product = Product::where('slug', $slug)->with('payment', 'secondary_user', 'user')->first();
@@ -298,39 +217,47 @@ class ProductController extends Controller
         ]);
     }
 
-    // /**
-    //  * Show the form for editing the specified resource.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     //
-    // }
-
-
-    /**
-     * Update a Specified Product
-     *
-     *
-     * @urlParam  id string required the id of the product
-     *
-     * @bodyParam name string
-     * @bodyParam product_number string
-     * @bodyParam price double
-     * @bodyParam description string
-     * @bodyParam quantity int
-     * @bodyParam description string
-     *
-     * @return [string] message
-     */
 
     // updating a product
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'type' => 'required|string',
+
+        ]);
         $input = $request->all();
-        $product = Product::where('id', $id)->update($input)->get();
+        if($input['transaction_type']){
+            unset($input['transaction_type']);
+        }
+        if($input['referral_amount']){
+            if($input['referral_amount'] >= $input['price']){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'referral amount can not be greater than or equal to product price'
+                ], 400);
+            }
+        }
+        $product = Product::where('id', $id)->first();
+        if($product->user_id != auth('api')->user()->id){
+            return response()->json([
+                'status' => 'Unauthorized',
+                'message' => 'You are not allow to edit the product'
+            ], 401);
+        }
+
+
+        // checking if the transaction is buy
+        if($product->transaction_type == 'buy')
+        {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'You not allow to edit a product you are buying'
+            ], 401);
+        }
+        $product->update($input);
         return response()->json([
             'status' => 'success',
             'message' => 'success',
