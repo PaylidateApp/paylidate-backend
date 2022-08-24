@@ -233,7 +233,7 @@ class ProductController extends Controller
         
         unset($input['transaction_type']);
         
-        if($input['referral_amount']){
+        if(isset($input['referral_amount'])){
             if($input['referral_amount'] >= $input['price']){
                 return response()->json([
                     'status' => 'error',
