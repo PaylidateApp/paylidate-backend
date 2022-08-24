@@ -233,13 +233,11 @@ class ProductController extends Controller
         
         unset($input['transaction_type']);
         
-        if(isset($input['referral_amount'])){
-            if($input['referral_amount'] >= $input['price']){
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'referral amount can not be greater than or equal to product price'
-                ], 400);
-            }
+        if(!empty($request->referral_amount) && $request->referral_amount >= $request->price){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'referral amount can not be greater than or equal to product price'
+            ], 400);
         }
         $product = Product::where('id', $id)->first();
         if($product->user_id != auth('api')->user()->id){
