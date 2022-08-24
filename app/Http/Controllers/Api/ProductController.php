@@ -229,9 +229,10 @@ class ProductController extends Controller
 
         ]);
         $input = $request->all();
-        if($input['transaction_type']){
-            unset($input['transaction_type']);
-        }
+        $input['transaction_type'] = "buy";
+        
+        unset($input['transaction_type']);
+        
         if($input['referral_amount']){
             if($input['referral_amount'] >= $input['price']){
                 return response()->json([
