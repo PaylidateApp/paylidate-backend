@@ -90,7 +90,7 @@ class DisputeController extends Controller
 
 
         if($dispute_presence){
-
+            
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
@@ -100,7 +100,8 @@ class DisputeController extends Controller
         else{
             
             Transaction::where('id', $request->transaction_id)->update([
-                'dispute' => false
+                'dispute' => false,
+                'status' => 0,
             ]);
 
             return response()->json([
