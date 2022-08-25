@@ -77,6 +77,7 @@ class RefererController extends Controller
      * @param  \App\Referer  $referer
      * @return \Illuminate\Http\Response
      */
+    // this function updates the status of the refferal whether withdrawn on not
     public function update(Request $request)
     {
         $user = auth('api')->user();
