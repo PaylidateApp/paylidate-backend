@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\ThirdPartyApiMiddleware;
 use PHPUnit\Util\Getopt;
 
 /*
@@ -126,4 +127,20 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'admin'], function () {
     Route::get('users', 'AdminController@users');
     Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
     Route::get('users/total', 'AdminController@numbers_of_users');
+});
+
+
+
+Route::namespace('ThirdPartyApi')->group(function () {
+    
+    
+    Route::group(['prefix' => 'v1'], function () {
+        
+        Route::middleware([ThirdPartyApiMiddleware::class])->group(function () {
+            
+        
+    });
+       
+        
+    });
 });

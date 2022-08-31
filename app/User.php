@@ -30,6 +30,16 @@ class User extends Authenticatable
         'password', 'remember_token', 'email_token'
     ];
 
+        public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
+    public function getEmailAttribute($value)
+    {
+        return strtolower($value);
+    }
+
     /**
      * The attributes that should be cast to native types.
      *

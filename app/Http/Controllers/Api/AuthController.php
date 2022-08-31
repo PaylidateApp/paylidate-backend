@@ -156,8 +156,9 @@ class AuthController extends Controller
         //     );
         // }
 
-        $credentials = request(['email', 'password']);
         //$credentials['active'] = 1;
+        $credentials['email']   = strtolower($request->email);
+        $credentials['password']   = $request->password;
         $credentials['deleted_at'] = null;
 
 
