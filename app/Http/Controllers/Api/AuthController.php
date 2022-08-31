@@ -41,34 +41,29 @@ class AuthController extends Controller
     public function signup(Request $request)
     {
         //return user::all();
-
-
-        $messages = [
-            'name.required'    => 'Enter full name!',
-            'email.required' => 'Enter an e-mail address!',
-            'email' => 'E-mail address exist!',
-            'phone' => 'unique',
-            'phone' => 'Phone number exist!',
-            'password.required'    => 'Password is required',
-            'password_confirmation' => 'The :password and :password_confirmation must match.'
-        ];
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
+        $request->validate([
+            'name' => 'required|string|min:3',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
-        ], $messages);
+    
+            
+        ]);
+
+        if(isset($request->phone)){
+            $request->validate([
+                'phone' => 'unique:users',        
+                
+            ]);
+        }
+
+       
 
 
         $user = User::where('email', $request->get('email'))->first();
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors()
-            ], 406);
-        } elseif ($user && $user->active == false) {
+        
+        if ($user && $user->active == false) {
             $user->update([
                 'name' => $request->name,
                 'phone' => $request->phone,

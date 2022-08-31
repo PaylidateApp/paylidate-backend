@@ -11,7 +11,7 @@ use App\Product;
 use App\Transaction;
 use App\User;
 use Illuminate\Support\Str;
-use Auth;
+
 
 /**
  * @group  Product management
