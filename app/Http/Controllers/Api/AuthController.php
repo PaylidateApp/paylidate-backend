@@ -63,7 +63,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         
-        if ($user && $user->active == false) {
+        if ($user && $user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q') {
             $user->update([
                 'name' => $request->name,
                 'phone' => $request->phone,

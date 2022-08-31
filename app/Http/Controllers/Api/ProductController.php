@@ -149,6 +149,7 @@ class ProductController extends Controller
 
                     $input['email'] = $request['seller_email'];
                     $input['password'] = 'defualt';
+                    $input['active'] = false;
                     $new_user = User::create($input);
 
                     $secondary_user['email'] = $new_user->email;
