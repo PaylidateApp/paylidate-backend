@@ -30,6 +30,12 @@ class PasswordResetController extends Controller
         
 
         $user = User::where('email', $request->email)->first();
+        if ($user && ($user->active == false || strlen($user->password) < 8)) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'We cannot find a user with that e-mail address.'
+            ], 404);
+        }
         
         if (!$user)
         return response()->json([

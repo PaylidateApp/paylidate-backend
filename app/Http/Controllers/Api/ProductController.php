@@ -131,7 +131,7 @@ class ProductController extends Controller
             $user_id = $user->id;
             $input = $request->all();
             $input['user_id']   = $user_id;
-            $input['slug']   = date('dmyHis');
+            $input['slug']   = Str::random(5) . date('dmyHis');
             $input['product_number']   = date('dmyHis');
 
 
@@ -150,6 +150,7 @@ class ProductController extends Controller
                     $input['email'] = $request['seller_email'];
                     $input['password'] = 'defualt';
                     $input['active'] = false;
+                    $input['referral_token'] = Str::random(10) . date('dmyHis');
                     $new_user = User::create($input);
 
                     $secondary_user['email'] = $new_user->email;
