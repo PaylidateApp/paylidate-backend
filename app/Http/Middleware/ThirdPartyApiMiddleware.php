@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Middleware;
-use App\User;
+use App\Apikey;
 
 use Closure;
 
@@ -29,15 +29,15 @@ class ThirdPartyApiMiddleware
         }
 
 
-        $user = User::where('API_key', $token);
-        if(!$user){
+        $apikey = Apikey::where('API_key', $token)->first();
+        if(!$apikey){
             return response()->json([
                 'status' => 'error',
                 'message' => 'Forbidden',
 
             ], 403);
         }
-
+        
         return $next($request);
     }
 }

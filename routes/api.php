@@ -138,7 +138,7 @@ Route::namespace('ThirdPartyApi')->group(function () {
         
         Route::middleware([ThirdPartyApiMiddleware::class])->group(function () {
             
-        
+            Route::get('get-users', 'AccountController@index');
     });
        
         
