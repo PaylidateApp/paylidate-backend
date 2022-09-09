@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\ThirdPartyApi;
 
 use App\Http\Controllers\Controller;
 use App\Mail\CreateProductMail;
@@ -103,34 +103,22 @@ class ProductController extends Controller
             'name' => 'required|string',
             'price' => 'required|numeric',
             'quantity' => 'required|numeric',
-            'type' => 'required|string',
+            
             'transaction_type' => 'required|string',
+            'buyer_email' => 'required|string|email',
 
         ]);
+        
 
 
-        if ($request->transaction_type == 'buy') {
-            $request->validate([
-                'seller_email' => 'required|string|email',
-
-            ]);
-
-            $input['referral_amount'] = 0.00;
-        }
-
-        if (!empty($request->referral_amount) && $request->referral_amount >= $request->price) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Referral bonus must be less than product price',
-
-            ], 400);
-        }
 
         try {
-            $user = auth('api')->user();
+            $user = User::where('email', $request->get('buyer_email'))->first();
             $user_id = $user->id;
             $input = $request->all();
             $input['user_id']   = $user_id;
+            $input['transaction_type']   = 'buy';
+            $input['type']   = 'product';
             $input['slug']   = Str::random(5) . date('dmyHis');
             $input['product_number']   = date('dmyHis');
 
@@ -142,6 +130,7 @@ class ProductController extends Controller
 
                 $secondary_user = User::where('email', $request->get('seller_email'))->first();
                 $transaction['product_id'] = $product->id;
+                $transaction['user_id'] = $secondary_user->id;
                 if ($secondary_user) {
 
                     $transaction['user_id'] = $secondary_user->id;
@@ -181,19 +170,11 @@ class ProductController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'message' => 'success',
-                    'data' => $product
+                    'data' => $new_transaction
                 ]);
             }
 
 
-
-            Mail::to($user)->send(new CreateProductMail($user, $product));
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'success',
-                'data' => $product
-            ]);
         } catch (\Exception $e) {
             return $e;
         }

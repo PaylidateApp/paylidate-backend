@@ -93,7 +93,7 @@ class ReferralWidrawalController extends Controller
         //return 'sdof';
 
         try {
-            $response = $this->flutterwaveService->transfer_to_bank($request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency);
+            $response = $this->flutterwaveService->transfer_to_bank($request->all());
             //return $response;  
 
             if ($response['status'] == 'success') {
