@@ -16,6 +16,9 @@ class UserController extends Controller
     public function index()
     {
         $users = DB::select('select * from users');
+        $User = User::find(33);
+ 
+        $User->delete();
        // $sel = "ogeneoyore@gmail.com";
        // $userme = User::where('email', $sel)->first();
        // $pas = bcrypt("ogeneoyore@123");
