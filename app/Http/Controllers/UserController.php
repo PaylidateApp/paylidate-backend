@@ -18,13 +18,14 @@ class UserController extends Controller
         $users = DB::select('select * from users');
         $User = User::find(33);
  
-        $User->delete();
+       // $User->delete();
        // $sel = "ogeneoyore@gmail.com";
        // $userme = User::where('email', $sel)->first();
        // $pas = bcrypt("ogeneoyore@123");
-       // $userme->update([
-        //    'password' => $pas
-        //]);
+        $User->update([
+            'email' => 'invalidaccount@invalid.com'
+            'active' => false
+        ]);
         return $users;
         DB::delete('delete from withdrawals');
        
