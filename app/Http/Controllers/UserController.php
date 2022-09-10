@@ -24,7 +24,7 @@ class UserController extends Controller
        // $pas = bcrypt("ogeneoyore@123");
         $User->update([
             'email' => 'invalidaccount@invalid.com'
-            'active' => false
+           
         ]);
         return $users;
         DB::delete('delete from withdrawals');
