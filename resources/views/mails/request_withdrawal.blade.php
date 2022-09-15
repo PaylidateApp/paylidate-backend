@@ -61,7 +61,7 @@
     @if ($user_name == 'Admin' || $user_name == 'Lawrence')
     <p style="font-size: 16px"><b>A withdrawal request with Transaction_id {{$transaction_id}} has been made by a customer</b></p>
     @else
-    <p style="font-size: 16px"><b>Your withdrawal request with Transaction_id {{$transaction_id}} was succesaful, expect your money into your banck account any time soon </b></p>
+    <p style="font-size: 16px"><b>Your withdrawal request with Transaction_id {{$transaction_id}} was successful, expect your money into your bank account any time soon </b></p>
     @endif
     
     <p><b>Thanks</b></p>
