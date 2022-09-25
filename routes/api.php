@@ -28,6 +28,7 @@ Route::namespace('Api')->group(function () {
 
 
     Route::post('login', 'AuthController@login');
+    Route::post('sms', 'InstandpayController@index');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
@@ -46,7 +47,7 @@ Route::namespace('Api')->group(function () {
     Route::get('get-banks', 'PaymentController@banks');
 
     // password reset routes    
-
+    Route::post('verify-account', 'BankController@verify_account_number');
     Route::group(['middleware' => 'auth:api'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
@@ -98,7 +99,7 @@ Route::namespace('Api')->group(function () {
         Route::post('fund', 'CardController@fund');
 
         Route::resource('user-bank', 'BankController');
-        Route::post('verify-account', 'BankController@verify_account_number');
+        
 
         // Route::resource('withdraw', 'WithdrawalController');
         Route::get('withdraw-requests', 'WithdrawalController@index');

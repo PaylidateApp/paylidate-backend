@@ -16,6 +16,7 @@ class UserController extends Controller
     public function index()
     {
         $users = DB::select('select * from users');
+        return $users;
         $User = User::find(33);
  
        // $User->delete();
@@ -26,7 +27,6 @@ class UserController extends Controller
             'email' => 'invalidaccount@invalid.com'
            
         ]);
-        return $users;
         DB::delete('delete from withdrawals');
        
 
