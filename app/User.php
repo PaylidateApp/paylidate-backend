@@ -49,6 +49,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function instantpay()
+    {
+        return $this->hasOne('App\Instandpay');
+    }
     public function wallet()
     {
         return $this->hasOne('App\Wallet');
