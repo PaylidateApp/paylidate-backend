@@ -26,7 +26,7 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $input['otp']   = random_int(100000, 999999);
+        $input['withdrawal_pin']   = random_int(100000, 999999);
         $body = 'Paylidate payment from Philemon. Visit https://paylidate.com/payments/hy853g65 to withdraw. Your withdrawal pin is 769056';
         //return $body ;
 
@@ -65,25 +65,36 @@ class InstandpayController extends Controller
      */
     public function transfer(Request $request)
     {        
+        
         $request->validate([
             
             'receiver_number' => 'required|numeric',
             'sender_email' => 'required|string|email',
             'amount' => 'required|numeric',
             'sender_name' => 'required|string|min:3',
+            'payment_ref' => 'required|string',
             
         ]);
+        //return $request->all();
 
         try{
+            $payment_ref = Instandpay::where('payment_ref', $request->payment_ref)->first();
+            if($payment_ref){
+                return response()->json([
+                    'status' => 'Error',
+                    'message' => 'Invalid payment_ref',
+                   
+                ], 400);
+            }
         $input = $request->all();
-        $input['otp']   = random_int(100000, 999999);
+        $input['withdrawal_pin']   = random_int(100000, 999999);
         $input['link_token']   = 'PD_IP_' . Str::random(4) . date('dmyHis');
         $input['tracking_id']   = random_int(100000, 999999);
 
-
         $transfer = Instandpay::create($input);
+        
 
-        $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/payments/'. $input['link_token'].' to withdraw. Your withdrawal pin is 769056';
+        $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking_id '. $input['tracking_id'];
 
         Http::withHeaders([
             'Accept' => 'application/json',
@@ -91,7 +102,7 @@ class InstandpayController extends Controller
             'https://www.bulksmsnigeria.com/api/v2/sms/create',
             [   
                     'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
-                    'to'=> '09079603505',
+                    'to'=> $input['receiver_number'],
                     'from'=> 'Paylidate',
                     'body'=> $body,
                     
@@ -99,8 +110,7 @@ class InstandpayController extends Controller
             ]
         );
 
-        //return $response;
-        
+     
         return response()->json([
             'status' => 'success',
             'message' => 'success',
@@ -117,32 +127,31 @@ class InstandpayController extends Controller
     {
         $request->validate([
             
-            'otp' => 'required|numeric',
+            'withdrawal_pin' => 'required|numeric',
             'link_token' => 'required|string',
             'bank_code' => 'required|numeric',         
             'account_number' => 'required|numeric',
-                     
+            
         ]);
+        //return $request->all();
         try{
         $instandpay = Instandpay::where('link_token', $request->link_token)->first();
-        if($instandpay && $instandpay->otp == $request->otp){
+        if($instandpay && $instandpay->withdrawal_pin == $request->withdrawal_pin){
             $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_number, $request->bank_code);
         
-
+//return $response;
                 //'data' => $response['status']
-            if($response['status'] != 'success'){
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Sorry, that account number is invalid, please check and try again',
+            // if($response['status'] != 'success'){
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Sorry, that account number is invalid, please check and try again',
                     
-                ], 400);
-            }
+            //     ], 400);
+            // }
             
-            $withdrawal_pin = date('dmyHis');
             $instandpay->update([
-                'withdrawal_pin' => $withdrawal_pin,
                 'bank_code' => $request->bank_code,
-                'account_name' =>  $response['data']['account_name'],
+                'account_name' =>  $request->account_name,
                 'account_number' => $request->account_number
             ]);
             
@@ -155,7 +164,7 @@ class InstandpayController extends Controller
 
         return response()->json([
             'status' => 'Error',
-            'message' => 'Invalid otp',
+            'message' => 'Invalid withdrawal pin',
            
         ], 400);
         }
@@ -168,14 +177,23 @@ class InstandpayController extends Controller
     public function withdraw(Request $request)
     {
         $request->validate([
-            'withdrawal_pin' => 'required|numeric',            
+            'id' => 'required',            
         ]);
+        //return "efdwfd";
         try{
-        $instandpay = Instandpay::where('withdrawal_pin', $request->withdrawal_pin)->first();
+        $instandpay = Instandpay::where('id', $request->id)->first();
         if(!$instandpay){
             return response()->json([
                 'status' => 'Error',
                 'message' => 'Invalid withdrawal code',
+                
+            ], 400);
+        }
+
+        if($instandpay["status"] == true){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'This money has been withdrawn',
                 
             ], 400);
         }
@@ -186,19 +204,26 @@ class InstandpayController extends Controller
         $input['narration']   = $instandpay['description'];
         
         $response = $this->flutterwaveService->transfer_to_bank($input);
-            //return $response;  
+           // return $response;  
 
             if ($response['status'] == 'success') {
             $instandpay->update([
                 
                 'status' => true
             ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Transfer successful',
+                'data' => $instandpay
+            ], 200);
         }
+        
         return response()->json([
-            'status' => 'success',
-            'message' => 'Transfer successful',
-            'data' => $response['data']
-        ], 200);
+            'status' => 'error',
+            'message' => 'Transfer Error',
+            
+        ], 400);
         }
         catch (\Exception $e) {
             return $e;

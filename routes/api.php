@@ -26,9 +26,10 @@ Route::namespace('Api')->group(function () {
 
     //Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
-
+    Route::post('instant-pay/verify', 'InstandpayController@verify');
+    Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
+    
     Route::post('login', 'AuthController@login');
-    Route::post('sms', 'InstandpayController@index');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
@@ -80,6 +81,8 @@ Route::namespace('Api')->group(function () {
         Route::get('product/status/delivered/{id}', 'ProductController@delivered');
         Route::get('product/status/recieved/{id}', 'ProductController@recieved');
         Route::get('product/status/canceled/{id}', 'ProductController@canceled');
+
+        Route::post('instant-pay/tranfer', 'InstandpayController@transfer');
 
 
         Route::post('transaction/accept/{id}', 'TransactionController@accept');

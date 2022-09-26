@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Instandpay extends Model
 {
     protected $fillable = [
-        'receiver_number', 'sender_email', 'account_number', 'link_token', 'tracking_id', 'account_name', 'bank_code', 'otp', 'amount', 'status', 'description', 'withdrawal_pin'
+        'receiver_number', 'sender_email', 'sender_name', 'account_number', 'link_token', 'payment_ref', 'tracking_id', 'account_name', 'bank_code', 'withdrawal_pin', 'amount', 'status', 'description'
     ];
 }
