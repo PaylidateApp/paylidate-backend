@@ -34,7 +34,7 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate()
-         //\Artisan::call('migrate');
+         \Artisan::call('migrate');
          //\Artisan::call('migrate:rollback');
       
 
