@@ -37,7 +37,7 @@ class TransactionController extends Controller
 
 
         ////////// \Artisan::call('migrate:rollback --step=1');
-         \Artisan::call('migrate');
+        //// \Artisan::call('migrate');
 
 
         $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
