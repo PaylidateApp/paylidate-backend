@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use App\Services\FlutterwaveService;
+use Illuminate\Support\Facades\DB;
 
 
 class InstandpayController extends Controller
@@ -26,25 +27,8 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $input['withdrawal_pin']   = random_int(100000, 999999);
-        $body = 'Paylidate payment from Philemon. Visit https://paylidate.com/payments/hy853g65 to withdraw. Your withdrawal pin is 769056';
-        //return $body ;
-
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-        ])->post(
-            'https://www.bulksmsnigeria.com/api/v2/sms/create',
-            [   
-                    'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
-                    'to'=> '08091552738',
-                    'from'=> 'Paylidate',
-                    'body'=> $body,
-                    
-            
-            ]
-        );
-
-        return $response; 
+        $Instandpay = DB::select('select * from instandpays');
+        return $Instandpay;
     }
 
     /**
