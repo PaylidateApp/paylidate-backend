@@ -22,7 +22,7 @@ use PHPUnit\Util\Getopt;
 
 Route::namespace('Api')->group(function () {
 
-    Route::get('artisan-command/{password}', 'ArtisanCommandController@index');
+    Route::get('artisan-command/{password}', 'ArtisanCommandController@index'); 
 
     //Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
