@@ -15,8 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        $users = DB::select('select * from users');
+        return $users;
         $Instandpay = DB::select('select * from migrations');
-        return $Instandpay;
        
     }
     public function indexx1($id)
