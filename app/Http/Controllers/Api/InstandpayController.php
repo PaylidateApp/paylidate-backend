@@ -27,7 +27,7 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $Instandpay = DB::select('select * from transactions');
+        //$Instandpay = DB::select('select * from transactions');
         return "Instandpay";
     }
 
