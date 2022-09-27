@@ -90,7 +90,7 @@ class InstandpayController extends Controller
         $input['withdrawal_pin']   = random_int(100000, 999999);
         $input['link_token']   = 'PD_IP_' . Str::random(4) . date('dmyHis');
         $input['tracking_id']   = random_int(100000, 999999);
-        $input['user_id']   = 1;
+        $input['user_id']   = auth('api')->user()->id;
 
         $transfer = Instandpay::create($input);
         
