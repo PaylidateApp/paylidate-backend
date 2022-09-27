@@ -28,7 +28,7 @@ Route::namespace('Api')->group(function () {
 
     Route::post('instant-pay/verify', 'InstandpayController@verify');
     Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
-    Route::post('instant-get', 'InstandpayController@index');
+    Route::get('instant-get', 'InstandpayController@index');
     
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
