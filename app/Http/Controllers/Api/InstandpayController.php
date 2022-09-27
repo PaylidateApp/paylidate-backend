@@ -90,12 +90,12 @@ class InstandpayController extends Controller
         $input['withdrawal_pin']   = random_int(100000, 999999);
         $input['link_token']   = 'PD_IP_' . Str::random(4) . date('dmyHis');
         $input['tracking_id']   = random_int(100000, 999999);
-        $input['user_id']   = auth('api')->user()->id;
+        $input['user_id']   = 1;
 
         $transfer = Instandpay::create($input);
         
 
-        $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking_id '. $input['tracking_id'];
+        $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking id '. $input['tracking_id'];
 
         Http::withHeaders([
             'Accept' => 'application/json',

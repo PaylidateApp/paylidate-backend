@@ -33,10 +33,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //Transaction::truncate()
-         \Artisan::call('migrate');
-         //\Artisan::call('migrate:rollback');
-      
+        //////////Transaction::truncate()
+
+
+         //////\Artisan::call('migrate');
+
 
         $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
         $filterTransaction = [];

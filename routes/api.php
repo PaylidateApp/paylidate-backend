@@ -35,6 +35,9 @@ Route::namespace('Api')->group(function () {
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
 
+    Route::post('instant/tranfer', 'InstandpayController@transfer');
+
+
     Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
 
 
