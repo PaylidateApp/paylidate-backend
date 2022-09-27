@@ -15,6 +15,7 @@ class CreateInstandpaysTable extends Migration
     {
         Schema::create('instandpays', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
             $table->string('tracking_id'); 
             $table->decimal('amount')->default(0.00);         
             $table->integer('receiver_number'); 
