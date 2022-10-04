@@ -24,6 +24,7 @@ class CreateTransactionsTable extends Migration
             $table->boolean('dispute')->nullable()->default(false);
             $table->decimal('amount')->nullable()->default(0.00); // total amount           
             $table->longText('description')->nullable();
+            $table->decimal('referral_amount')->nullable()->default(0.00)->after('price'); // total referral amount per prodcut     
             $table->timestamps();
             $table->softDeletes();
         });
