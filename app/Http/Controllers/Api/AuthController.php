@@ -46,18 +46,17 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255',
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
+            'phone' => 'required|unique:users',
     
             
         ]);
 
-        if(isset($request->phone)){
-            $request->validate([
-                'phone' => 'unique:users',        
+        // if(isset($request->phone)){
+        //     $request->validate([
+        //         'phone' => 'unique:users',        
                 
-            ]);
-        }
-
-       
+        //     ]);
+        // }       
 
 
         $user = User::where('email', $request->get('email'))->first();

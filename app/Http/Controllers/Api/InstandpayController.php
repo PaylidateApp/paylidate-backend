@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Instandpay;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -25,10 +26,28 @@ class InstandpayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function receiver()
     {
-        $Instandpay = DB::select('select * from migrations');
-        return $Instandpay;
+        $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)->first();
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $transaction
+        ], 200);
+    }
+
+    public function sender()
+    {
+        $transaction = Instandpay::where('id', auth('api')->user()->id)->with('user')->first();
+
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $transaction
+        ], 200);
     }
 
     /**
@@ -36,9 +55,30 @@ class InstandpayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function verify_user($phone_number)
     {
-        //
+        $reciver = User::where('phone', $phone_number)->first();
+        if(!$reciver){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'Receiver is not a paylidate user',
+               
+            ], 400);
+        }
+
+        if(!$reciver->phone == $phone_number){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'You can not send money to yourself',
+               
+            ], 400);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $reciver->name
+        ], 200);
     }
 
     /**
@@ -60,6 +100,24 @@ class InstandpayController extends Controller
             
         ]);
         //return $request->all();
+        $reciver = User::where('phone', $request->receiver_number)->first();
+        if(!$reciver){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'Receiver is not a paylidate user',
+               
+            ], 400);
+
+        }
+
+        if(!$reciver->phone == $request->receiver_number){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'You can not send money to yourself',
+               
+            ], 400);
+        }
+
 
         try{
             $payment_ref = Instandpay::where('payment_ref', $request->payment_ref)->first();
@@ -75,6 +133,8 @@ class InstandpayController extends Controller
         $input['link_token']   = 'PD_IP_' . Str::random(4) . date('dmyHis');
         $input['tracking_id']   = random_int(100000, 999999);
         $input['user_id']   = auth('api')->user()->id;
+        $input['receiver_name']   = $reciver->name;
+        $input['receiver_id']   = $reciver->id;
 
         $transfer = Instandpay::create($input);
         
@@ -114,31 +174,41 @@ class InstandpayController extends Controller
             
             'withdrawal_pin' => 'required|numeric',
             'link_token' => 'required|string',
+            'bank_name' => 'required|string',
             'bank_code' => 'required|numeric',         
             'account_number' => 'required|numeric',
             
         ]);
         //return $request->all();
+        $user = auth('api')->user();
         try{
         $instandpay = Instandpay::where('link_token', $request->link_token)->first();
+        if($user->id != $instandpay->receiver_id){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'unauthorized',
+            ], 401);
+        }
         if($instandpay && $instandpay->withdrawal_pin == $request->withdrawal_pin){
             $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_number, $request->bank_code);
         
-//return $response;
                 //'data' => $response['status']
-            // if($response['status'] != 'success'){
-            //     return response()->json([
-            //         'status' => 'error',
-            //         'message' => 'Sorry, that account number is invalid, please check and try again',
+             if($response['status'] != 'success'){
+                 return response()->json([
+                     'status' => 'error',
+                     'message' => 'Sorry, that account number is invalid, please check and try again',
                     
-            //     ], 400);
-            // }
-            
-            $instandpay->update([
-                'bank_code' => $request->bank_code,
-                'account_name' =>  $request->account_name,
-                'account_number' => $request->account_number
-            ]);
+                 ], 400);
+             }
+            if($instandpay->status != true){
+
+                $instandpay->update([
+                    'bank_code' => $request->bank_code,
+                    'account_name' =>  $request->account_name,
+                    'account_number' => $request->account_number,
+                    'bank_name' => $request->bank_name
+                ]);
+            }
             
             return response()->json([
                 'status' => 'success',

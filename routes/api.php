@@ -26,8 +26,6 @@ Route::namespace('Api')->group(function () {
 
     //Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
-    Route::post('instant-pay/verify', 'InstandpayController@verify');
-    Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
     Route::get('instant-get', 'InstandpayController@index');
     
     Route::post('login', 'AuthController@login');
@@ -37,6 +35,9 @@ Route::namespace('Api')->group(function () {
     Route::get('product/{slug}', 'ProductController@get_product');
 
     Route::post('instant/tranfer', 'InstandpayController@transfer');
+    Route::post('instant-pay/verify', 'InstandpayController@verify');
+    Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
+
 
 
     Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
