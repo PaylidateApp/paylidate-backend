@@ -19,12 +19,11 @@ class CreateTransactionsTable extends Migration
             $table->bigInteger('product_id'); 
             $table->integer('quantity')->unsigned()->nullable()->default(0); // total quantity purchased
             $table->string('transaction_ref')->nullable(); //Auto generate
-            $table->integer('status')->unsigned()->default(0);// 0=pending, 1=completed, 2=failed or canceled, 3 = transaction reported, 4 = buyer allow to cancel transaction
+            $table->integer('status')->unsigned()->default(0);// 0=pending, 1=completed, 2=failed or canceled
             $table->boolean('accept_transaction')->nullable(); // accepting a transation
             $table->boolean('dispute')->nullable()->default(false);
             $table->decimal('amount')->nullable()->default(0.00); // total amount           
             $table->longText('description')->nullable();
-            $table->decimal('referral_amount')->nullable()->default(0.00)->after('price'); // total referral amount per prodcut     
             $table->timestamps();
             $table->softDeletes();
         });
