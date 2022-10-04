@@ -37,6 +37,8 @@ Route::namespace('Api')->group(function () {
     Route::post('instant/tranfer', 'InstandpayController@transfer');
     Route::post('instant-pay/verify', 'InstandpayController@verify');
     Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
+    Route::get('instant-pay/history-send', 'InstandpayController@send');
+    Route::get('instant-pay/history-receive', 'InstandpayController@receive');
 
 
 

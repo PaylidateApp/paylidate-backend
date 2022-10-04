@@ -26,9 +26,9 @@ class InstandpayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function receiver()
+    public function receive()
     {
-        $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)->first();
+        $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)->with('user')->first();
 
 
         return response()->json([
@@ -38,9 +38,9 @@ class InstandpayController extends Controller
         ], 200);
     }
 
-    public function sender()
+    public function send()
     {
-        $transaction = Instandpay::where('id', auth('api')->user()->id)->with('user')->first();
+        $transaction = Instandpay::where('user_id', auth('api')->user()->id)->first();
 
 
         return response()->json([

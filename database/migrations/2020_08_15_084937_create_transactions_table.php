@@ -23,7 +23,8 @@ class CreateTransactionsTable extends Migration
             $table->boolean('accept_transaction')->nullable(); // accepting a transation
             $table->boolean('dispute')->nullable()->default(false);
             $table->decimal('amount')->nullable()->default(0.00); // total amount           
-            $table->longText('description')->nullable();
+            $table->longText('description')->nullable();           	
+            $table->timestamp('transaction_reported_at')->default('CURRENT_TIMESTAMP');
             $table->timestamps();
             $table->softDeletes();
         });
