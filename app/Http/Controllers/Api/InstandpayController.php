@@ -28,8 +28,9 @@ class InstandpayController extends Controller
      */
     public function receive()
     {
-        $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)->with('user')->first();
-
+        $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
 
         return response()->json([
             'status' => 'success',
@@ -40,7 +41,9 @@ class InstandpayController extends Controller
 
     public function send()
     {
-        $transaction = Instandpay::where('user_id', auth('api')->user()->id)->first();
+        $transaction = Instandpay::where('user_id', auth('api')->user()->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
 
 
         return response()->json([
@@ -57,6 +60,13 @@ class InstandpayController extends Controller
      */
     public function verify_user($phone_number)
     {
+        if(strlen($phone_number) != 11){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'Receiver is not a paylidate user',
+               
+            ], 400);
+        }
         $reciver = User::where('phone', $phone_number)->first();
         if(!$reciver){
             return response()->json([
@@ -77,7 +87,7 @@ class InstandpayController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $reciver->name
+            'name' => $reciver->name
         ], 200);
     }
 
@@ -95,30 +105,27 @@ class InstandpayController extends Controller
             'receiver_number' => 'required|numeric',
             'sender_email' => 'required|string|email',
             'amount' => 'required|numeric',
-            'sender_name' => 'required|string|min:3',
             'payment_ref' => 'required|string',
             
         ]);
         //return $request->all();
-        $reciver = User::where('phone', $request->receiver_number)->first();
-        if(!$reciver){
+        $receiver = User::where('phone', $request->receiver_number)->first();
+        if(!$receiver){
             return response()->json([
                 'status' => 'Error',
                 'message' => 'Receiver is not a paylidate user',
-               
+                
             ], 400);
-
+            
         }
-
-        if(!$reciver->phone == $request->receiver_number){
+        if(auth('api')->user()->phone == $request->receiver_number){
             return response()->json([
                 'status' => 'Error',
                 'message' => 'You can not send money to yourself',
-               
+                
             ], 400);
         }
-
-
+        
         try{
             $payment_ref = Instandpay::where('payment_ref', $request->payment_ref)->first();
             if($payment_ref){
@@ -131,13 +138,13 @@ class InstandpayController extends Controller
         $input = $request->all();
         $input['withdrawal_pin']   = random_int(100000, 999999);
         $input['link_token']   = 'PD_IP_' . Str::random(4) . date('dmyHis');
-        $input['tracking_id']   = random_int(100000, 999999);
+        $input['tracking_id']   = random_int(100000, 999999). date('dmyHis');
         $input['user_id']   = auth('api')->user()->id;
-        $input['receiver_name']   = $reciver->name;
-        $input['receiver_id']   = $reciver->id;
-
-        $transfer = Instandpay::create($input);
+        $input['sender_name']   = auth('api')->user()->name;
+        $input['receiver_name']   = $receiver->name;
+        $input['receiver_id']   = $receiver->id;
         
+        //return $transfer;
 
         $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking id '. $input['tracking_id'];
 
@@ -147,13 +154,13 @@ class InstandpayController extends Controller
             'https://www.bulksmsnigeria.com/api/v2/sms/create',
             [   
                     'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
-                    'to'=> $input['receiver_number'],
+                    'to'=> '08144261337',
                     'from'=> 'Paylidate',
-                    'body'=> $body,
-                    
+                    'body'=> 'ergekj',                    
             
             ]
         );
+        $transfer = Instandpay::create($input);
 
      
         return response()->json([
@@ -168,13 +175,13 @@ class InstandpayController extends Controller
 
     }
 
+    // Verify user information
     public function verify(Request $request)
     {
         $request->validate([
             
             'withdrawal_pin' => 'required|numeric',
             'link_token' => 'required|string',
-            'bank_name' => 'required|string',
             'bank_code' => 'required|numeric',         
             'account_number' => 'required|numeric',
             
@@ -193,13 +200,13 @@ class InstandpayController extends Controller
             $response = $this->flutterwaveService->verifyBankAccountNumber($request->account_number, $request->bank_code);
         
                 //'data' => $response['status']
-             if($response['status'] != 'success'){
-                 return response()->json([
-                     'status' => 'error',
-                     'message' => 'Sorry, that account number is invalid, please check and try again',
+            //  if($response['status'] != 'success'){
+            //      return response()->json([
+            //          'status' => 'error',
+            //          'message' => 'Sorry, that account number is invalid, please check and try again',
                     
-                 ], 400);
-             }
+            //      ], 400);
+            //  }
             if($instandpay->status != true){
 
                 $instandpay->update([
