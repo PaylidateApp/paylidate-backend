@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use App\Services\FlutterwaveService;
 use Illuminate\Support\Facades\DB;
+use Twilio\Rest\Client;
 
 
 class InstandpayController extends Controller
@@ -148,18 +149,25 @@ class InstandpayController extends Controller
 
         $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking id '. $input['tracking_id'];
 
-        Http::withHeaders([
-            'Accept' => 'application/json',
-        ])->post(
-            'https://www.bulksmsnigeria.com/api/v2/sms/create',
-            [   
-                    'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
-                    'to'=> '08144261337',
-                    'from'=> 'Paylidate',
-                    'body'=> 'ergekj',                    
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create($input['receiver_number'], ['from' => $twilio_number, 'body' => $body]);
+
+
+        // Http::withHeaders([
+        //     'Accept' => 'application/json',
+        // ])->post(
+        //     'https://www.bulksmsnigeria.com/api/v2/sms/create',
+        //     [   
+        //             'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
+        //             'to'=> $input['receiver_number'],
+        //             'from'=> 'Paylidate',
+        //             'body'=> $body,                    
             
-            ]
-        );
+        //     ]
+        // );
         $transfer = Instandpay::create($input);
 
      
