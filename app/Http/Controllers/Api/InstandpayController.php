@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+require __DIR__ . '/twilio-php-main/src/Twilio/autoload.php';
 
 use App\Instandpay;
 use App\User;
@@ -103,7 +104,7 @@ class InstandpayController extends Controller
         
         $request->validate([
             
-            'receiver_number' => 'required|numeric',
+            'receiver_number' => 'required',
             'sender_email' => 'required|string|email',
             'amount' => 'required|numeric',
             'payment_ref' => 'required|string',
