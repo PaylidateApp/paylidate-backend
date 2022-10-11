@@ -102,7 +102,7 @@ class InstandpayController extends Controller
         
         $request->validate([
             
-            'receiver_number' => 'required|numeric',
+            'receiver_number' => 'required',
             'sender_email' => 'required|string|email',
             'amount' => 'required|numeric',
             'payment_ref' => 'required|string',
@@ -154,9 +154,9 @@ class InstandpayController extends Controller
             'https://www.bulksmsnigeria.com/api/v2/sms/create',
             [   
                     'api_token'=> '7XyAWuScqHNoALX5xvDKPl9YUlEKsR5tT2pTjKIf9SDnrqXUgdi1nYLBwgIG',
-                    'to'=> '08144261337',
+                    'to'=> $input['receiver_number'],
                     'from'=> 'Paylidate',
-                    'body'=> 'ergekj',                    
+                    'body'=> $body,                    
             
             ]
         );
