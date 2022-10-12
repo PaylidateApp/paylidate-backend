@@ -28,6 +28,26 @@ class InstandpayController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function index()
+    {
+        // $account_sid = getenv("TWILIO_SID");
+        // $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_number = getenv("TWILIO_NUMBER");
+        // $client = new Client($account_sid, $auth_token);
+        // try{
+
+        //     $message = $client->messages->create('+2347034511900', ['from' => $twilio_number, 'body' => 'testing instant pay last']);
+        //     return $message;
+        // }
+        
+        // catch (\Exception $e) {
+
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => $e
+        //     ]);
+        // }
+    }
     public function receive()
     {
         $transaction = Instandpay::where('receiver_id', auth('api')->user()->id)
@@ -104,13 +124,14 @@ class InstandpayController extends Controller
         
         $request->validate([
             
-            'receiver_number' => 'required',
+            'receiver_number' => 'required|numeric',
             'sender_email' => 'required|string|email',
             'amount' => 'required|numeric',
             'payment_ref' => 'required|string',
             
         ]);
-        //return $request->all();
+        //$str = substr($request->receiver_number, 1);
+        //return $str;
         $receiver = User::where('phone', $request->receiver_number)->first();
         if(!$receiver){
             return response()->json([
@@ -154,8 +175,11 @@ class InstandpayController extends Controller
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
         $client = new Client($account_sid, $auth_token);
-        $client->messages->create($input['receiver_number'], ['from' => $twilio_number, 'body' => $body]);
-
+        
+        $frmNum = '+234' . substr($request->receiver_number, 1);
+       // $message = $client->messages->create($frmNum, ['from' => $twilio_number, 'body' => $body]);
+        $client->messages->create($frmNum, ['from' => $twilio_number, 'body' => $body]);
+        
 
         // Http::withHeaders([
         //     'Accept' => 'application/json',

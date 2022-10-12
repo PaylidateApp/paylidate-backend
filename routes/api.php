@@ -26,21 +26,14 @@ Route::namespace('Api')->group(function () {
 
     //Route::get('transfer', 'WithdrawalController@transfer_to_bank');
 
-    Route::get('instant-get', 'InstandpayController@index');
+        //Route::post('instant-pay/tranfer1', 'InstandpayController@transfer');
+        //Route::get('instant-get', 'InstandpayController@index');
     
     Route::post('login', 'AuthController@login');
     Route::post('signup', 'AuthController@signup');
     Route::get('signup/activate/{token}', 'AuthController@signupActivate');
     Route::get('check/email/{email}', 'AuthController@check_email');
     Route::get('product/{slug}', 'ProductController@get_product');
-
-    Route::post('instant/tranfer', 'InstandpayController@transfer');
-    Route::post('instant-pay/verify', 'InstandpayController@verify');
-    Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
-    Route::get('instant-pay/history-send', 'InstandpayController@send');
-    Route::get('instant-pay/history-receive', 'InstandpayController@receive');
-    Route::get('verify-number/{phone_number}', 'InstandpayController@verify_user');
-
 
 
     Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
@@ -91,8 +84,13 @@ Route::namespace('Api')->group(function () {
         Route::get('product/status/canceled/{id}', 'ProductController@canceled');
 
         Route::post('instant-pay/tranfer', 'InstandpayController@transfer');
-
-
+        Route::post('instant/tranfer', 'InstandpayController@transfer');
+        Route::post('instant-pay/verify', 'InstandpayController@verify');
+        Route::post('instant-pay/withdraw', 'InstandpayController@withdraw');
+        Route::get('instant-pay/history-send', 'InstandpayController@send');
+        Route::get('instant-pay/history-receive', 'InstandpayController@receive');
+        Route::get('verify-number/{phone_number}', 'InstandpayController@verify_user');
+    
         Route::post('transaction/accept/{id}', 'TransactionController@accept');
         Route::post('transaction/decline/{id}', 'TransactionController@decline');
         Route::post('transaction/confirm/{id}', 'TransactionController@confirm');
