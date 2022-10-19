@@ -9,10 +9,15 @@ class FlutterwaveService
 {
     public $baseURLBank = 'http://bank_url/api';
     public $baseURL = 'http://154.113.16.142:8882';
+    protected $username = 'username';
+    protected $password = 'password';
 
     public function __construct()
     {
-
+        // $this->baseURLBank = env('BANK_URL');
+        // $this->baseURL = env('FLUTTERWAVE_URL');
+        // $this->username = env('FLUTTERWAVE_USERNAME');
+        // $this->password = env('FLUTTERWAVE_PASSWORD');
     }
 
     // create new virtual account
@@ -23,6 +28,19 @@ class FlutterwaveService
         ])->post($this->baseURL . 'PiPCreateDynamicAccountNumber', [
             'account_name' => $data['name'],
         ]);
+
+        return $response->json();
+    }
+
+    // GET
+    // verify Transaction
+    // http://bank_url/api/PiPverifyTransaction?session_id=204210202000000500002
+    // This endpoint is to verify a transaction by supplying the session id and credentials.
+    public function verifyTransaction($session_id)
+    {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->get($this->baseURLBank . '/PiPverifyTransaction?session_id=' . $session_id);
 
         return $response->json();
     }
@@ -39,18 +57,28 @@ class FlutterwaveService
         return $response->json();
     }
 
-    // get NIP account details
 
-    public function getNIPAccountDetails($data)
+    // 4.1.1 URI
+    // Request Path – /GetBVNDetails HTTP method – POST
+    // 4.1.2 Header
+    // Accept – application/json Content-Type – application/json
+    // 4.1.3 JSON Request and Response
+    // Request Parameter (json string)
+    // { "bvn":"22222222222", "userName":"test", "password":"test"
+    // }
+    public function getBVNDetails($bvn)
     {
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-        ])->post($this->baseURL . '/GetNIPAccount', [
-            'account_number' => $data['account_number'],
+        ])->post($this->baseURL . 'GetBVNDetails', [
+            'bvn' => $bvn,
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
     }
+    
 
     // 4.2.1 URI
     // Request Path – GetNIPAccount HTTP method – POST
@@ -67,8 +95,8 @@ class FlutterwaveService
         ])->post($this->baseURL . '/GetNIPAccount', [
             'accountNumber' => $data['account_number'],
             'beneficiaryBank' => $data['bank_code'],
-            'userName' => 'test',
-            'password' => 'test',
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
@@ -101,8 +129,8 @@ class FlutterwaveService
             'beneficiaryAccountNumber' => $data['beneficiaryAccountNumber'],
             'beneficiaryBank' => $data['beneficiaryBank'],
             'transactionReference' => $data['transactionReference'],
-            'userName' => $data['userName'],
-            'password' => $data['password'],
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
@@ -128,8 +156,8 @@ class FlutterwaveService
             'Content-Type' => 'application/json',
         ])->post($this->baseURL . '/GetNIPTransactionStatus', [
             'transactionReference' => $data['transactionReference'],
-            'userName' => $data['userName'],
-            'password' => $data['password'],
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
@@ -180,8 +208,8 @@ class FlutterwaveService
             'Content-Type' => 'application/json',
         ])->post($this->baseURL . '/GetProvidusTransactionStatus', [
             'transactionReference' => $data['transactionReference'],
-            'userName' => $data['userName'],
-            'password' => $data['password'],
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
@@ -204,8 +232,8 @@ class FlutterwaveService
             'Content-Type' => 'application/json',
         ])->post($this->baseURL . '/GetProvidusAccount', [
             'accountNumber' => $data['accountNumber'],
-            'userName' => $data['userName'],
-            'password' => $data['password'],
+            'userName' => $this->username,
+            'password' => $this->password,
         ]);
 
         return $response->json();
