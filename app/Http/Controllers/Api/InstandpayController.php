@@ -30,7 +30,7 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $account_sid = getenv("TWILIO_SID");
+        $account_sid = getenv("TWILIO_SID") || "ACe205346b3af18acd07295b3c0f38b3f0";
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
         return [$account_sid, $auth_token,$twilio_number];
@@ -175,6 +175,9 @@ class InstandpayController extends Controller
         $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
+        // $account_sid = getenv("TWILIO_SID");
+        // $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_number = getenv("TWILIO_NUMBER");
         $client = new Client($account_sid, $auth_token);
         
         $frmNum = '+234' . substr($request->receiver_number, 1);
