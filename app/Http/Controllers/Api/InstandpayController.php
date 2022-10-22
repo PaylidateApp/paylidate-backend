@@ -40,10 +40,10 @@ class InstandpayController extends Controller
         //     'data' => $response
         // ]);
         //return $response;
-        $account_sid = getenv("TWILIO_SID");
-        $auth_token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_number = getenv("TWILIO_NUMBER");
-        return [$account_sid, $auth_token,$twilio_number];
+        // $account_sid = getenv("TWILIO_SID");
+        // $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        // $twilio_number = getenv("TWILIO_NUMBER");
+        // return [$account_sid, $auth_token,$twilio_number];
         //$client = new Client($account_sid, $auth_token);
         // try{
 
