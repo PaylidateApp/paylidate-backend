@@ -30,7 +30,7 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $account_sid = getenv("TWILIO_SID") || "ACe205346b3af18acd07295b3c0f38b3f0";
+        $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
         return [$account_sid, $auth_token,$twilio_number];
@@ -172,12 +172,12 @@ class InstandpayController extends Controller
 
         $body = 'Paylidate payment of NGN'. $input['amount'].' from '. $input['sender_name']. '. Visit https://paylidate.com/recieve-instant-funds/'. $input['link_token'].' to withdraw. Your withdrawal pin is '. $input['withdrawal_pin']. '. Tracking id '. $input['tracking_id'];
 
-        $account_sid = getenv("TWILIO_SID");
-        $auth_token = getenv("TWILIO_AUTH_TOKEN");
-        $twilio_number = getenv("TWILIO_NUMBER");
         // $account_sid = getenv("TWILIO_SID");
         // $auth_token = getenv("TWILIO_AUTH_TOKEN");
         // $twilio_number = getenv("TWILIO_NUMBER");
+        $account_sid = "ACe205346b3af18acd07295b3c0f38b3f0";
+        $auth_token = "d498da28bbee4d04dee31f0c1eba0f9c";
+        $twilio_number = "+18608132858";
         $client = new Client($account_sid, $auth_token);
         
         $frmNum = '+234' . substr($request->receiver_number, 1);
