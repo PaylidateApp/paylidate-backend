@@ -33,12 +33,12 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        $data['name'] = 'CustomerWize';
-        $response = $this->providusNIPService->getBVNDetails(22222222222);
+        // $data['name'] = 'CustomerWize';
+        // $response = $this->providusNIPService->getBVNDetails(22222222222);
 
-        return response()->json([
-            'data' => $response
-        ]);
+        // return response()->json([
+        //     'data' => $response
+        // ]);
         //return $response;
         $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
