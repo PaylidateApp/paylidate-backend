@@ -5,10 +5,10 @@ namespace App\Services;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 
-class FlutterwaveService
+class ProvidusNIPService
 {
     public $baseURLBank = 'http://bank_url/api';
-    public $baseURL = 'http://154.113.16.142:8882';
+    public $baseURL = 'http://154.113.16.142:8882/api';
     protected $username = 'username';
     protected $password = 'password';
 
@@ -29,7 +29,7 @@ class FlutterwaveService
             'account_name' => $data['name'],
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     // GET
@@ -42,7 +42,7 @@ class FlutterwaveService
             'Content-Type' => 'application/json',
         ])->get($this->baseURLBank . '/PiPverifyTransaction?session_id=' . $session_id);
 
-        return $response->json();
+        return $response;
     }
 
     // get virtual account details
@@ -54,7 +54,7 @@ class FlutterwaveService
             'business_name' => $data['name'],
         ]);
 
-        return $response->json();
+        return $response;
     }
 
 
@@ -76,7 +76,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
     
 
@@ -99,7 +99,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
 
@@ -133,7 +133,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
 
@@ -160,7 +160,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     // get NIP GetNIPBanks
@@ -171,7 +171,7 @@ class FlutterwaveService
         ])->post($this->baseURL . '/GetNIPBanks', [
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     // ProvidusFundTransfer
@@ -187,7 +187,7 @@ class FlutterwaveService
             'account_name' => $data['account_name'],
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     // 4.7.1 URI
@@ -212,7 +212,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
     // 4.8.1 URI
@@ -236,7 +236,7 @@ class FlutterwaveService
             'password' => $this->password,
         ]);
 
-        return $response->json();
+        return $response;
     }
 
 

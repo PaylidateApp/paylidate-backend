@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use App\Services\FlutterwaveService;
+use App\Services\ProvidusNIPService;
 use Illuminate\Support\Facades\DB;
 use Twilio\Rest\Client;
 
@@ -18,10 +19,12 @@ class InstandpayController extends Controller
 {
 
     protected $flutterwaveService;
+    protected $providusNIPService;
 
     public function __construct(){
 
         $this->flutterwaveService = new FlutterwaveService;
+        $this->providusNIPService = new ProvidusNIPService;
     }
     /**
      * Display a listing of the resource.
@@ -30,6 +33,11 @@ class InstandpayController extends Controller
      */
     public function index()
     {
+        // $data['name'] = 'CustomerWize';
+        // return $this->providusNIPService->getBVNDetails('22222222222');
+
+
+        //return $response;
         $account_sid = getenv("TWILIO_SID");
         $auth_token = getenv("TWILIO_AUTH_TOKEN");
         $twilio_number = getenv("TWILIO_NUMBER");
