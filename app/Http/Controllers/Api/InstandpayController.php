@@ -30,10 +30,11 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-        // $account_sid = getenv("TWILIO_SID");
-        // $auth_token = getenv("TWILIO_AUTH_TOKEN");
-        // $twilio_number = getenv("TWILIO_NUMBER");
-        // $client = new Client($account_sid, $auth_token);
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        return [$account_sid, $auth_token,$twilio_number];
+        //$client = new Client($account_sid, $auth_token);
         // try{
 
         //     $message = $client->messages->create('+2347034511900', ['from' => $twilio_number, 'body' => 'testing instant pay last']);
