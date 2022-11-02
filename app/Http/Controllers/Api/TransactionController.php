@@ -36,7 +36,7 @@ class TransactionController extends Controller
         //////////Transaction::truncate()
 
 
-        ////////// \Artisan::call('migrate:rollback --step=1');
+        \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
 
 
