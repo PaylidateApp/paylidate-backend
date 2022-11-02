@@ -226,7 +226,7 @@ class FlutterwaveService
         return $response;
     }
 
-//$request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency
+    //$request->account_bank, $request->account_number, $request->amount, $request->narration, $request->currency, $request->reference, $request->debit_currency
     public function transfer_to_bank($param)
     {
         //return env('APP_NAME');

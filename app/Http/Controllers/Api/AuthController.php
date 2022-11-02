@@ -12,7 +12,7 @@ use App\Wallet;
 use App\UserAccount;
 use Auth;
 use Carbon\Carbon;
-use App\Services\walletService;
+use App\Services\WalletService;
 
 
 
@@ -30,7 +30,7 @@ class AuthController extends Controller
     public function __construct()
     {
 
-        $this->walletService = new walletService;
+        $this->walletService = new WalletService;
     }
 
 

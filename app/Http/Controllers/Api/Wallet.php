@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use App\Wallet;
 use Auth;
-use App\Services\walletService;
+use App\Services\WalletService;
 
 class AccountController extends Controller
 {
@@ -17,7 +17,7 @@ class AccountController extends Controller
     public function __construct()
     {
 
-        $this->walletService = new walletService;
+        $this->walletService = new WalletService;
     }
 
 
