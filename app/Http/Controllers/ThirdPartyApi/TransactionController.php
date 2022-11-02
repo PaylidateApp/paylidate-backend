@@ -34,7 +34,7 @@ class TransactionController extends Controller
     public function index()
     {
         //Transaction::truncate()
-         \Artisan::call('migrate');
+        //\Artisan::call('migrate');
 
 
         $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
@@ -140,12 +140,11 @@ class TransactionController extends Controller
 
         if ($transaction->transaction_reported_at && $transaction->status == 3 && Carbon::parse($transaction->transaction_reported_at)->addHours(24)->isPast()) {
 
-                $transaction->update([
-                    'status' => 4
-                ]);                
-            
+            $transaction->update([
+                'status' => 4
+            ]);
         }
-        
+
         $transaction['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
         $userID;
         if ($transaction->product->transaction_type == 'sell') {
@@ -153,10 +152,10 @@ class TransactionController extends Controller
         } else {
             $userID = $transaction->user_id;
         }
-        
-        $seller =User::where('id', $userID)->first();
 
-        $transaction['seller_email'] = $seller->email;            
+        $seller = User::where('id', $userID)->first();
+
+        $transaction['seller_email'] = $seller->email;
         $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
         $transaction['bank'] = Bank::where('user_id', auth('api')->user()->id)->first();
         $transaction['withdrawal_request'] = Withdrawal::where('transaction_id', $transaction->id)->first();
@@ -229,8 +228,8 @@ class TransactionController extends Controller
     public function confirm($id)
     {
         $transaction = Transaction::where('id', $id)->with('product')->first();
-        
-            // This condition checks the id if the authenticated user is one buying thr poduct
+
+        // This condition checks the id if the authenticated user is one buying thr poduct
         if ($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) {
             $transaction->update([
                 'status' => 1
@@ -273,28 +272,28 @@ class TransactionController extends Controller
     public function reportTransaction($id, Request $request)
     {
         $request->validate([
-            
+
             'sellerEmail' => 'required|string|email',
             'report' => 'required|string|min:5',
-            
+
         ]);
         $transaction = Transaction::where('id', $id)->first();
         //return $transaction;
         if (($transaction->product->transaction_type == 'buy' && $transaction->product->user_id == auth('api')->user()->id) || ($transaction->product->transaction_type == 'sell' && $transaction->user_id == auth('api')->user()->id)) {
             $transaction->update([
                 'status' => 3,
-                'transaction_reported_at'=>Carbon::now()
+                'transaction_reported_at' => Carbon::now()
             ]);
-            
-            if($transaction){
-                
-            $user = User::where('email', $request->sellerEmail)->first();
-             Mail::to($request->sellerEmail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $request->report));
-             
-             Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
-             Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
-             Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report', $request->report));
-             }
+
+            if ($transaction) {
+
+                $user = User::where('email', $request->sellerEmail)->first();
+                Mail::to($request->sellerEmail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'report', $request->report));
+
+                Mail::to('hello@paylidate.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
+                Mail::to('holyphilzy@gmail.com')->send(new ReportTransaction('Admin', $transaction->transaction_ref, 'report', $request->report));
+                Mail::to('sirlawattah@gmail.com')->send(new ReportTransaction('Lawrence', $transaction->transaction_ref, 'report', $request->report));
+            }
 
             return response()->json([
                 'status' => 'success',
@@ -322,7 +321,7 @@ class TransactionController extends Controller
             $transaction->update([
                 'status' => 2
             ]);
-            
+
             $user = User::where('email', $sellerEmail)->first();
             Mail::to($sellerEmail)->send(new ReportTransaction($user->name, $transaction->transaction_reff, 'resolve'));
 

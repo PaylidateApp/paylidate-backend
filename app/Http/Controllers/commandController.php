@@ -13,9 +13,8 @@ class commandController extends Controller
      */
     public function index()
     {
-        if($password == '12345secret')
-        {
-            \Artisan::call('migrate');
+        if ($password == '12345secret') {
+            // \Artisan::call('migrate');
             dd('Command executed succefull');
         }
     }
