@@ -15,6 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
+        DB::table('migrations')
+            ->where('id', 10)
+            ->update(['batch' => 10]);
         $users = DB::select('select * from users');
         $migrattion = DB::select('select * from migrations');
         return $migrattion;
