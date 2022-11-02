@@ -16,24 +16,23 @@ class UserController extends Controller
     public function index()
     {
         $users = DB::select('select * from users');
-        return $users;
+        $migrattion = DB::select('select * from migrations');
+        return $migrattion;
         $Instandpay = DB::select('select * from migrations');
-       
     }
     public function indexx1($id)
     {
 
-        if($id == 12345){
+        if ($id == 12345) {
 
-            DB::insert('insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)', 
-            [33, 77, 40, 7, 'Payment for Real Estate Theme', 'NGN', 29655266, true]);
+            DB::insert(
+                'insert into withdrawals (user_id, transaction_id, payment_id, bank_id, narration, debit_currency, f_withdrawal_id, status) values (?, ?, ?, ?, ?, ?, ?, ?)',
+                [33, 77, 40, 7, 'Payment for Real Estate Theme', 'NGN', 29655266, true]
+            );
             return 'good';
-        }
-        else{
+        } else {
             return 'bad';
-
         }
-        
     }
 
     /**

@@ -21,10 +21,10 @@ class UserTable extends Seeder
             'is_admin' => true,
             'is_staff' => true
         ]);
-        Wallet::create([
-            'user_id' => 1,
-            'wallet' => 200000
-        ]);
+        // Wallet::create([
+        //     'user_id' => 1,
+        //     'wallet' => 200000
+        // ]);
 
         // $user_virtual_card = new VirtualCard;
 
@@ -52,12 +52,12 @@ class UserTable extends Seeder
             'email' => 'staff@gmail.com',
             'password' =>  bcrypt('secret'),
             'is_staff' => true,
-            
+
         ]);
-        Wallet::create([
-            'user_id' => 2,
-            'wallet' => 200000
-        ]);
+        // Wallet::create([
+        //     'user_id' => 2,
+        //     'wallet' => 200000
+        // ]);
 
         User::create([
             'name' => 'Philemon',
@@ -66,10 +66,10 @@ class UserTable extends Seeder
             'is_admin' => true,
             'is_staff' => true
         ]);
-        Wallet::create([
-            'user_id' => 3,
-            'wallet' => 200000
-        ]);
+        // Wallet::create([
+        //     'user_id' => 3,
+        //     'wallet' => 200000
+        // ]);
 
         //  // create NGN virtual card for transactions
         //  $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = 'Paylidate Staff');

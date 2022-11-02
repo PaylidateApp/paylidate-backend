@@ -7,14 +7,14 @@ use Illuminate\Http\Request;
 use App\Mail\RegistrationMail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use Validator;
 use App\User;
 use App\Wallet;
 use App\UserAccount;
 use Auth;
-use App\VirtualCard;
 use Carbon\Carbon;
-use App\Transaction;
+use App\Services\walletService;
+
+
 
 
 /**
@@ -24,20 +24,16 @@ use App\Transaction;
  */
 class AuthController extends Controller
 {
-    /**
-     * Create user
-     *
-     * the user signup routs
-     *
-     * @bodyParam name string required the full name of the user
-     * @bodyParam email string required the email of the user , this value is unige
-     * @bodyParam phone string required the valide phone number of the user, this value is unige
-     * @bodyParam password string required the users prefered password
-     * @bodyParam password_confirmation string required the confirmation password. must be thesame as the password
-     *
-     *
-     * @return [string] message
-     */
+
+    protected $walletService;
+
+    public function __construct()
+    {
+
+        $this->walletService = new walletService;
+    }
+
+
     public function signup(Request $request)
     {
         //return user::all();
@@ -47,21 +43,21 @@ class AuthController extends Controller
             'password' => 'required',
             'password_confirmation' => 'required|same:password',
             'phone' => 'required|unique:users',
-    
-            
+
+
         ]);
 
         // if(isset($request->phone)){
         //     $request->validate([
         //         'phone' => 'unique:users',        
-                
+
         //     ]);
         // }       
 
 
         $user = User::where('email', $request->get('email'))->first();
 
-        
+
         if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
             $user->update([
                 'name' => $request->name,
@@ -71,9 +67,7 @@ class AuthController extends Controller
                 'referral_token' => Str::random(10) . date('dmyHis'),
             ]);
 
-            Wallet::create([
-                'user_id' => $user->id,
-            ]);
+            $this->walletService->createWallet($user->id, $user->name);
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
@@ -84,7 +78,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                // 'account' => $virtual_account['data']
+
             ]);
         } elseif ($user) {
             return response()->json([
@@ -104,9 +98,7 @@ class AuthController extends Controller
             $input['referral_token'] = Str::random(10) . date('dmyHis');
             $user = User::create($input);
 
-            Wallet::create([
-                'user_id' => $user->id,
-            ]);
+            $this->walletService->createWallet($user->id, $user->name);
 
             $tokenResult = $user->createToken('Personal Access Token');
             $token = $tokenResult->token;
@@ -117,7 +109,7 @@ class AuthController extends Controller
                 'message' => 'User created',
                 'access_token' => $tokenResult->accessToken,
                 'data' => $user->load('wallet'),
-                // 'account' => $virtual_account['data']
+
             ]);
         }
     }
