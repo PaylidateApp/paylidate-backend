@@ -98,6 +98,7 @@ class WalletController extends Controller
             $header = $request->header('X-Auth-Signature');
             if ($header != $app_header || !$virtual_account_number) {
                 return response()->json([
+                    "header" => $app_header,
                     "requestSuccessful" => true,
                     "sessionId" => $session_id,
                     "responseMessage" => "rejected transaction",
