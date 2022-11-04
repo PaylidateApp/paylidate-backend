@@ -134,7 +134,12 @@ class WalletController extends Controller
                 "responseCode" => "00"
             ]);
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                "requestSuccessful" => true,
+                "sessionId" => $session_id,
+                "responseMessage" => "rejected transaction",
+                "responseCode" => "02"
+            ]);
         }
     }
 
