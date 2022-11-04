@@ -35,9 +35,12 @@ class InstandpayController extends Controller
      */
     public function index()
     {
-
-        $response = $this->providusNIPService->getBVNDetails(22222222222);
-        return  $response;
+        //return 'ffvfg';
+        // $name = 'philemon';
+        // $response = $this->providusNIPService->createVirtualAccount($name);
+        // $result = (json_decode($response));
+        // dd($result->account_name);
+        //return  $response;
     }
     public function receive()
     {

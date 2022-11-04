@@ -21,14 +21,18 @@ class WalletService
     {
         try {
             $accountRresponse = $this->providusNIPService->createVirtualAccount($account_name); // creating a virtual account number
+            $accountRresponse = (json_decode($accountRresponse));
 
-            // creat a wallet for a user
+            // creat a wallet for a 
+            // return [
+            //     $accountRresponse->initiationTranRef,
+            //     $accountRresponse->account_name,
+            //     $accountRresponse->account_number
+            // ];
             $response = Wallet::create([
                 'user_id' => $user_id,
-                'account_name' => $accountRresponse['account_name'],
-                'account_number' => $accountRresponse['account_number'],
-                'initiationTranRef' => $accountRresponse['initiationTranRef'],
-
+                'account_name' => $accountRresponse->account_name,
+                'account_number' => $accountRresponse->account_number,
             ]);
             return $response;
         } catch (\Exception $e) {

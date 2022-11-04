@@ -20,7 +20,6 @@ class CreateWalletsTable extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('account_name');
             $table->string('account_number')->unique();
-            $table->string('initiationTranRef')->unique();
             $table->decimal('balance')->nullable()->default(0.00);
             $table->decimal('bonus')->nullable()->default(0.00);
             $table->timestamps();

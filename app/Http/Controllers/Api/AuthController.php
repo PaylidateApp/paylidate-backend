@@ -57,60 +57,63 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->get('email'))->first();
 
+        try {
+            if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
+                $user->update([
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'password' => bcrypt($request->password),
+                    'active' => true,
+                    'referral_token' => Str::random(10) . date('dmyHis'),
+                ]);
 
-        if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
-            $user->update([
-                'name' => $request->name,
-                'phone' => $request->phone,
-                'password' => bcrypt($request->password),
-                'active' => true,
-                'referral_token' => Str::random(10) . date('dmyHis'),
-            ]);
+                $this->walletService->createWallet($user->id, $user->name);
 
-            $this->walletService->createWallet($user->id, $user->name);
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
 
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->token;
-            $token->save();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user->load('wallet'),
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'User created',
-                'access_token' => $tokenResult->accessToken,
-                'data' => $user->load('wallet'),
+                ]);
+            } elseif ($user) {
+                return response()->json([
+                    'status' => 'exist',
+                    'message' => 'User already exist. please login',
+                ], 409);
+            } else {
 
-            ]);
-        } elseif ($user) {
-            return response()->json([
-                'status' => 'exist',
-                'message' => 'User already exist. please login',
-            ], 409);
-        } else {
-
-            $emailToken = Str::random(8) . date('dmyHis');
-            $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
-            //return $verifyEmailLink;
+                $emailToken = Str::random(8) . date('dmyHis');
+                $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
+                //return $verifyEmailLink;
 
 
-            $input = $request->all();
-            $input['password'] = bcrypt($input['password']);
-            $input['email_token'] = $emailToken;
-            $input['referral_token'] = Str::random(10) . date('dmyHis');
-            $user = User::create($input);
+                $input = $request->all();
+                $input['password'] = bcrypt($input['password']);
+                $input['email_token'] = $emailToken;
+                $input['referral_token'] = Str::random(10) . date('dmyHis');
+                $user = User::create($input);
 
-            $this->walletService->createWallet($user->id, $user->name);
+                $wallet = $this->walletService->createWallet($user->id, $user->name);
 
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->token;
-            $token->save();
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'User created',
-                'access_token' => $tokenResult->accessToken,
-                'data' => $user->load('wallet'),
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user->load('wallet'),
 
-            ]);
+                ]);
+            }
+        } catch (\Exception $e) {
+            return $e;
         }
     }
 

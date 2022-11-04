@@ -109,8 +109,8 @@ class ProvidusNIPService
             $response = curl_exec($curl);
 
             curl_close($curl);
-            echo $response;
             return $response;
+            // return $response;
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
