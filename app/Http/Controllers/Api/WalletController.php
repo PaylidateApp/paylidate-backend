@@ -96,7 +96,7 @@ class WalletController extends Controller
             $app_header = getenv("X_AUTH_SIGNATURE");
             // rejected for invalid header
             $header = $request->header('X-Auth-Signature');
-            if ($header != $app_header || !$virtual_account_number || $request->transactionAmount > 0) {
+            if ($header != $app_header || !$virtual_account_number || $request->transactionAmount < 0) {
                 return response()->json([
                     "requestSuccessful" => true,
                     "sessionId" => $session_id,
