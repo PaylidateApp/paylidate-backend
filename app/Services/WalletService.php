@@ -28,7 +28,7 @@ class WalletService
             //     $accountRresponse->initiationTranRef,
             //     $accountRresponse->account_name,
             //     $accountRresponse->account_number
-            /// ];
+            /// ];/
             return "response";
 
             $response = Wallet::create([
