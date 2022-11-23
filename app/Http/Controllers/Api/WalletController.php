@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use App\Wallet;
-use App\WalletsettlementId;
-use Auth;
 use App\Services\ProvidusNIPService;
 use App\Services\WalletService;
+use App\WalletHistory;
+use App\WalletsettlementId;
 
 class WalletController extends Controller
 {
@@ -35,18 +35,18 @@ class WalletController extends Controller
         //     ->get();
 
         try {
-            $wallet = Wallet::where('user_id', auth('api')->user()->id)->first();
-            if (!$wallet) {
-                $wallet = $this->walletService->createWallet(auth('api')->user()->id, auth('api')->user()->name);
-            }
+            $wallet = Wallet::where('user_id', auth('api')->user()->id)->with('wallet_history')->get();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'successful',
+                'message' => 'success',
                 'data' => $wallet
-            ], 200);
+            ]);
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e,
+            ]);
         }
     }
 
@@ -55,6 +55,10 @@ class WalletController extends Controller
     {
         try {
 
+            $request->validate([
+                'bvn' => 'required|min:11|max:11'
+            ]);
+
             $wallet = Wallet::where('user_id', auth('api')->user()->id)->first();
             if ($wallet) {
                 return response()->json([
@@ -62,14 +66,27 @@ class WalletController extends Controller
                     'message' => 'This user already has an account',
                 ], 400);
             }
-            $wallet = $this->walletService->createWallet(auth('api')->user()->id, auth('api')->user()->name);
+            $user = auth('api')->user();
+            $wallet = $this->walletService->createWallet($user->id, $user->email, $user->name, $request->bvn);
+
+            if ($wallet['status'] == "error") {
+
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $wallet["message"]
+                ]);
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'success',
                 'data' => $wallet
             ], 201);
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                'status' => 'error',
+                'message' => $e,
+            ]);
         }
     }
 
@@ -78,80 +95,169 @@ class WalletController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function creditWalletByFL(Request $request)
+    {
+        try {
+            $request->validate([
+                'tx_ref' => 'required|string',
+                'narration' => 'required|string',
+                'amount' => 'required|numeric'
+            ]);
+
+            $user = auth('api')->user();
+            $tx_ref = $request->tx_ref;
+            $amount = $request->amount;
+
+            $wallet = Wallet::where('user_id', $user->id)->first();
+
+            $settlement = WalletsettlementId::where('settlementId', $tx_ref)->first();
+
+            if ($settlement) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Duplicate Transaction',
+                ], 422);
+            }
+
+            if (!$wallet || $amount < 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Transaction rejected, Amount must be greater than 1 NGN',
+                ], 400);
+            }
+
+            // storing settlementId
+            WalletsettlementId::create([
+                'wallet_id' => $wallet->id,
+                'settlementId' => $tx_ref,
+            ]);
+
+            // credit wallet
+            $credited = $this->walletService->creditWalletById($user->id, $amount);
+
+            $history = $this->walletService->walletHistory($user->id, 'credit', $amount, $request->narration, $credited['data']->id, $credited['data']->balance - $amount, $credited['data']->balance);
+
+            if ($history['status'] == 'success') {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'success',
+                    'data' => $history['data']
+                ], 200);
+            }
+
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'message' => 'an error occured',
+                ],
+                400
+            );
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e,
+            ], 400);
+        }
+    }
     public function creditWalletByTransfer(Request $request)
     {
         try {
 
-            $session_id = $request->sessionId;
-            $settlement_id = $request->settlementId;
+            $tx_ref = $request->data['tx_ref'];
+            $amount = $request->data['amount'];
+            $settlement_id = $request->data['id'];
 
-            $virtual_account_number = Wallet::where('account_number', $request->accountNumber)->first();
-            $settlement = WalletsettlementId::where('settlementId', $settlement_id)->first();
-
-            $verifyTransaction = $this->providusNIPService->verifyTransactionBySettlementId('204210202000000700001');
-            $verifyTransaction = (json_decode($verifyTransaction));
-
-            //return $verifyTransaction->sessionId;
+            $virtual_account_number = Wallet::where('tx_ref', $tx_ref)->first();
 
             $app_header = getenv("X_AUTH_SIGNATURE");
             // rejected for invalid header
-            $header = $request->header('X-Auth-Signature');
-            if ($header != $app_header || !$virtual_account_number || $request->transactionAmount < 1) {
+            $header = $request->header('verif-hash');
+            if ($header != $app_header) {
                 return response()->json([
-                    "requestSuccessful" => true,
-                    "sessionId" => $session_id,
-                    "responseMessage" => "rejected transaction",
-                    "responseCode" => "02"
+                    'status' => 'error',
+                    'message' => 'invalid auth header',
                 ]);
             }
 
-            // duplicate
+            $settlement = WalletsettlementId::where('settlementId', $settlement_id)->first();
+
             if ($settlement) {
                 return response()->json([
-                    "requestSuccessful" => true,
-                    "sessionId" => $session_id,
-                    "responseMessage" => "duplicate transaction",
-                    "responseCode" => "01"
-                ]);
+                    'status' => 'error',
+                    'message' => 'Duplicate Transaction',
+                ], 401);
             }
 
+            if (!$virtual_account_number || $amount < 1) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Transaction rejected, Amount must be greater than 1 NGN',
+                ], 400);
+            }
 
             // storing settlementId
             WalletsettlementId::create([
                 'wallet_id' => $virtual_account_number->id,
                 'settlementId' => $settlement_id,
-
-
             ]);
 
             // credit wallet
-            $this->walletService->creditWalletByAccountNumber($request->accountNumber, $request->transactionAmount);
+            $this->walletService->creditWalletBytx_ref($tx_ref, $amount);
+
+            //wallet history
+            $this->walletService->walletHistory($virtual_account_number->user_id, 'credit', $amount, "Credit wallet by bank transfer", $virtual_account_number->id, $virtual_account_number->balance - $amount, $virtual_account_number->balance);
 
             return response()->json([
-                "requestSuccessful" => true,
-                "sessionId" => $session_id,
-                "responseMessage" => "success",
-                "responseCode" => "00"
-            ]);
+                'status' => 'success',
+                'message' => 'success',
+            ], 200);
         } catch (\Exception $e) {
             return response()->json([
-                "requestSuccessful" => true,
-                "sessionId" => $session_id,
-                "responseMessage" => "rejected transaction",
-                "responseCode" => "02"
-            ]);
+                'status' => 'error',
+                'message' => $e,
+            ], 400);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    // debit Wallet
+    public function debitWallet(Request $request)
     {
-        //
+        try {
+            $request->validate([
+                'amount' => 'required|numeric',
+                'narration' => 'required|string'
+
+            ]);
+
+            $user = auth('api')->user();
+            $amount = $request->amount;
+            $wallet = $this->walletService->debitWallet($user->id, $amount);
+            if ($wallet['status'] === 'error') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => $wallet['message']
+
+                ], 200);
+            }
+
+            if ($wallet['status'] == 'success') {
+                $history = $this->walletService->walletHistory($user->id, 'debit', $amount, $request->narration, $wallet['data']->id, $wallet['data']->balance + $amount, $wallet['data']->balance);
+
+                if ($history['status'] == 'success') {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'success',
+                        'data' => $history['data']
+                    ], 200);
+                }
+            }
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e,
+            ], 400);
+        }
     }
 
     /**

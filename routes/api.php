@@ -20,7 +20,9 @@ use PHPUnit\Util\Getopt;
 //     return $request->user();
 // });
 
-// This endpoint is to be consume by providuce bank
+
+// This endpoint is to be consume by flutterwave.
+// It is for credting wallet by transfer
 Route::namespace('Api')->group(
     function () {
         Route::post('settlement_notif', 'WalletController@creditWalletByTransfer');
@@ -82,8 +84,13 @@ Route::group(['prefix' => 'api'], function () {
 
             Route::get('product/resolve-dispute/{id}', 'ProductController@resolve_dispute');
 
-            Route::get('wallet', 'WalletController@index');
-            Route::post('wallet-create', 'WalletController@create');
+            // wallet routes
+            Route::get('get-wallet', 'WalletController@index');
+            Route::post('create-wallet', 'WalletController@create');
+            Route::post('credit-wallet', 'WalletController@creditWalletByFL');
+            Route::post('debit-wallet', 'WalletController@debitWallet');
+            Route::get('get-wallet-history', 'WalletHistoryController@index');
+
 
             Route::resource('product', 'ProductController');
 

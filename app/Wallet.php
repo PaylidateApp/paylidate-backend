@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wallet extends Model
 {
     protected $fillable = [
-        'user_id', 'account_name', 'account_number', 'balance', 'bonus'
+        'user_id', 'order_ref', 'tx_ref', 'account_number', 'balance', 'bonus'
     ];
 
     public function user()
@@ -18,5 +18,10 @@ class Wallet extends Model
     public function wallet_settlement()
     {
         return $this->hasMany('App\WalletsettlementId');
+    }
+
+    public function wallet_history()
+    {
+        return $this->hasMany('App\WalletHistory');
     }
 }

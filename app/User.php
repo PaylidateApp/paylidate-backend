@@ -30,7 +30,7 @@ class User extends Authenticatable
         'password', 'remember_token', 'email_token'
     ];
 
-        public function setEmailAttribute($value)
+    public function setEmailAttribute($value)
     {
         $this->attributes['email'] = strtolower($value);
     }
@@ -56,6 +56,11 @@ class User extends Authenticatable
     public function wallet()
     {
         return $this->hasOne('App\Wallet');
+    }
+
+    public function wallet_history()
+    {
+        return $this->hasMany('App\WalletHistory');
     }
 
     public function dispute()

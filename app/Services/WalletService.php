@@ -4,37 +4,38 @@ namespace App\Services;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
-use App\Services\ProvidusNIPService;
+use App\Services\FlutterwaveService;
 use App\Wallet;
-
+use App\WalletHistory;
 
 class WalletService
 {
-    protected $providusNIPService;
+    protected $FlutterwaveService;
     public function __construct()
     {
-        $this->providusNIPService = new ProvidusNIPService;
+        $this->FlutterwaveService = new FlutterwaveService;
     }
 
     // create a virtual account and a user wallet
-    public function createWallet($user_id, $account_name)
+    public function createWallet($user_id, $email, $name, $bvn)
     {
+        $tx_ref = 'PD' . '_' . $user_id . time();
         try {
-            $accountRresponse = $this->providusNIPService->createVirtualAccount($account_name); // creating a virtual account number
-            $accountRresponse = (json_decode($accountRresponse));
-
-            // creat a wallet for a 
-            // return [
-            //     $accountRresponse->initiationTranRef,
-            //     $accountRresponse->account_name,
-            //     $accountRresponse->account_number
-            /// ];/
-            return "response";
-
+            $accountResponse = $this->FlutterwaveService->createVirtualAccount($email, $name, $tx_ref, $bvn); // creating a virtual account number
+            //  return $accountResponse;
+            if ($accountResponse->status !== 'success') {
+                return [
+                    'status' => 'error',
+                    'message' => 'Virtual Account not created'
+                ];
+            }
+            $accountResponse = $accountResponse->data;
+            //return $accountResponse->order_ref;
             $response = Wallet::create([
                 'user_id' => $user_id,
-                'account_name' => $accountRresponse->account_name,
-                'account_number' => $accountRresponse->account_number,
+                'tx_ref' => $tx_ref,
+                'order_ref' => $accountResponse->order_ref,
+                'account_number' => $accountResponse->account_number,
             ]);
             return $response;
         } catch (\Exception $e) {
@@ -50,7 +51,10 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0'
+                ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
             $balance =  $wallet->balance + $amount;
@@ -58,7 +62,10 @@ class WalletService
                 'balance' => $balance
             ]);
 
-            return $wallet;
+            return [
+                'status' => 'success',
+                'data' => $wallet
+            ];
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
@@ -67,17 +74,20 @@ class WalletService
         }
     }
 
-    // credit Wallet by user wallect account number
-    public function creditWalletByAccountNumber($account_number, $amount)
+    // credit Wallet by user wallect transaction ref
+    public function creditWalletBytx_ref($tx_ref, $amount)
     {
         try {
-            $wallet = Wallet::where('account_number', $account_number)->first();
+            $wallet = Wallet::where('tx_ref', $tx_ref)->first();
             $balance =  $wallet->balance + $amount;
             $wallet->update([
                 'balance' => $balance
             ]);
 
-            return $wallet;
+            return [
+                'status' => 'success',
+                'data' => $wallet
+            ];
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
@@ -92,18 +102,29 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0 NGN'
+                ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
             if ($wallet->balance - $amount < 0) {
-                abort(400, "insufficient fund");
+
+                return [
+                    'status' => 'error',
+                    'message' => 'insufficient fund'
+                ];
             }
             $balance =  $wallet->balance - $amount;
             $wallet->update([
                 'balance' => $balance
             ]);
 
-            return $wallet;
+            return [
+                'status' => 'success',
+                'data' => $wallet
+            ];
         } catch (\Exception $e) {
             return [
                 'status' => 'error',
@@ -117,11 +138,17 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0'
+                ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
             if ($wallet->bonus - $amount < 0) {
-                abort(400, "insufficient bonus");
+                return [
+                    'status' => 'error',
+                    'message' => 'insufficient bonus'
+                ];
             }
             $balance =  $wallet->balance + $amount;
             $wallet->update([
@@ -143,11 +170,17 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0 NGN'
+                ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
             if ($wallet->bonus - $amount < 0) {
-                abort(400, "insufficient bonus");
+                return [
+                    'status' => 'error',
+                    'message' => 'insufficient bonus'
+                ];
             }
 
             $wallet->update([
@@ -168,7 +201,11 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0'
+                ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
 
@@ -191,7 +228,10 @@ class WalletService
     {
         try {
             if ($amount < 1) {
-                abort(400, "amount must be greater than 0");
+                return [
+                    'status' => 'error',
+                    'message' => 'amount must be greater than 0'
+                ];
             }
             $wallet = Wallet::where('account_number', $account_number)->first();
 
@@ -201,6 +241,32 @@ class WalletService
             ]);
 
             return $wallet;
+        } catch (\Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => $e
+            ];
+        }
+    }
+
+    // Wallet history
+    public function walletHistory($user_id, $type, $amount, $narration, $wallet_id, $balance_before, $balance_after)
+    {
+        try {
+
+            $response = WalletHistory::create([
+                'user_id' => $user_id,
+                'wallet_id' => $wallet_id,
+                'type' => $type,
+                'amount' => $amount,
+                'narration' => $narration,
+                'balance_before' => $balance_before,
+                'balance_after' => $balance_after,
+            ]);
+            return [
+                'status' => 'success',
+                'data' => $response
+            ];
         } catch (\Exception $e) {
             return [
                 'status' => 'error',

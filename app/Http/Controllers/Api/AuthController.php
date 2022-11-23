@@ -8,11 +8,10 @@ use App\Mail\RegistrationMail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\User;
-use App\Wallet;
 use App\UserAccount;
 use Auth;
 use Carbon\Carbon;
-use App\Services\WalletService;
+
 
 
 
@@ -25,39 +24,37 @@ use App\Services\WalletService;
 class AuthController extends Controller
 {
 
-    protected $walletService;
 
     public function __construct()
     {
-
-        $this->walletService = new WalletService;
     }
 
 
     public function signup(Request $request)
     {
-        //return user::all();
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'email' => 'required|string|email|max:255',
-            'password' => 'required',
-            'password_confirmation' => 'required|same:password',
-            'phone' => 'required|unique:users',
-
-
-        ]);
-
-        // if(isset($request->phone)){
-        //     $request->validate([
-        //         'phone' => 'unique:users',        
-
-        //     ]);
-        // }       
-
-
-        $user = User::where('email', $request->get('email'))->first();
-
         try {
+            //return $request;
+            $request->validate([
+                'name' => 'required|string|min:3',
+                'email' => 'required|string|email|max:255',
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password',
+                'phone' => 'required|unique:users',
+
+
+            ]);
+
+            // if(isset($request->phone)){
+            //     $request->validate([
+            //         'phone' => 'unique:users',        
+
+            //     ]);
+            // }       
+
+
+            $user = User::where('email', $request->get('email'))->first();
+
+
             if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
                 $user->update([
                     'name' => $request->name,
@@ -67,8 +64,6 @@ class AuthController extends Controller
                     'referral_token' => Str::random(10) . date('dmyHis'),
                 ]);
 
-                $this->walletService->createWallet($user->id, $user->name);
-
                 $tokenResult = $user->createToken('Personal Access Token');
                 $token = $tokenResult->token;
                 $token->save();
@@ -77,7 +72,7 @@ class AuthController extends Controller
                     'status' => 'success',
                     'message' => 'User created',
                     'access_token' => $tokenResult->accessToken,
-                    'data' => $user->load('wallet'),
+                    'data' => $user,
 
                 ]);
             } elseif ($user) {
@@ -98,8 +93,6 @@ class AuthController extends Controller
                 $input['referral_token'] = Str::random(10) . date('dmyHis');
                 $user = User::create($input);
 
-                $wallet = $this->walletService->createWallet($user->id, $user->name);
-
                 $tokenResult = $user->createToken('Personal Access Token');
                 $token = $tokenResult->token;
                 $token->save();
@@ -108,12 +101,17 @@ class AuthController extends Controller
                     'status' => 'success',
                     'message' => 'User created',
                     'access_token' => $tokenResult->accessToken,
-                    'data' => $user->load('wallet'),
+                    'data' => $user,
 
                 ]);
             }
         } catch (\Exception $e) {
-            return $e;
+            return response()->json([
+                'status' => 'Error',
+                'message' => $e,
+
+
+            ]);
         }
     }
 
@@ -171,7 +169,7 @@ class AuthController extends Controller
                 'message' => 'Your account is not activated'
             ], 401);
 
-        $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $user = User::where('id', Auth::user()->id)->first();
 
         // $user_account = new UserAccount;
         // $account = $user_account->where('user_id', Auth::user()->id)->first();
@@ -198,7 +196,7 @@ class AuthController extends Controller
             'status' => 'success',
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
-            'data' => $user->load('wallet'),
+            'data' => $user
             // 'account' => $account
         ]);
     }
@@ -229,7 +227,7 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $user = User::where('id', Auth::user()->id)->first();
         $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
         if ($account && $account->ref) {
@@ -244,7 +242,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'user fetched',
-            'data' => $user->load('wallet'),
+            'data' => $user,
             'account' => $account
         ]);
     }
@@ -275,7 +273,7 @@ class AuthController extends Controller
             'status' => 'success',
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
-            'data' => $user->load('wallet'),
+            'data' => $user,
             // 'account' => $account
         ]);
     }
@@ -304,7 +302,7 @@ class AuthController extends Controller
                 'message' => 'Email verification link sent',
 
             ]);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
 
             return response()->json([
                 'status' => 'error',
@@ -338,7 +336,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'user activated',
-            'data' => $user->load('wallet')
+            'data' => $user
         ]);
     }
 
@@ -364,7 +362,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'User updated',
-            'data' => $user->load('wallet'),
+            'data' => $user,
         ]);
     }
 

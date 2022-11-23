@@ -116,16 +116,36 @@ class FlutterwaveService
         return $response;
     }
 
-    public function createVirtualAccount($email, $is_permanent, $name)
+    public function createVirtualAccount($email, $name, $tx_ref, $bvn)
+    {
+        $header =  array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . env('FLW_SECRET_KEY')
+        );
+        $arr = array('email' => $email, 'is_permanent' => true, 'bvn' => $bvn, 'tx_ref' => $tx_ref, 'narration' => $name,);
+        $curl = curl_init();
+        $param = json_encode($arr);
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('FLW_BASE_URL') . '/v3/virtual-account-numbers',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => $param,
+            CURLOPT_HTTPHEADER => $header,
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return json_decode($response);
+    }
+    public function getVirtualAccount($order_ref)
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
-        ])->post(env('FLW_BASE_URL') . '/v3/virtual-account-numbers', [
-            "email" => $email,
-            "is_permanent" => $is_permanent,
-            "tx_ref" => $name . '-' . time(),
-            "narration" => $name,
-        ]);
+        ])->post(env('FLW_BASE_URL') . '/v3/virtual-account-numbers/' . $order_ref);
 
         return $response;
     }
@@ -134,7 +154,7 @@ class FlutterwaveService
     {
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('FLW_SECRET_KEY')
-        ])->get(env('FLW_BASE_URL') . '/v3/transactions/' . $transaction_id . '\/verify/');
+        ])->get(env('FLW_BASE_URL') . '/v3/transactions/' . $transaction_id . '/verify/');
 
         return $response;
     }
