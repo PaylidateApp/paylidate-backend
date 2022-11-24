@@ -35,7 +35,7 @@ class WalletController extends Controller
         //     ->get();
 
         try {
-            $wallet = Wallet::where('user_id', auth('api')->user()->id)->with('wallet_history')->get();
+            $wallet = Wallet::where('user_id', auth('api')->user()->id)->with('wallet_history')->first();
 
             return response()->json([
                 'status' => 'success',
