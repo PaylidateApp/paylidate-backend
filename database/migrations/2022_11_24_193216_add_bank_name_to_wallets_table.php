@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRefundToPaymentsTable extends Migration
+class AddBankNameToWalletsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddRefundToPaymentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('payments', function (Blueprint $table) {
-            if (!Schema::hasColumn('payments', 'refund')) {
-                $table->boolean('refund')->nullable()->default(false); //true if buyer has been refunded. false buyer yet to be refunded
+        Schema::table('wallets', function (Blueprint $table) {
+            if (!Schema::hasColumn('wallets', 'bannk_name')) {
+                $table->boolean('bannk_name')->default("Sterling BANK");
             };
         });
     }
@@ -27,7 +27,7 @@ class AddRefundToPaymentsTable extends Migration
      */
     public function down()
     {
-        Schema::table('payments', function (Blueprint $table) {
+        Schema::table('wallets', function (Blueprint $table) {
             //
         });
     }
