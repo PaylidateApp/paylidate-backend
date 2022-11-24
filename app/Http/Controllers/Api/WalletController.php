@@ -86,7 +86,7 @@ class WalletController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => $e,
-            ]);
+            ], 400);
         }
     }
 
