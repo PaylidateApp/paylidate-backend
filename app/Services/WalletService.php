@@ -26,7 +26,7 @@ class WalletService
             if ($accountResponse->status !== 'success') {
                 return [
                     'status' => 'error',
-                    'message' => 'Virtual Account not created',
+                    'message' => 'An error occured, virtual Account not created',
                     'data' => $accountResponse
 
                 ];
