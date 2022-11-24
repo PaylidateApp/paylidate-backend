@@ -169,7 +169,8 @@ class WalletController extends Controller
 
             $virtual_account_number = Wallet::where('tx_ref', $tx_ref)->first();
 
-            $app_header = getenv("X_AUTH_SIGNATURE");
+            //$app_header = getenv("X_AUTH_SIGNATURE");
+            $app_header = "BE09BEE831CF262226B426E39BD1092AFGDEYUKNB842076D4174FAC78A2261F9A3D6E59744983B8326B69HD5476N963FE314DFC89635CFA37A40596508DD6EAAB09402C7";
             // rejected for invalid header
             $header = $request->header('verif-hash');
             if ($header != $app_header) {
