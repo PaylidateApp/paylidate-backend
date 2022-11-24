@@ -14,8 +14,8 @@ class AddBankNameToWalletsTable extends Migration
     public function up()
     {
         Schema::table('wallets', function (Blueprint $table) {
-            if (!Schema::hasColumn('wallets', 'bannk_name')) {
-                $table->boolean('bannk_name')->default("Sterling BANK");
+            if (!Schema::hasColumn('wallets', 'bank_name')) {
+                $table->string('bank_name')->default("Sterling BANK");
             };
         });
     }

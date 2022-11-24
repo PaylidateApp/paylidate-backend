@@ -37,7 +37,7 @@ class WalletService
                 'tx_ref' => $tx_ref,
                 'order_ref' => $accountResponse->order_ref,
                 'account_number' => $accountResponse->account_number,
-                'bannk_name' => $accountResponse->bank_name,
+                'bank_name' => $accountResponse->bank_name,
             ]);
             return $response;
         } catch (\Exception $e) {
