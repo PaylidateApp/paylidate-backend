@@ -8,6 +8,7 @@ use App\Mail\ReportTransaction;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Transaction;
+use App\Wallet;
 use App\Withdrawal;
 use App\Bank;
 use App\Payment;
@@ -33,11 +34,11 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //////////Transaction::truncate()
+        Wallet::truncate();
 
 
-        \Artisan::call('migrate:rollback --step=1');
-        \Artisan::call('migrate');
+        //\Artisan::call('migrate:rollback --step=1')
+        //\Artisan::call('migrate')
 
 
         $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
