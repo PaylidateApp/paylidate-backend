@@ -34,7 +34,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        Wallet::truncate();
+        //Wallet::truncate();
 
 
         //\Artisan::call('migrate:rollback --step=1')
