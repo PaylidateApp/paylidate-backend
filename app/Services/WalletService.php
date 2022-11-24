@@ -26,7 +26,7 @@ class WalletService
             if ($accountResponse->status !== 'success') {
                 return [
                     'status' => 'error',
-                    'message' => $accountResponse,
+                    'message' => $accountResponse->message,
 
                 ];
             }
