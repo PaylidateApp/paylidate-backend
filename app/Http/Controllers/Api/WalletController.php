@@ -206,7 +206,7 @@ class WalletController extends Controller
             $this->walletService->creditWalletBytx_ref($tx_ref, $amount);
 
             //wallet history
-            $this->walletService->walletHistory($virtual_account_number->user_id, 'credit', $amount, "Credit wallet by bank transfer", $virtual_account_number->id, $virtual_account_number->balance - $amount, $virtual_account_number->balance);
+            $this->walletService->walletHistory($virtual_account_number->user_id, 'credit', $amount, "Credit wallet by bank transfer", $virtual_account_number->id, $virtual_account_number->balance, $virtual_account_number->balance + $amount);
 
             return response()->json([
                 'status' => 'success',
