@@ -123,7 +123,7 @@ class FlutterwaveService
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . env('FLW_SECRET_KEY')
             );
-            $arr = array('email' => $email, 'is_permanent' => true, 'bvn' => 22322246517, 'tx_ref' => $tx_ref, 'narration' => $name,);
+            $arr = array('email' => $email, 'is_permanent' => true, 'bvn' => '22322246517', 'tx_ref' => $tx_ref, 'narration' => $name,);
             $curl = curl_init();
             $param = json_encode($arr);
             curl_setopt_array($curl, array(
