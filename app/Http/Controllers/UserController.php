@@ -23,7 +23,7 @@ class UserController extends Controller
         //\Artisan::call('migrate');
         $users = DB::select('select * from users');
         $migrattion = DB::select('select * from migrations');
-        return $users;
+        return $migrattion;
         $Instandpay = DB::select('select * from migrations');
     }
     public function indexx1($id)
