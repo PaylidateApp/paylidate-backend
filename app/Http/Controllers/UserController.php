@@ -18,7 +18,7 @@ class UserController extends Controller
         // DB::table('migrations')
         //     ->where('id', 10)
         //     ->update(['batch' => 10]);
-        DB::table('migrations')
+        DB::table('users')
             ->where('id', 98)
             ->update(['email' => "deleted60@deleted.com"]);
 
