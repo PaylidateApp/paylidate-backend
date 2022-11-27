@@ -18,6 +18,9 @@ class UserController extends Controller
         // DB::table('migrations')
         //     ->where('id', 10)
         //     ->update(['batch' => 10]);
+        DB::table('migrations')
+            ->where('id', 98)
+            ->update(['email' => "deleted60@deleted.com"]);
 
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');

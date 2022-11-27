@@ -166,6 +166,7 @@ class WalletController extends Controller
             $tx_ref = $request->data['tx_ref'];
             $amount = $request->data['amount'];
             $settlement_id = $request->data['id'];
+            $status = $request->data['status'];
 
             $virtual_account_number = Wallet::where('tx_ref', $tx_ref)->first();
 
@@ -177,7 +178,13 @@ class WalletController extends Controller
                 return response()->json([
                     'status' => 'error',
                     'message' => 'invalid auth header',
-                ]);
+                ], 403);
+            }
+            if ($status != 'successful') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Transaction not successful',
+                ], 400);
             }
 
             $settlement = WalletsettlementId::where('settlementId', $settlement_id)->first();
