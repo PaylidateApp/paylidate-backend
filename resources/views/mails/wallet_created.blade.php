@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <p style="font-size: 18px"><b>Hello {{$wallet[$user->name]}}</b></p>
+    <p style="font-size: 18px"><b>Hello {{$user->name}}</b></p>
     <p>Your wallet has been created succecefully </p><br />
     <p>And a bonuws of #1,000< has been added to your Paylidate Wallet.</p><br />
             <p>Use PAYLIDATE to protect your transaction and get more bonuses for yourself and anyone you transact with.

@@ -17,10 +17,10 @@ class WalletCreated extends Mailable
      *
      * @return void
      */
-    public function __construct(Wallet $wallet)
+    public function __construct($user)
     {
         //
-        $this->wallet = $wallet;
+        $this->user = $user;
     }
 
     /**

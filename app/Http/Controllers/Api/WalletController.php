@@ -80,7 +80,7 @@ class WalletController extends Controller
             }
 
             // send mail mail to user after creation succesful
-            Mail::to($wallet[$user->id])->send(new WalletCreated($wallet));
+            Mail::to($user->email)->send(new WalletCreated($user->name));
 
 
             return response()->json([
