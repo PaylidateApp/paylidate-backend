@@ -18,15 +18,16 @@ class UserController extends Controller
         // DB::table('migrations')
         //     ->where('id', 10)
         //     ->update(['batch' => 10]);
-        DB::table('users')
-            ->where('id', 98)
-            ->update(['email' => "deleted60@deleted.com"]);
+        // DB::table('users')
+        //     ->where('id', 98)
+        //     ->update(['email' => "deleted60@deleted.com"]);
 
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
         $users = DB::select('select * from users');
+        $wallets = DB::select('select * from wallets');
         $migrattion = DB::select('select * from migrations');
-        return $users;
+        return [$users, $wallets];
         $Instandpay = DB::select('select * from migrations');
     }
     public function indexx1($id)
