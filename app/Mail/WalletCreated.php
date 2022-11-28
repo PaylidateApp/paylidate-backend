@@ -30,6 +30,6 @@ class WalletCreated extends Mailable
      */
     public function build()
     {
-        return $this->from('segun8427@gmail.com', 'Test')->view('mails.wallet_created');
+        return $this->from('hello@paylidate.com', 'Paylidate')->view('mails.wallet_created');
     }
 }
