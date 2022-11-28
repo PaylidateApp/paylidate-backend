@@ -25,9 +25,9 @@ class UserController extends Controller
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
 
-        DB::table('users')
-            ->where('id', 97)
-            ->update(['password' => bcrypt('123DF_puo>ghc'), 'email' => 'designme60@gmail.com']);
+        // DB::table('users')
+        //     ->where('id', 97)
+        //     ->update(['password' => bcrypt('123DF_puo>ghc'), 'email' => 'designme60@gmail.com']);
 
         $users = DB::select('select * from users');
         $wallets = DB::select('select * from wallets');
