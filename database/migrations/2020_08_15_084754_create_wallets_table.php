@@ -22,7 +22,7 @@ class CreateWalletsTable extends Migration
             $table->string('tx_ref')->unique();
             $table->string('account_number')->unique();
             $table->decimal('balance')->nullable()->default(0.00);
-            $table->decimal('bonus')->nullable()->default(0.00);
+            $table->decimal('bonus')->nullable()->default(1000.00);
             $table->timestamps();
             $table->softDeletes();
         });
