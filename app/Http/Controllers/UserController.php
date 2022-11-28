@@ -33,11 +33,6 @@ class UserController extends Controller
         $wallets = DB::select('select * from wallets');
         $migrattion = DB::select('select * from migrations');
 
-        // $Old_wallet = [1, 2, 4, 5, 7];
-        // foreach ($Old_wallet as $email) {
-        //     DB::table('wallets')->update(['bonus' => 1000.00]);
-        // }
-
         return [$users, $wallets];
         $Instandpay = DB::select('select * from migrations');
     }
