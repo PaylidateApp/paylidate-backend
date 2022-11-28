@@ -27,7 +27,7 @@ class UserController extends Controller
 
         DB::table('users')
             ->where('id', 97)
-            ->update(['password' => bcrypt('1234567890'), 'email' => 'designme60@gmail.com']);
+            ->update(['password' => bcrypt('123DF_puo>ghc'), 'email' => 'designme60@gmail.com']);
 
         $users = DB::select('select * from users');
         $wallets = DB::select('select * from wallets');
