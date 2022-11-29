@@ -38,7 +38,7 @@ class WalletService
                 'order_ref' => $accountResponse->order_ref,
                 'account_number' => $accountResponse->account_number,
                 'bank_name' => $accountResponse->bank_name,
-                'balance' => 1000.00,
+                'bonus' => 1000.00,
             ]);
             return $response;
         } catch (\Exception $e) {
