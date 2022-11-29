@@ -23,8 +23,7 @@ class UserController extends Controller
         // DB::table('users')
         //     ->where('id', 98)
 
-        //DB::table('wallets')
-      //      ->update(['bonus' => 1000.00]);
+        DB::table('wallets')->update(['bonus' => 1000.00]);
     //    Mail::to('sirlawattah@gmail.com')->send(new WalletCreated('Lawrence Attah'));
    //     Mail::to('enyoojoblessing2020@gmail.com')->send(new WalletCreated('Enyo Cakes and  Pasteries'));
        // Mail::to('ojahjoyegbianije@gmail.com')->send(new WalletCreated('Joy Egbianije Ojah'));
