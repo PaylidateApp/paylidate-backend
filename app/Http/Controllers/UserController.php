@@ -29,7 +29,7 @@ class UserController extends Controller
         Mail::to('enyoojoblessing2020@gmail.com')->send(new WalletCreated('Enyo Cakes and  Pasteries'));
         Mail::to('ojahjoyegbianije@gmail.com')->send(new WalletCreated('Joy Egbianije Ojah'));
         Mail::to('viisiomedia@gmail.com')->send(new WalletCreated('Viisio Media'));
-        Mail::to('Philemon Shekari')->send(new WalletCreated('Philemon Shekari'));
+        Mail::to('holyphilzy@gmail.com')->send(new WalletCreated('Philemon Shekari'));
 
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
