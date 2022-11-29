@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\WalletCreated;
 use Illuminate\Http\Request;
 use Ixudra\Curl\Facades\Curl;
 use App\Wallet;
@@ -10,6 +11,7 @@ use App\Services\ProvidusNIPService;
 use App\Services\WalletService;
 use App\WalletHistory;
 use App\WalletsettlementId;
+use Illuminate\Support\Facades\Mail;
 
 class WalletController extends Controller
 {
@@ -76,6 +78,10 @@ class WalletController extends Controller
                     'message' => $wallet["message"]
                 ]);
             }
+
+            // send mail mail to user after creation succesful
+            Mail::to($user->email)->send(new WalletCreated($user->name));
+
 
             return response()->json([
                 'status' => 'success',
