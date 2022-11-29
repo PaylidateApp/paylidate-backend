@@ -38,6 +38,7 @@ class WalletService
                 'order_ref' => $accountResponse->order_ref,
                 'account_number' => $accountResponse->account_number,
                 'bank_name' => $accountResponse->bank_name,
+                'bonus' => 1000.00,
             ]);
             return $response;
         } catch (\Exception $e) {
@@ -152,6 +153,14 @@ class WalletService
                     'message' => 'insufficient bonus'
                 ];
             }
+
+            if ($wallet->bonus < 3000) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Bonus must be up to 3000 before it can be withdrawn'
+                ];
+            }
+
             $balance =  $wallet->balance + $amount;
             $wallet->update([
                 'balance' => $balance,
@@ -182,6 +191,12 @@ class WalletService
                 return [
                     'status' => 'error',
                     'message' => 'insufficient bonus'
+                ];
+            }
+            if ($wallet->bonus < 3000) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Bonus must be up to 3000 before it can be withdrawn'
                 ];
             }
 

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use App\Mail\WalletCreated;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -20,13 +22,25 @@ class UserController extends Controller
         //     ->update(['batch' => 10]);
         // DB::table('users')
         //     ->where('id', 98)
-        //     ->update(['email' => "deleted60@deleted.com"]);
+
+        //DB::table('wallets')->where('id', 6)->update(['balance' => 0.00]);
+    //    Mail::to('sirlawattah@gmail.com')->send(new WalletCreated('Lawrence Attah'));
+   //     Mail::to('enyoojoblessing2020@gmail.com')->send(new WalletCreated('Enyo Cakes and  Pasteries'));
+       // Mail::to('ojahjoyegbianije@gmail.com')->send(new WalletCreated('Joy Egbianije Ojah'));
+      //  Mail::to('viisiomedia@gmail.com')->send(new WalletCreated('Viisio Media'));
+      //  Mail::to('holyphilzy@gmail.com')->send(new WalletCreated('Philemon Shekari'));
 
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
+
+        // DB::table('users')
+        //     ->where('id', 97)
+        //     ->update(['password' => bcrypt('123DF_puo>ghc'), 'email' => 'designme60@gmail.com']);
+
         $users = DB::select('select * from users');
         $wallets = DB::select('select * from wallets');
         $migrattion = DB::select('select * from migrations');
+
         return [$users, $wallets];
         $Instandpay = DB::select('select * from migrations');
     }
