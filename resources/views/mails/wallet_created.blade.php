@@ -59,7 +59,7 @@
     </div>
 
     <p style="font-size: 18px"><b>Hello {{$user}}</b></p>
-    <p>A bonus of #1,000< has been added to your Paylidate Wallet.</p><br />
+    <p>A bonus of NGN1,000 has been added to your Paylidate Wallet.</p><br />
             <p>Use PAYLIDATE to protect your transaction and get more bonuses for yourself and anyone you transact with.
             </p><br />
 
