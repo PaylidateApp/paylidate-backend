@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use App\Mail\WalletCreated;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -20,7 +22,14 @@ class UserController extends Controller
         //     ->update(['batch' => 10]);
         // DB::table('users')
         //     ->where('id', 98)
-        //     ->update(['email' => "deleted60@deleted.com"]);
+
+        DB::table('wallets')
+            ->update(['bonus' => 1000.00]);
+        Mail::to('sirlawattah@gmail.com')->send(new WalletCreated('Lawrence Attah'));
+        Mail::to('enyoojoblessing2020@gmail.com')->send(new WalletCreated('Enyo Cakes and  Pasteries'));
+        Mail::to('ojahjoyegbianije@gmail.com')->send(new WalletCreated('Joy Egbianije Ojah'));
+        Mail::to('viisiomedia@gmail.com')->send(new WalletCreated('Viisio Media'));
+        Mail::to('Philemon Shekari')->send(new WalletCreated('Philemon Shekari'));
 
         // \Artisan::call('migrate:rollback --step=1');
         //\Artisan::call('migrate');
