@@ -112,6 +112,16 @@ class WalletService
                 ];
             }
             $wallet = Wallet::where('user_id', $user_id)->first();
+            
+            
+            if (!$wallet) {
+
+                return [
+                    'status' => 'error',
+                    'message' => "You don't have a wallet"
+                ];
+            }
+            
             if ($wallet->balance - $amount < 0) {
 
                 return [
