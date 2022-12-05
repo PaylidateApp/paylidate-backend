@@ -90,8 +90,8 @@ Route::group(['prefix' => 'api'], function () {
             Route::post('credit-wallet', 'WalletController@creditWalletByFL');
             Route::post('debit-wallet', 'WalletController@debitWallet');
             Route::get('get-wallet-history', 'WalletHistoryController@index');
-            Route::get('get-wallet-balance', 'WalletController@getBalance');
-            Route::get('get-wallet-bonus', 'WalletController@getBonus');
+            // Route::get('get-wallet-balance', 'WalletController@getBalance');
+            // Route::get('get-wallet-bonus', 'WalletController@getBonus');
 
 
             Route::resource('product', 'ProductController');
@@ -122,7 +122,7 @@ Route::group(['prefix' => 'api'], function () {
 
             Route::resource('payment', 'PaymentController');
             Route::post('make-payment', 'PaymentController@make_payment');
-            Route::get('payments-received', 'PaymentController@payments_received');
+            // Route::get('payments-received', 'PaymentController@payments_received');
 
             Route::resource('card', 'CardController');
             //Route::post('payment/link', 'PaymentController@getPaymentLink');
@@ -132,6 +132,9 @@ Route::group(['prefix' => 'api'], function () {
             Route::post('fund', 'CardController@fund');
 
             Route::resource('user-bank', 'BankController');
+
+            //Dashboard Endpoints
+            Route::get('/dashboard', 'DashboardController@index');
 
 
             // Route::resource('withdraw', 'WithdrawalController');
