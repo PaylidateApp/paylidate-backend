@@ -90,6 +90,8 @@ Route::group(['prefix' => 'api'], function () {
             Route::post('credit-wallet', 'WalletController@creditWalletByFL');
             Route::post('debit-wallet', 'WalletController@debitWallet');
             Route::get('get-wallet-history', 'WalletHistoryController@index');
+            // Route::get('get-wallet-balance', 'WalletController@getBalance');
+            // Route::get('get-wallet-bonus', 'WalletController@getBonus');
 
 
             Route::resource('product', 'ProductController');
@@ -119,15 +121,20 @@ Route::group(['prefix' => 'api'], function () {
             Route::post('transaction/reslove-report/{id}/{sellerEemail}', 'TransactionController@resloveReport');
 
             Route::resource('payment', 'PaymentController');
+            Route::post('make-payment', 'PaymentController@make_payment');
+            // Route::get('payments-received', 'PaymentController@payments_received');
+
             Route::resource('card', 'CardController');
             //Route::post('payment/link', 'PaymentController@getPaymentLink');
-            Route::post('make-payment', 'PaymentController@make_payment');
             Route::resource('transaction', 'TransactionController');
             Route::resource('account', 'UserAccountController');
 
             Route::post('fund', 'CardController@fund');
 
             Route::resource('user-bank', 'BankController');
+
+            //Dashboard Endpoints
+            Route::get('/dashboard', 'DashboardController@index');
 
 
             // Route::resource('withdraw', 'WithdrawalController');
@@ -142,6 +149,7 @@ Route::group(['prefix' => 'api'], function () {
 
 
             Route::get('referral-bonus', 'RefererController@index');
+            Route::get('referral', 'RefererController@get_referer');
 
             Route::post('request-referral-bonus-withdrawal', 'ReferralWidrawalController@request_withdrawal');
             Route::get('referral-withdraw-requests', 'ReferralWidrawalController@index');

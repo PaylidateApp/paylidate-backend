@@ -11,6 +11,7 @@ use App\Payment;
 use App\Referer;
 use App\Services\FlutterwaveService;
 use App\Product;
+use App\Transaction;
 use Auth;
 use Illuminate\Validation\ValidationException;
 use stdClass;
@@ -409,5 +410,34 @@ class PaymentController extends Controller
             'message' => 'success',
             'data' => $response['data']
         ]);
+    }
+
+    public function payemnts_received()
+    {
+        $user = auth('api')->user();
+        if(!$user){
+            return response()->json([
+                'status'    => 'error',
+                'message'   => 'Please Log in'
+            ], 401);
+        }
+        try {
+            $response = Transaction::where('user_id', $user->id)
+                        ->orderBy('desc')
+                        ->get();
+
+            return response()->json([
+                'status'    => 'success',
+                'message'   => 'success',
+                'data'      => $response['data']
+            ], 200);
+
+        } 
+        catch(\Exception $e) {
+            return response()->json([
+                'status'    => 'success',
+                'message'   => $e
+            ], 400);
+        }
     }
 }

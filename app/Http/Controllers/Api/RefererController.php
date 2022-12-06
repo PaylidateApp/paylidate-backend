@@ -112,4 +112,24 @@ class RefererController extends Controller
     {
         //
     }
+
+    public function get_referer(){
+        $user = auth('api')->user();
+
+        if(!$user){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Please Log in'
+            ],401);
+        }
+        $referer = Referer::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $referer['data']
+        ], 200);
+
+    }
 }
