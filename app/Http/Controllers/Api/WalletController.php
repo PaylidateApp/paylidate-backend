@@ -251,7 +251,7 @@ class WalletController extends Controller
                     'status' => 'error',
                     'message' => $wallet['message']
 
-                ], 200);
+                ], 400);
             }
 
             if ($wallet['status'] == 'success') {
