@@ -134,7 +134,7 @@ Route::group(['prefix' => 'api'], function () {
             Route::resource('user-bank', 'BankController');
 
             //Dashboard Endpoints
-            Route::get('/dashboard', 'DashboardController@index');
+            Route::get('dashboard', 'DashboardController@index');
 
 
             // Route::resource('withdraw', 'WithdrawalController');
