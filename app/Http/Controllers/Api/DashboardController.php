@@ -30,18 +30,17 @@ class DashboardController extends Controller
             $balance = Wallet::where('user_id', $user->id)->value('balance')->get();
             $bonus = Wallet::where('user_id', $user->id)->value('bonus')->get();
 
-            $data = [
-                "status" => "200",
-                "details" => [
-                    "payment_received" => $payments_received,
-                    "payment_made" => $payments_made,
-                    "refer" => $referer,
-                    "balance" => $balance,
-                    "bonus" => $bonus,
+            return response()->json([
+                'status' => 'success',
+                'message' => 'success',
+                'data'    => [
+                    'payments_received' => $payments_received,
+                    'payments_made' => $payments_made,
+                    'balance' => $bonus,
+                    'bonus'   => $bonus,
+                    'refer'   => $referer
                 ]
-            ];
-
-            return response()->json($data, 200);
+            ], 200);
 
         } catch (\Exception $e) {
             return response()->json([
