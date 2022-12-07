@@ -24,11 +24,11 @@ class DashboardController extends Controller
         }
 
         try {
-            $payments_received = Transaction::where('user_id', $user->id)->value('amount')->sum();
-            $payments_made = Payment::where('user_id', $user->id)->value('balance_after')->sum();
-            $referer = Referer::where('user_id', $user->id)->value('amount')->sum();
-            $balance = Wallet::where('user_id', $user->id)->value('balance')->get();
-            $bonus = Wallet::where('user_id', $user->id)->value('bonus')->get();
+            $payments_received = Transaction::where('user_id', $user->id)->sum('amount');
+            $payments_made = Payment::where('user_id', $user->id)->sum('balance_after');
+            $referer = Referer::where('user_id', $user->id)->sum('amount');
+            $balance = Wallet::where('user_id', $user->id)->get('balance');
+            $bonus = Wallet::where('user_id', $user->id)->get('bonus');
 
             return response()->json([
                 'status' => 'success',
