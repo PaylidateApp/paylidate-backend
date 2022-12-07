@@ -27,7 +27,7 @@ class DashboardController extends Controller
             $payments_received = Transaction::where('user_id', $user->id)->sum('amount');
             $payments_made = Payment::where('user_id', $user->id)->sum('balance_after');
             $referer = Referer::where('user_id', $user->id)->sum('amount');
-            $balance = Wallet::where('user_id', $user->id)->get('balance');
+            $balance = Wallet::where('user_id', $user->id)->sum('balance');
             $bonus = Wallet::where('user_id', $user->id)->get('bonus');
 
             return response()->json([
