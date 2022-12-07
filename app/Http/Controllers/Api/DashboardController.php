@@ -24,18 +24,23 @@ class DashboardController extends Controller
         }
 
         try {
-            $payment_received = Transaction::where('user_id', $user->id)->get();
-            $payments_made = Payment::where('user_id', $user->id)->get();
-            $referer = Referer::where('user_id', $user->id)
-                                ->orderBy('created_at', 'desc')->get();
-            $balance = Wallet::where('user_id', $user->id)->get(['bonus', 'balance']);
+            $payments_received = Transaction::where('user_id', $user->id)->value('amount')->sum()->get();
+            $payments_made = Payment::where('user_id', $user->id)->value('balance_after')->sum()->get();
+            $referer = Referer::where('user_id', $user->id)->value('amount')->sum()->get();
+            $balance = Wallet::where('user_id', $user->id)->value('amount')->sum()->get();
 
+            $data = [
+                "status" => "200",
+                "details" => [
+                    "payment_received" => $payments_received,
+                    "payment_made" => $payments_made,
+                    "refer" => $referer,
+                    "balance" => $balance,
+                ]
+            ];
 
-            return response()->json([
-                'status'    => 'success',
-                'message'   => 'success',
-                'data'      => [$payment_received, $payments_made, $referer, $balance]
-            ], 200);
+            return response()->json($data);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status'    => 'error',

@@ -34,5 +34,9 @@ class Payment extends Model
     {
         return $this->hasOne('App\Refund');
     }
+    public function fulfilment()
+    {
+        return $this->hasOne('App\Fulfilment');
+    }
 
 }

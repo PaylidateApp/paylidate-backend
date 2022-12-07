@@ -54,6 +54,7 @@ class UserTable extends Seeder
             'is_staff' => true,
 
         ]);
+        
         // Wallet::create([
         //     'user_id' => 2,
         //     'wallet' => 200000
@@ -63,6 +64,14 @@ class UserTable extends Seeder
             'name' => 'Philemon',
             'email' => 'holyphilzy@gmail.com',
             'password' =>  bcrypt('secret'),
+            'is_admin' => true,
+            'is_staff' => true
+        ]);
+
+        User::create([
+            'name' => 'David',
+            'email' => 'segun8427@gmail.com',
+            'password' =>  bcrypt('password'),
             'is_admin' => true,
             'is_staff' => true
         ]);
