@@ -24,10 +24,11 @@ class DashboardController extends Controller
         }
 
         try {
-            $payments_received = Transaction::where('user_id', $user->id)->value('amount')->sum()->get();
-            $payments_made = Payment::where('user_id', $user->id)->value('balance_after')->sum()->get();
-            $referer = Referer::where('user_id', $user->id)->value('amount')->sum()->get();
-            $balance = Wallet::where('user_id', $user->id)->value('amount')->sum()->get();
+            $payments_received = Transaction::where('user_id', $user->id)->value('amount')->sum();
+            $payments_made = Payment::where('user_id', $user->id)->value('balance_after')->sum();
+            $referer = Referer::where('user_id', $user->id)->value('amount')->sum();
+            $balance = Wallet::where('user_id', $user->id)->value('balance')->get();
+            $bonus = Wallet::where('user_id', $user->id)->value('bonus')->get();
 
             $data = [
                 "status" => "200",
@@ -36,10 +37,11 @@ class DashboardController extends Controller
                     "payment_made" => $payments_made,
                     "refer" => $referer,
                     "balance" => $balance,
+                    "bonus" => $bonus,
                 ]
             ];
 
-            return response()->json($data);
+            return response()->json($data, 200);
 
         } catch (\Exception $e) {
             return response()->json([
