@@ -61,8 +61,10 @@ class DashboardController extends Controller
             },0);
 
             $referer = Referer::where('user_id', $user->id)->sum('amount');
-            $balance = Wallet::where('user_id', $user->id)->get('balance');
-            $bonus = Wallet::where('user_id', $user->id)->get('bonus');
+            $balance = Wallet::where('user_id', $user->id)->first('balance');
+            $ba = empty($balance) ? 0 : $balance;
+            $bonus = Wallet::where('user_id', $user->id)->first('bonus');
+            $bo = empty($bonus) ? 0 : $bonus;
 
             //Notification
             $active_disputes = Dispute::where('user_id', $user->id)->where('dispute_solved', false)->count();
@@ -76,8 +78,8 @@ class DashboardController extends Controller
                 'data'    => [
                     'payments_received' => $payments_received,
                     'payments_made' => $payments_m,
-                    'balance' => $balance,
-                    'bonus'   => $bonus,
+                    'balance' => $ba,
+                    'bonus'   => $bo,
                     'refer'   => $referer,
                     'active_dsiputes' => $active_disputes,
                     'pending_withdrawals' => $pending_withdrawals,
