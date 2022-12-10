@@ -30,7 +30,7 @@ class DashboardController extends Controller
 
             $payments_rec = Transaction::where('status', 1)
             ->join('products', 'transactions.product_id', '=', 'products.id')
-            ->where('products.type', '=', 'buy')
+            ->where('products.type', '=', 'sell')
             ->where('transactions.user_id', $user->id)
             ->select('transactions.amount')
             ->get();
@@ -40,7 +40,7 @@ class DashboardController extends Controller
                         
             $payments_m = Transaction::where('status', 1)
             ->join('products', 'transactions.product_id', '=', 'products.id')
-            ->where('products.type', '=', 'sell')
+            ->where('products.type', '=', 'buy')
             ->where('transactions.user_id', $user->id)
             ->select('transactions.amount')
             ->get();
