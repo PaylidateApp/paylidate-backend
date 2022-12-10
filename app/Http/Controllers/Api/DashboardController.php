@@ -38,10 +38,10 @@ class DashboardController extends Controller
             $payments_received = $payments_rec->sum('amount');
             
                         
-            $payments_m = Transaction::join('products', 'transactions.product_id', '=', 'products.id')
+            $payments_m = Transaction::where('status', 1)
+            ->join('products', 'transactions.product_id', '=', 'products.id')
             ->where('products.transaction_type', '=', 'buy')
             ->where('transactions.user_id', $user->id)
-            ->where('transactions.status', 1)
             ->select('transactions.amount')
             ->get();
             $payments_made = $payments_m->sum('amount');
