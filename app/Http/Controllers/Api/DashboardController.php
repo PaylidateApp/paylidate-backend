@@ -28,37 +28,23 @@ class DashboardController extends Controller
 
         try {
 
-            // $payments_rec = Transaction::where('user_id', $user->id)->where('status', 1)->with('product')->get();
-            // foreach($payments_rec as $payment){
-            //     $amount=0;
-            //     if($payment->transaction_type == 'sell'){
-            //         $amount += $payment->amount;
-            //         return $amount;
-            //     }
-            //     return $payments_received = $amount;
-            // }
+            $payments_rec = Transaction::where('status', 1)
+            ->join('products', 'transactions.product_id', '=', 'products.id')
+            ->where('products.type', '=', 'buy')
+            ->where('transactions.user_id', $user->id)
+            ->select('transactions.amount')
+            ->get();
 
-
-            // $payments_m = Transaction::where('user_id', $user->id)->where('status', 1)->with('product')->get();
-            // foreach($payments_m as $payment){
-            //     $amount=0;
-            //     if($payment->transaction_type == 'buy'){
-            //         $amount += $payment->amount;
-            //         return $amount;
-            //     }
-            //     return $payments_made = $amount;
-            // }
-
-
-
-
-            $payments_received = Transaction::where('user_id', $user->id)->where('status', 1)->sum('amount');
+            $payments_received = $payments_rec->sum('amount');
             
-            $payments_made = Payment::where('user_id', $user->id)->with('transaction')->get();
-            $payments_m = $payments_made->reduce(function ($carry, $item) {
-                    return $carry += empty($item->transaction->amount) ? 0 : $item->transaction->amount;
-                
-            },0);
+                        
+            $payments_m = Transaction::where('status', 1)
+            ->join('products', 'transactions.product_id', '=', 'products.id')
+            ->where('products.type', '=', 'sell')
+            ->where('transactions.user_id', $user->id)
+            ->select('transactions.amount')
+            ->get();
+            $payments_made = $payments_m->sum('amount');
 
             $referer = Referer::where('user_id', $user->id)->sum('amount');
             $balance = Wallet::where('user_id', $user->id)->first('balance');
@@ -77,7 +63,7 @@ class DashboardController extends Controller
                 'message' => 'success',
                 'data'    => [
                     'payments_received' => $payments_received,
-                    'payments_made' => $payments_m,
+                    'payments_made' => $payments_made,
                     'balance' => $ba,
                     'bonus'   => $bo,
                     'refer'   => $referer,
