@@ -28,29 +28,33 @@ class DashboardController extends Controller
 
         try {
 
-            $payments_rec = Transaction::where('status', 1)
-            ->join('products', 'transactions.product_id', '=', 'products.id')
-            ->where('products.transaction_type', '=', 'sell')
-            ->where('transactions.user_id', $user->id)
-            ->select('transactions.amount')
-            ->get();
-
-            $payments_received = $payments_rec->sum('amount');
-            
-                        
-            // $payments_m = Transaction::where('status', 1)
+            // $payments_rec = Transaction::where('status', 1)
             // ->join('products', 'transactions.product_id', '=', 'products.id')
-            // ->where('products.transaction_type', '=', 'buy')
+            // ->where('products.transaction_type', '=', 'sell')
             // ->where('transactions.user_id', $user->id)
             // ->select('transactions.amount')
             // ->get();
 
-            $payments_made = Transaction::where('user_id', $user->id)
-            ->where('status', 1)
-            ->whereHas('product', function($query) {
-            $query->where('transaction_type', 'buy');
-            })
-            ->sum('amount');
+            // $payments_received = $payments_rec->sum('amount');
+
+            $payments_received = Transaction::where('user_id', '=', $user->id)->where('status', '=', 1)->sum('amount');
+            
+                        
+            $payments_m = Payment::join('transactions', 'payments.transaction_id', '=', 'transactions.id')
+            // ->where('products.transaction_type', '=', 'buy')
+            ->where('payments.user_id', '=', $user->id)
+            ->where('transactions.status', '=', 1)
+            ->select('transactions.amount')
+            ->get();
+
+            $payments_made = $payments_m->sum('amount');
+
+            // $payments_made = Transaction::where('user_id', $user->id)
+            // ->where('status', 1)
+            // ->whereHas('product', function($query) {
+            // $query->where('transaction_type', 'buy');
+            // })
+            // ->sum('amount');
 
             $referer = Referer::where('user_id', $user->id)->sum('amount');
             $balance = Wallet::where('user_id', $user->id)->first('balance');
