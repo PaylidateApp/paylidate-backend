@@ -38,13 +38,19 @@ class DashboardController extends Controller
             $payments_received = $payments_rec->sum('amount');
             
                         
-            $payments_m = Transaction::where('status', 1)
-            ->join('products', 'transactions.product_id', '=', 'products.id')
-            ->where('products.transaction_type', '=', 'buy')
-            ->where('transactions.user_id', $user->id)
-            ->select('transactions.amount')
-            ->get();
-            $payments_made = $payments_m->sum('amount');
+            // $payments_m = Transaction::where('status', 1)
+            // ->join('products', 'transactions.product_id', '=', 'products.id')
+            // ->where('products.transaction_type', '=', 'buy')
+            // ->where('transactions.user_id', $user->id)
+            // ->select('transactions.amount')
+            // ->get();
+
+            $payments_made = Transaction::where('user_id', $user->id)
+            ->where('status', 1)
+            ->whereHas('product', function($query) {
+            $query->where('transaction_type', 'buy');
+            })
+            ->sum('amount');
 
             $referer = Referer::where('user_id', $user->id)->sum('amount');
             $balance = Wallet::where('user_id', $user->id)->first('balance');
