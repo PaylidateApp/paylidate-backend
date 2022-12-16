@@ -274,63 +274,6 @@ class WalletController extends Controller
         }
     }
 
-    public function getBalance()
-    {
-        $user = auth('api')->user();
-        
-        if(!$user){
-            return response()->json([
-                'status'    => 'error',
-                'message'   => 'Login To Check Balance'
-            ], 401);
-        }
-
-        try {
-            $response = Wallet::where('user_id', $user->id)->get('balance');
-
-            return response()->json([
-
-                'status'    => 'success',
-                'message'   => 'success',
-                'data'      => $response
-            ], 200);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e,
-            ], 400);
-        }
-    }
-
-    public function getBonus()
-    {
-        $user = auth('api')->user();
-
-        if(!$user){
-            return response()->json([
-                'status'    => 'error',
-                'message'   => 'Login To Check Bonus'
-            ]);
-        }
-
-        try {
-            $response = Wallet::where('user_id', $user->id)->get('bonus');
-
-        return response()->json(
-            [
-                'status'    => 'success',
-                'message'   => 'success',
-                'data'      => $response
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $e,
-            ], 400);
-        }
-    }
-
     /**
      * Display the specified resource.
      *

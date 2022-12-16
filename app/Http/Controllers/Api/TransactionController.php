@@ -19,6 +19,7 @@ use App\Product;
 use App\Referer;
 use Carbon\Carbon;
 use App\Refund;
+use App\Services\FulfilmentService;
 
 /**
  * @group  Transaction management
@@ -27,6 +28,14 @@ use App\Refund;
  */
 class TransactionController extends Controller
 {
+    public $fulfilmentService;
+
+    public function __construct()
+    {
+
+        $this->fulfilmentService = new FulfilmentService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -127,6 +136,7 @@ class TransactionController extends Controller
         Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
         Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
 
+        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id);
 
         return response()->json([
             'status' => 'success',
