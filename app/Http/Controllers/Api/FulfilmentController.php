@@ -39,7 +39,7 @@ class FulfilmentController extends Controller
                 'buyers_name' => $buyers_name,
                 'buyers_s&d' => $buyers_s_d,
             ]
-            ], 200);
+        ], 200);
     }
 
     public function confirm_fufilment($hash, Request $request)
@@ -61,5 +61,21 @@ class FulfilmentController extends Controller
             'status' => 'error',
             'message' => 'Invalid Code'
         ], 400);
+    }
+
+    public function static()
+    {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => [
+                'product_number' => 1234567890,
+                'product_name' => 'M2 Solid state drive',
+                'product_description' => 'description',
+                'sellers_name' => 'Samsung',
+                'buyers_name' => 'paylidate',
+                'buyers_s&d' => 'Black, 2TB',
+            ]
+        ], 200);
     }
 }
