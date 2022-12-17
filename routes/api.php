@@ -51,6 +51,10 @@ Route::group(['prefix' => 'api'], function () {
 
         Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
 
+        // Fulfilment Route
+        Route::get('fulfilment/{hash}', 'FufilmentController@get_transaction');
+        Route::post('fulfilment/{hash}', 'FufilmentController@confirm_fufilment');
+
 
         Route::group(['prefix' => 'password'], function () {
             Route::post('create', 'PasswordResetController@create');

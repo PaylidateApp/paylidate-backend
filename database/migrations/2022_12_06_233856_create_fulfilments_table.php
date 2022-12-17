@@ -15,8 +15,11 @@ class CreateFulfilmentsTable extends Migration
     {
         Schema::create('fulfilments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('payment_id')->constrained();
+            $table->integer('user_id');
+            $table->integer('transaction_id');
+            $table->string('transaction_ref');
             $table->unsignedBigInteger('code');
+            $table->integer('status')->default(0); // 0 = Pending; 1 = complete;
             $table->timestamps();
         });
     }
