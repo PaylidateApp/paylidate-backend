@@ -136,7 +136,7 @@ class TransactionController extends Controller
         Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
         Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
 
-        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id);
+        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id, $t_ref);
 
         return response()->json([
             'status' => 'success',

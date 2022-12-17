@@ -17,7 +17,7 @@ class CreateFulfilmentsTable extends Migration
             $table->id();
             $table->integer('user_id');
             $table->integer('transaction_id');
-            // $table->string('transaction_ref');
+            $table->string('transaction_ref');
             $table->unsignedBigInteger('code');
             $table->integer('status')->default(0); // 0 = Pending; 1 = complete;
             $table->timestamps();
