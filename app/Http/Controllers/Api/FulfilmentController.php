@@ -37,7 +37,7 @@ class FulfilmentController extends Controller
                 'product_description' => $product_description,
                 'sellers_name' => $sellers_name,
                 'buyers_name' => $buyers_name,
-                'buyers_s&d' => $buyers_s_d,
+                'buyers_s_d' => $buyers_s_d,
             ]
         ], 200);
     }
@@ -74,7 +74,7 @@ class FulfilmentController extends Controller
                 'product_description' => 'description',
                 'sellers_name' => 'Samsung',
                 'buyers_name' => 'paylidate',
-                'buyers_s&d' => 'Black, 2TB',
+                'buyers_s_d' => 'Black, 2TB',
             ]
         ], 200);
     }
