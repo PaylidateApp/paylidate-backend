@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use App\Services\FlutterwaveService;
 use App\Fulfilment;
 use App\Mail\FulfilmentMail;
+use App\Mail\SellerFulfilmentMail;
 use Illuminate\Support\Facades\Mail;
 
 class FulfilmentService
@@ -49,6 +50,6 @@ class FulfilmentService
         }
 
         Mail::to($buyer->email)->send(new FulfilmentMail($buyer, $code));
-        Mail::to($seller->email)->send(new FulfilmentMail($seller, generate_url(4, $t_id)));
+        Mail::to($seller->email)->send(new SellerFulfilmentMail($seller, generate_url(4, $t_id)));
     }
 }
