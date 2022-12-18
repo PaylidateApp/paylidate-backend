@@ -59,9 +59,9 @@
     </div>
 
     <p style="font-size: 18px"><b>Hello {{$user->name}}</b></p>
-    <p>below is your Code for ur ordered Product</p><br />
-    <h1>{{$data}}</h1>
-    <p>Only Provide this code at the point of delivery</p><br />
+    <p>below is your fulfilment link </p><br />
+    <h1 class="flex-center"><a>{{$data}}</a></h1>
+    <p>Only use this link at the point of delivery</p><br />
 
 
     <p>Your Escrow agent</p>
