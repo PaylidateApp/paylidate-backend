@@ -46,11 +46,13 @@ class FulfilmentController extends Controller
     {
         $urlHash = explode(":", base64_decode($hash));
 
-        $validate = 'g';
+        $validated = $request->validate([
+            'code' => 'required|numeric'
+        ]);
 
         $fulfilment = Fulfilment::where('transaction_id', $urlHash[1])->first('code');
 
-        if($request->code == $fulfilment){
+        if($validated['code'] == $fulfilment){
             Fulfilment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
                 'status' => Fulfilment::SUCCESSFUL
             ]);
@@ -96,7 +98,7 @@ class FulfilmentController extends Controller
 
         $valid = 1234;
 
-        if($validated == $valid){
+        if($validated['code'] == $valid){
             return response()->json([
                 'status' => 'Success',
                 'message' => 'Success Order Fulfiled',
