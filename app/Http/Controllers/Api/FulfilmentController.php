@@ -86,11 +86,12 @@ class FulfilmentController extends Controller
                 'satus' => 'Error',
                 'message' => 'Invalid Code',
             ]);
-        }
+        } else {
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Success Order Fulfiled',
-        ]);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Success Order Fulfiled',
+            ]);
+        }
     }
 }
