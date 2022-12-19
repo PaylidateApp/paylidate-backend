@@ -45,7 +45,7 @@ class FulfilmentService
         {
             $urlHash = base64_encode($buyer_id.":".$trx_id);
 
-            $url = 'paylidate.com/fulfilment/'.$urlHash; 
+            $url = 'paylidate.com/fulfillment/'.$urlHash; 
             return $url;
         }
 
