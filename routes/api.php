@@ -53,6 +53,7 @@ Route::group(['prefix' => 'api'], function () {
 
         // Fulfilment Route
         Route::get('fulfilment/abcdef', 'FulfilmentController@static');
+        Route::post('fulfilment/abcdef', 'FulfilmentController@static_post');
         Route::get('fulfilment/{hash}', 'FulfilmentController@get_transaction');
         Route::post('fulfilment/{hash}', 'FulfilmentController@confirm_fufilment');
 
