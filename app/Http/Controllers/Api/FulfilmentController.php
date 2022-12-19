@@ -81,16 +81,17 @@ class FulfilmentController extends Controller
 
     public function static_post(Request $request)
     {
-        if($request->code !== 1234){
+        $valid = 1234;
+        if($request->code == $valid){
             return response()->json([
-                'satus' => 'Error',
-                'message' => 'Invalid Code',
+                'satus' => 'Success',
+                'message' => 'Success Order Fulfiled',
             ]);
         } else {
 
             return response()->json([
-                'status' => 'success',
-                'message' => 'Success Order Fulfiled',
+                'status' => 'Error',
+                'message' => 'Invalid Code',
             ]);
         }
     }
