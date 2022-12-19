@@ -52,10 +52,10 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
 
         // Fulfilment Route
-        Route::get('fulfilment/abcdef', 'FulfilmentController@static');
-        Route::post('fulfilment/abcdef', 'FulfilmentController@static_post');
-        Route::get('fulfilment/{hash}', 'FulfilmentController@get_transaction');
-        Route::post('fulfilment/{hash}', 'FulfilmentController@confirm_fufilment');
+        Route::get('fulfillment/abcdef', 'FulfilmentController@static');
+        Route::post('fulfillment/abcdef', 'FulfilmentController@static_post');
+        Route::get('fulfillment/{hash}', 'FulfilmentController@get_transaction');
+        Route::post('fulfillment/{hash}', 'FulfilmentController@confirm_fufilment');
 
 
         Route::group(['prefix' => 'password'], function () {

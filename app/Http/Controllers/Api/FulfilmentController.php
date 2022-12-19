@@ -46,6 +46,8 @@ class FulfilmentController extends Controller
     {
         $urlHash = explode(":", base64_decode($hash));
 
+        $validate = 'g';
+
         $fulfilment = Fulfilment::where('transaction_id', $urlHash[1])->first('code');
 
         if($request->code == $fulfilment){
@@ -55,12 +57,18 @@ class FulfilmentController extends Controller
             Transaction::where('id', $urlHash[1])->update([
                 'status' => 1
             ]);
+
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'Succes Order Fulfiled'
+            ], 200);
+        }else {
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'Invalid Code'
+            ], 400);
         }
 
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Invalid Code'
-        ], 400);
     }
 
     public function static()
@@ -81,10 +89,16 @@ class FulfilmentController extends Controller
 
     public function static_post(Request $request)
     {
+
+        $validated = $request->validate([
+            'code' => 'required|numeric'
+        ]);
+
         $valid = 1234;
-        if($request->code == $valid){
+
+        if($validated == $valid){
             return response()->json([
-                'satus' => 'Success',
+                'status' => 'Success',
                 'message' => 'Success Order Fulfiled',
             ]);
         } else {
