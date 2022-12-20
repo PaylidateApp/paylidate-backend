@@ -28,12 +28,12 @@ use App\Services\FulfilmentService;
  */
 class TransactionController extends Controller
 {
-    public FulfilmentService $fulfilmentService;
+    protected $fulfilmentService;
 
-    public function __construct(FulfilmentService $fulfilmentService)
+    public function __construct()
     {
 
-        $this->fulfilmentService = $fulfilmentService;
+        $this->fulfilmentService = new FulfilmentService;
     }
 
     /**
@@ -132,8 +132,8 @@ class TransactionController extends Controller
         $emailTransaction['total_quantity'] = $new_transaction->quantity;
         $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
         $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
-        
-        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id, $t_ref);
+
+        $this->fulfilmentService->initiate_fufilment($seller_user->email, $seller_user->name, $user->email, $user->name, $user->id, $new_transaction->id, $t_ref, $emailTransaction);
 
         Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
         Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
@@ -143,7 +143,7 @@ class TransactionController extends Controller
             'message' => 'success',
             'data' => $new_transaction
         ]);
-        
+    
     }
 
 

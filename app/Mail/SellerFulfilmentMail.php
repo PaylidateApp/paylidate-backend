@@ -13,16 +13,18 @@ class SellerFulfilmentMail extends Mailable
 
     public $user;
     public $data;
+    public $transaction;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $data)
+    public function __construct($user, $data, $transaction)
     {
         $this->user = $user;
         $this->data = $data;
+        $this->transaction = $transaction;
     }
 
     /**
@@ -32,6 +34,6 @@ class SellerFulfilmentMail extends Mailable
      */
     public function build()
     {
-        return $this->from('hello@paylidate.com', 'Paylidate')->view('mails.seller_fulfilment');
+        return $this->from('hello@paylidate.com', 'Paylidate Fulfillment')->view('mails.seller_fulfilment');
     }
 }

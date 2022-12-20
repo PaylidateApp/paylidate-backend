@@ -58,9 +58,23 @@
         </div>
     </div>
 
-    <p style="font-size: 18px"><b>Hello {{$user->name}}</b></p>
+    <p style="font-size: 18px"><b>Hello {{$user}}</b></p>
     <p>below is your fulfilment link </p><br />
     <h1 class="flex-center"><a>{{$data}}</a></h1>
+    <b>Transaction details:</b>
+    <p>
+    <ul>
+        <li>Transaction id: {{$transaction['id']}}</li>
+        <li>Transaction ref: {{$transaction['transaction_ref']}}</li>
+        <li>Product id: {{$transaction['product_id']}}</li>
+        <li>Product name: {{$transaction['product_name']}}</li>
+        <li>Product number: {{$transaction['product_number']}}</li>
+        <li>Type: {{$transaction['type']}}</li>
+        <li>Total Quantity: {{$transaction['total_quantity']}}</li>
+        <li>Total Price: {{$transaction['total_price']}}</li>
+        <li>Description: {{$transaction['description']}}</a></li>
+    </ul>
+    </p>
     <p>Only use this link at the point of delivery</p><br />
 
 
