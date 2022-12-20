@@ -12,16 +12,18 @@ class FulfilmentMail extends Mailable
     use Queueable, SerializesModels;
     public $user;
     public $data;
+    public $transaction;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user, $data)
+    public function __construct($user, $data, $transaction)
     {
         $this->user = $user;
         $this->data = $data;
+        $this->transaction = $transaction;
     }
 
     /**

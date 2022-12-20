@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Mail;
 class FulfilmentService
 {
 
-    public function initiate_fufilment($seller, $buyer, $t_id, $t_ref)
+    public function initiate_fufilment($seller_mail, $seller_name, $buyer_mail, $buyer_name, $buyer_id, $t_id, $t_ref, $transaction_details)
     {
         function generateFufilment_code() {
             $number = mt_rand(10000, 99999); // better than rand()
@@ -31,10 +31,11 @@ class FulfilmentService
             return Fulfilment::where('code', $number)->exists();
         }
 
-        $code = generateFufilment_code();
+        try {
+            $code = generateFufilment_code();
 
         Fulfilment::create([
-            'user_id' => $buyer->id,
+            'user_id' => $buyer_id,
             'transaction_id' => $t_id,
             'transaction_ref' => $t_ref,
             'code' => $code,
@@ -49,7 +50,11 @@ class FulfilmentService
             return $url;
         }
 
-        Mail::to($buyer->email)->send(new FulfilmentMail($buyer, $code));
-        Mail::to($seller->email)->send(new SellerFulfilmentMail($seller, generate_url($buyer->id, $t_id)));
+        Mail::to($buyer_mail)->send(new FulfilmentMail($buyer_name, $code, $transaction_details));
+        Mail::to($seller_mail)->send(new SellerFulfilmentMail($seller_name, generate_url($buyer_id, $t_id), $transaction_details));
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
