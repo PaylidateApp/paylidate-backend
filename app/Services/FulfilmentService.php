@@ -31,17 +31,6 @@ class FulfilmentService
             return Fulfilment::where('code', $number)->exists();
         }
 
-        try {
-            $code = generateFufilment_code();
-
-        Fulfilment::create([
-            'user_id' => $buyer_id,
-            'transaction_id' => $t_id,
-            'transaction_ref' => $t_ref,
-            'code' => $code,
-            'status' => Fulfilment::PENDING
-        ]);
-
         function generate_url($buyer_id, $trx_id)
         {
             $urlHash = base64_encode($buyer_id.":".$trx_id);
@@ -50,11 +39,25 @@ class FulfilmentService
             return $url;
         }
 
-        Mail::to($buyer_mail)->send(new FulfilmentMail($buyer_name, $code, $transaction_details));
-        Mail::to($seller_mail)->send(new SellerFulfilmentMail($seller_name, generate_url($buyer_id, $t_id), $transaction_details));
+        try {
+            $code = generateFufilment_code();
 
-        } catch (\Throwable $th) {
-            throw $th;
+            Fulfilment::create([
+                'user_id' => $buyer_id,
+                'transaction_id' => $t_id,
+                'transaction_ref' => $t_ref,
+                'code' => $code,
+                'status' => Fulfilment::PENDING
+            ]);
+
+            Mail::to($buyer_mail)->send(new FulfilmentMail($buyer_name, $code, $transaction_details));
+            Mail::to($seller_mail)->send(new SellerFulfilmentMail($seller_name, generate_url($buyer_id, $t_id), $transaction_details));
+            
+            return true;
+
+        } catch (\Throwable $exception) {
+            throw $exception;
+            return false;
         }
     }
 }
