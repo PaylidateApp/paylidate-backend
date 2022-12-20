@@ -49,4 +49,8 @@ class Transaction extends Model
     {
         return $this->hasOnce('App\Refund');
     }
+    public function fulfilment()
+    {
+        return $this->hasOne('App\Fulfilment');
+    }
 }

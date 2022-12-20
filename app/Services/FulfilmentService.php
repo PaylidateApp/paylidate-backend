@@ -50,6 +50,6 @@ class FulfilmentService
         }
 
         Mail::to($buyer->email)->send(new FulfilmentMail($buyer, $code));
-        Mail::to($seller->email)->send(new SellerFulfilmentMail($seller, generate_url(4, $t_id)));
+        Mail::to($seller->email)->send(new SellerFulfilmentMail($seller, generate_url($buyer->id, $t_id)));
     }
 }
