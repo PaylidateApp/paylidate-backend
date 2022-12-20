@@ -28,12 +28,12 @@ use App\Services\FulfilmentService;
  */
 class TransactionController extends Controller
 {
-    public $fulfilmentService;
+    public FulfilmentService $fulfilmentService;
 
-    public function __construct()
+    public function __construct(FulfilmentService $fulfilmentService)
     {
 
-        $this->fulfilmentService = new FulfilmentService;
+        $this->fulfilmentService = $fulfilmentService;
     }
 
     /**
