@@ -132,11 +132,11 @@ class TransactionController extends Controller
         $emailTransaction['total_quantity'] = $new_transaction->quantity;
         $emailTransaction['total_price'] = $new_transaction->product->price * $new_transaction->quantity;
         $emailTransaction['description'] = $new_transaction->description ? $new_transaction->description : 'No description';
+        
+        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id, $t_ref);
 
         Mail::to($user->email)->send(new CreateTransactionMail($user, $emailTransaction));
         Mail::to($seller_user->email)->send(new CreateTransactionMail($seller_user, $emailTransaction));
-
-
 
         return response()->json([
             'status' => 'success',
@@ -144,7 +144,6 @@ class TransactionController extends Controller
             'data' => $new_transaction
         ]);
         
-        $this->fulfilmentService->initiate_fufilment($seller_user, $user, $new_transaction->id, $t_ref);
     }
 
 
