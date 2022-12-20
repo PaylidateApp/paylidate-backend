@@ -69,6 +69,14 @@ class UserTable extends Seeder
         ]);
 
         User::create([
+            'name' => 'David2',
+            'email' => 'segun8428@gmail.com',
+            'password' =>  bcrypt('password'),
+            'is_admin' => true,
+            'is_staff' => true
+        ]);
+
+        User::create([
             'name' => 'David',
             'email' => 'segun8427@gmail.com',
             'password' =>  bcrypt('password'),
