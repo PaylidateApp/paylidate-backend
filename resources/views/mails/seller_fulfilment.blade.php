@@ -60,7 +60,9 @@
 
     <p style="font-size: 18px"><b>Hello {{$user}}</b></p>
     <p>below is your fulfilment link </p><br />
-    <h1 class="flex-center"><a>{{$data}}</a></h1>
+    <a href="{{$data}}">
+        <h1 class="flex-center">{{$data}}</h1>
+    </a>
     <b>Transaction details:</b>
     <p>
     <ul>

@@ -60,7 +60,7 @@
 
     <p style="font-size: 18px"><b>Hello {{$user}}</b></p>
     <p>below is your Code for ur ordered Product</p><br />
-    <h1>{{$data}}</h1>
+    <h1 class="flex-center">{{$data}}</h1>
     <b>Transaction details:</b>
     <p>
     <ul>
