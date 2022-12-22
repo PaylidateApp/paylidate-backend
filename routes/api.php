@@ -30,6 +30,18 @@ Route::namespace('Api')->group(function () {
     Route::get('product/{slug}', 'ProductController@get_product');
     
     Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
+    
+    Route::get('check-pending', function getPendingMigration($migrationsFolderPath = false, $toJson = false)
+    {
+        $migrationsFolderPath = $migrationsFolderPath ?: database_path('/migrations');
+        $migrations = app('migrator')->getMigrationFiles($migrationsFolderPath);
+        $pendingMigrations = [];
+        foreach ($migrations as $migration => $fullpath){
+            if(!\Illuminate\Support\Facades\DB::table('migrations')->where('migration', $migration)->exists())
+                array_push($pendingMigrations, $migration);
+        }
+        return $toJson ? json_encode($pendingMigrations) : $pendingMigrations;
+    });
    
 
     Route::group(['prefix' => 'password'], function () {
