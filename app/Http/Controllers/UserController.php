@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Mail\WalletCreated;
+use App\Services\FulfilmentService;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
@@ -43,6 +44,20 @@ class UserController extends Controller
 
         return [$users, $wallets];
         $Instandpay = DB::select('select * from migrations');
+
+
+        // $emailTransaction['id'] = 1;
+        // $emailTransaction['referral'] = 1223;
+        // $emailTransaction['transaction_ref'] = 'dummy_rerf';
+        // $emailTransaction['product_id'] = 4;
+        // $emailTransaction['product_name'] = 'bag';
+        // $emailTransaction['product_number'] = 11112332;
+        // $emailTransaction['type'] = 'product';
+        // $emailTransaction['total_quantity'] = 2;
+        // $emailTransaction['total_price'] = 1000;
+        // $emailTransaction['description'] = 'purple and red';
+
+        // (new FulfilmentService())->initiate_fufilment('segun8428@gmail.com', 'DAve2', 'segun8428@gmail.com', 'buyer', 5, 1, 'dumm_rerf', $emailTransaction);
     }
     public function indexx1($id)
     {

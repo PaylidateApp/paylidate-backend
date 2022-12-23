@@ -2,9 +2,6 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
-use App\Services\FlutterwaveService;
 use App\Fulfilment;
 use App\Mail\FulfilmentMail;
 use App\Mail\SellerFulfilmentMail;
