@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Fulfilment;
+use App\Fulfillment;
 use App\Mail\FulfilmentMail;
 use App\Mail\SellerFulfilmentMail;
 use Illuminate\Support\Facades\Mail;
@@ -25,7 +25,7 @@ class FulfilmentService
         }
         
         function barcodeNumberExists($number) {
-            return Fulfilment::where('code', $number)->exists();
+            return Fulfillment::where('code', $number)->exists();
         }
 
         function generate_url($buyer_id, $trx_id)
@@ -39,12 +39,12 @@ class FulfilmentService
         try {
             $code = generateFufilment_code();
 
-            Fulfilment::create([
+            Fulfillment::create([
                 'user_id' => $buyer_id,
                 'transaction_id' => $t_id,
                 'transaction_ref' => $t_ref,
                 'code' => $code,
-                'status' => Fulfilment::PENDING
+                'status' => Fulfillment::PENDING
             ]);
 
             Mail::to($buyer_mail)->send(new FulfilmentMail($buyer_name, $code, $transaction_details));

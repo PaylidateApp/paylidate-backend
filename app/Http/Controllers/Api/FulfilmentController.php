@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Fulfilment;
+use App\Fulfillment;
 use App\Http\Controllers\Controller;
 use App\Transaction;
 use App\User;
@@ -50,11 +50,11 @@ class FulfilmentController extends Controller
             'code' => 'required|numeric'
         ]);
 
-        $fulfilment = Fulfilment::where('transaction_id', $urlHash[1])->first('code');
+        $fulfilment = Fulfillment::where('transaction_id', $urlHash[1])->first('code');
 
         if($validated['code'] == $fulfilment){
-            Fulfilment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
-                'status' => Fulfilment::SUCCESSFUL
+            Fulfillment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
+                'status' => Fulfillment::SUCCESSFUL
             ]);
             Transaction::where('id', $urlHash[1])->update([
                 'status' => 1
