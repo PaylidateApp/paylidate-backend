@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Fulfilment extends Model
+class Fulfillment extends Model
 {
     protected $fillable = [
         'user_id', 'transaction_id', 'transaction_ref', 'code'
