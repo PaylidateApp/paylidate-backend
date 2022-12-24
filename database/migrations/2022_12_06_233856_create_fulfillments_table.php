@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFulfilmentsTable extends Migration
+class CreateFulfillmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateFulfilmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('fulfilments', function (Blueprint $table) {
+        Schema::create('fulfillments', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
             $table->integer('transaction_id');
