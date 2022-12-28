@@ -57,7 +57,7 @@ class FulfilmentController extends Controller
                 return response()->json([
                     'status' => 'Used',
                     'message' => 'This Order Has Already Been FulfFilled'
-                ])
+                ]);
             } else {
                 Fulfillment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
                     'status' => Fulfillment::SUCCESSFUL
