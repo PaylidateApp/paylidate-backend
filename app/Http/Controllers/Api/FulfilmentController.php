@@ -46,7 +46,6 @@ class FulfilmentController extends Controller
     {
         $urlHash = explode(":", base64_decode($hash));
 
-        dd($urlHash);
         $validated = $request->validate([
             'code' => 'required|numeric'
         ]);
