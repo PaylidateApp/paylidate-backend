@@ -50,20 +50,28 @@ class FulfilmentController extends Controller
             'code' => 'required|numeric'
         ]);
 
-        $fulfilment = Fulfillment::where('transaction_id', $urlHash[1])->first('code');
+        $fulfilment = Fulfillment::where('transaction_id', $urlHash[1])->first();
 
-        if($validated['code'] == $fulfilment){
-            Fulfillment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
-                'status' => Fulfillment::SUCCESSFUL
-            ]);
-            Transaction::where('id', $urlHash[1])->update([
-                'status' => 1
-            ]);
+        if($validated['code'] == $fulfilment->code){
+            if($fulfilment->status == 1){
+                return response()->json([
+                    'status' => 'Used',
+                    'message' => 'This Order Has Already Been FulfFilled'
+                ])
+            } else {
+                Fulfillment::where('transaction_id', $urlHash[1])->where('user_id', $urlHash[0])->update([
+                    'status' => Fulfillment::SUCCESSFUL
+                ]);
+                Transaction::where('id', $urlHash[1])->update([
+                    'status' => 1
+                ]);
 
-            return response()->json([
-                'status' => 'Success',
-                'message' => 'Succes Order Fulfiled'
-            ], 200);
+                return response()->json([
+                    'status' => 'Success',
+                    'message' => 'Succes Order Fulfilled'
+                ], 200);
+            }
+
         }else {
             return response()->json([
                 'status' => 'Error',
