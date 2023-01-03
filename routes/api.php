@@ -169,7 +169,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::group(['middleware' => 'auth:api', 'prefix' => 'admin'], function () {
         Route::get('users', 'AdminController@users');
         Route::get('users/{startDate}/{endDate}', 'AdminController@userBtwnDate');
-        Route::get('users/total', 'AdminController@numbers_of_users');
+        Route::get('dashboard', 'AdminController@numbers_of');
     });
 
 
