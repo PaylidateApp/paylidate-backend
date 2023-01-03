@@ -8,6 +8,9 @@ use App\Transaction;
 use App\Dispute;
 use App\User;
 use App\Product;
+use App\Referer;
+use App\Refund;
+use App\Wallet;
 
 class AdminController extends Controller
 {
@@ -46,21 +49,42 @@ class AdminController extends Controller
 
     
 
-    public function numbers_of_users()
+    public function numbers_of()
     {
         $userCount = User::count();
+        $totalTransations = Transaction::where('status', 1)->count();
+        $totalTransationsAmount = Transaction::where('status', 1)->sum('amount');
+        $disputeCount = Dispute::count();
+        $refundCount = Refund::count();
+        $referralCount = Referer::count();
+        $totalWalletAmount = Wallet::get()->sum('amount');
+        $listOfUsers = User::all();
+        $listOfTransactions = Transaction::all();
+        $listOfDisputes = Dispute::all();
 
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => ['Total_registered_users' => $userCount]
-        ]);
+            'data' => [
+                'Total_registered_users' => $userCount,
+                'Total_Transactions_completed' => $totalTransations,
+                'Total_Transactions_completed_amount' => $totalTransationsAmount,
+                'Total_Dispute' => $disputeCount,
+                'Total_Refund' => $refundCount,
+                'Total_Refund' => $referralCount,
+                'total_Wallet_Amount' => $totalWalletAmount,
+                'list_Of_Users' => $listOfUsers,
+                'list_Of_Transactions' => $listOfTransactions,
+                'list_Of_Disputes' => $listOfDisputes,
+            ]
+        ], 200);
     }
 
 
     public function totalTransations()
     {
         $totalTransations = Product::count();
+
 
         return response()->json([
             'status' => 'success',
@@ -69,14 +93,16 @@ class AdminController extends Controller
         ]);
     }
 
-    public function transations()
+    public function total_of()
     {
-        $transations = Product::all();
+        $transations = Transaction::all();
 
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => ['Transations' => $transations]
+            'data' => [
+                'Transations' => $transations
+            ]
         ]);
     }
 
