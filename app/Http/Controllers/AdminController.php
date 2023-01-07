@@ -58,9 +58,9 @@ class AdminController extends Controller
         $refundCount = Refund::count();
         $referralCount = Referer::count();
         $totalWalletAmount = Wallet::get()->sum('amount');
-        $listOfUsers = User::all();
-        $listOfTransactions = Transaction::all();
-        $listOfDisputes = Dispute::all();
+        $listOfUsers = User::get();
+        $listOfTransactions = Transaction::get();
+        $listOfDisputes = Dispute::get();
 
         return response()->json([
             'status' => 'success',
@@ -71,7 +71,7 @@ class AdminController extends Controller
                 'Total_Transactions_completed_amount' => $totalTransationsAmount,
                 'Total_Dispute' => $disputeCount,
                 'Total_Refund' => $refundCount,
-                'Total_Refund' => $referralCount,
+                'Total_Referral' => $referralCount,
                 'total_Wallet_Amount' => $totalWalletAmount,
                 'list_Of_Users' => $listOfUsers,
                 'list_Of_Transactions' => $listOfTransactions,
