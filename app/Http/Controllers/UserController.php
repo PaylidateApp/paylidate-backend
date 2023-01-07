@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Dispute;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use App\Mail\WalletCreated;
+use App\Referer;
+use App\Refund;
 use App\Services\FulfilmentService;
+use App\Transaction;
+use App\Wallet;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
@@ -58,6 +63,34 @@ class UserController extends Controller
         // $emailTransaction['description'] = 'purple and red';
 
         // (new FulfilmentService())->initiate_fufilment('segun8428@gmail.com', 'DAve2', 'segun8428@gmail.com', 'buyer', 5, 1, 'dumm_rerf', $emailTransaction);
+
+        // $userCount = User::count();
+        // $totalTransations = Transaction::where('status', 1)->count();
+        // $totalTransationsAmount = Transaction::where('status', 1)->sum('amount');
+        // $disputeCount = Dispute::count();
+        // $refundCount = Refund::count();
+        // $referralCount = Referer::count();
+        // $totalWalletAmount = Wallet::get()->sum('amount');
+        // $listOfUsers = User::get();
+        // $listOfTransactions = Transaction::get();
+        // $listOfDisputes = Dispute::get();
+
+        // return response()->json([
+        //     'status' => 'success',
+        //     'message' => 'success',
+        //     'data' => [
+        //         'Total_registered_users' => $userCount,
+        //         'Total_Transactions_completed' => $totalTransations,
+        //         'Total_Transactions_completed_amount' => $totalTransationsAmount,
+        //         'Total_Dispute' => $disputeCount,
+        //         'Total_Refund' => $refundCount,
+        //         'Total_Referral' => $referralCount,
+        //         'total_Wallet_Amount' => $totalWalletAmount,
+        //         'list_Of_Users' => $listOfUsers,
+        //         'list_Of_Transactions' => $listOfTransactions,
+        //         'list_Of_Disputes' => $listOfDisputes,
+        //     ]
+        // ], 200);
     }
     public function indexx1($id)
     {
