@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\RegistrationMail;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
-use Validator;
 use App\User;
-use App\Wallet;
 use App\UserAccount;
 use Auth;
-use App\VirtualCard;
 use Carbon\Carbon;
+
+
+
+
 
 /**
  * @group  Authentication management
@@ -21,133 +23,94 @@ use Carbon\Carbon;
  */
 class AuthController extends Controller
 {
-    /**
-     * Create user
-     *
-     * the user signup routs
-     *
-     * @bodyParam name string required the full name of the user
-     * @bodyParam email string required the email of the user , this value is unige
-     * @bodyParam phone string required the valide phone number of the user, this value is unige
-     * @bodyParam password string required the users prefered password
-     * @bodyParam password_confirmation string required the confirmation password. must be thesame as the password
-     *
-     *
-     * @return [string] message
-     */
+
+
+    public function __construct()
+    {
+    }
+
+
     public function signup(Request $request)
     {
-
-        $messages = [
-            'name.required'    => 'Enter full name!',
-            'email.required' => 'Enter an e-mail address!',
-            'email' => 'E-mail address exist!',
-            'phone' => 'unique',
-            'phone' => 'Phone number exist!',
-            'password.required'    => 'Password is required',
-            'password_confirmation' => 'The :password and :password_confirmation must match.'
-        ];
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required',
-            'password_confirmation' => 'required|same:password',
-        ], $messages);
+        try {
+            //return $request;
+            $request->validate([
+                'name' => 'required|string|min:3',
+                'email' => 'required|string|email|max:255',
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password',
+                'phone' => 'required|unique:users',
 
 
-        $user = User::where('email', $request->get('email'))->first();
-
-        if ($user) {
-            return response()->json([
-                'status' => 'exist',
-                'message' => 'User already exist. please login',
-            ], 409);
-        } elseif ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => $validator->errors()
-            ], 406);
-        } else {
-            $input = $request->all();
-            $input['password'] = bcrypt($input['password']);
-            $user = User::create($input);
-
-            Wallet::create([
-                'user_id' => $user->id,
             ]);
 
-            // if (env('ENABLE_VIRTUAL_ACCOUNT_ON_REGISTRATION', false)) {
-            //     $ref = '';
-            //     $user_account = new UserAccount;
-            //     $virtual_account = $user_account->createVirtualAccount($email = $request->email, $is_permanent = false, $name = $request->name);
+            // if(isset($request->phone)){
+            //     $request->validate([
+            //         'phone' => 'unique:users',        
 
-            //     if ($virtual_account['status'] == 'success') {
-            //             $ref =  $virtual_account['data']['order_ref'];
-            //         }
-
-            //     UserAccount::create([
-            //         'user_id' => $user->id,
-            //         'ref' => $ref
             //     ]);
-            // }
+            // }       
 
-            // $user_virtual_card = new VirtualCard;
 
-            // // create NGN virtual card for transactions
-            // $virtual_card = $user_virtual_card->virtualCard($currency = 'NGN', $ammount = '150', $name = $request->name);
-            // $naira_card_id = null;
+            $user = User::where('email', $request->get('email'))->first();
 
-            // if ($virtual_card['status'] == 'success') {
-            //     $naira_card_id = $virtual_card['data']['id'];
-            //     VirtualCard::create([
-            //         'user_id' => $user->id,
-            //         'card_id' => $virtual_card['data']['id'],
-            //         'account_id' => $virtual_card['data']['account_id'],
-            //         'currency' => $virtual_card['data']['currency'],
-            //         'default' => 1,
-            //     ]);
-            // }else {
-            //     // Mail::raw($virtual_card['message'], function ($message) {
-            // }
 
-           // create USD virtual card for transactions
+            if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
+                $user->update([
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'password' => bcrypt($request->password),
+                    'active' => true,
+                    'referral_token' => Str::random(10) . date('dmyHis'),
+                ]);
 
-            // $virtual_card = $user_virtual_card->virtualCard($currency = 'USD', $ammount = '1', $name = $request->name);
-            // $dollar_card_id = null;
-            // if ($virtual_card['status'] == 'success') {
-            //     $dollar_card_id = $virtual_card['data']['id'];
-            //     VirtualCard::create([
-            //         'user_id' => $user->id,
-            //         'card_id' => $virtual_card['data']['id'],
-            //         'account_id' => $virtual_card['data']['account_id'],
-            //         'currency' => $virtual_card['data']['currency'],
-            //         'default' => false,
-            //     ]);
-            // }else {
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
 
-            // }
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user,
 
-            // // withdraw from virtual card
-            // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $naira_card_id, $ammount = '148');
-            // // $withdraw = $user_virtual_card->withdrawFromVirtualCard($card_id = $dollar_card_id, $ammount = '1');
+                ]);
+            } elseif ($user) {
+                return response()->json([
+                    'status' => 'exist',
+                    'message' => 'User already exist. please login',
+                ], 409);
+            } else {
 
-            try {
-                Mail::to($user)->send(new RegistrationMail($user));
-            } catch (\Throwable $th) {
-                //throw $th;
+                $emailToken = Str::random(8) . date('dmyHis');
+                $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
+                //return $verifyEmailLink;
+
+
+                $input = $request->all();
+                $input['password'] = bcrypt($input['password']);
+                $input['email_token'] = $emailToken;
+                $input['referral_token'] = Str::random(10) . date('dmyHis');
+                $user = User::create($input);
+
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user,
+
+                ]);
             }
-
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->token;
-            $token->save();
-
+        } catch (\Exception $e) {
             return response()->json([
-                'status' => 'success',
-                'message' => 'User created',
-                'access_token' => $tokenResult->accessToken,
-                'data' => $user->load('wallet'),
-                // 'account' => $virtual_account['data']
+                'status' => 'Error',
+                'message' => $e,
+
+
             ]);
         }
     }
@@ -170,15 +133,35 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $credentials = request(['email', 'password']);
-        $credentials['active'] = 1;
+        // \Artisan::call('migrate');
+        // $userss = User::all();
+        // foreach ($userss as $user) {
+        //     $user->update(
+        //         [
+        //             'referral_token' => Str::random(10) . date('dmyHis'),
+        //         ]
+        //     );
+        // }
+
+        //$credentials['active'] = 1;
+        $credentials['email']   = strtolower($request->email);
+        $credentials['password']   = $request->password;
         $credentials['deleted_at'] = null;
+
 
         if (!Auth::attempt($credentials))
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Unauthorized'
+                'message' => 'Wrong email and password'
             ], 401);
+
+        // if (isset(Auth::user()->email_token) || !Auth::user()->email_verified_at)
+        //     {
+        //         return response()->json([
+        //         'status' => 'failed',
+        //         'message' => 'Please verify your email address'
+        //     ], 401);
+        //         }
 
         if (!Auth::user()->active)
             return response()->json([
@@ -186,7 +169,7 @@ class AuthController extends Controller
                 'message' => 'Your account is not activated'
             ], 401);
 
-        $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $user = User::where('id', Auth::user()->id)->first();
 
         // $user_account = new UserAccount;
         // $account = $user_account->where('user_id', Auth::user()->id)->first();
@@ -207,11 +190,13 @@ class AuthController extends Controller
             $token->expires_at = Carbon::now()->addWeeks(4);
         $token->save();
 
+
+
         return response()->json([
             'status' => 'success',
             'access_token' => $tokenResult->accessToken,
             'message' => 'login successful',
-            'data' => $user->load('wallet'),
+            'data' => $user
             // 'account' => $account
         ]);
     }
@@ -242,7 +227,7 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
-        $user = User::where('id', Auth::user()->id)->with('wallet')->first();
+        $user = User::where('id', Auth::user()->id)->first();
         $account = UserAccount::where('user_id', Auth::user()->id)->first();
 
         if ($account && $account->ref) {
@@ -250,16 +235,80 @@ class AuthController extends Controller
             $virtual_account = $user_object->getVirtualAccount($account->ref);
 
             if ($virtual_account['status'] == 'success') {
-                    $account['account'] = $virtual_account['data'];
-                }
+                $account['account'] = $virtual_account['data'];
+            }
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'user fetched',
-            'data' => $user->load('wallet'),
-            'account'=> $account
+            'data' => $user,
+            'account' => $account
         ]);
+    }
+
+
+    public function verifyEmail($token)
+    {
+
+
+        $user = User::where('email_token', $token)->first();
+        if (!$token || !$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'This verification token is invalid.'
+            ], 404);
+        }
+
+        $user->email_verified_at = date("Y-m-d H:i:s", strtotime('now'));
+        $user->email_token = null;
+        $user->save();
+
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+
+        $token->save();
+
+        return response()->json([
+            'status' => 'success',
+            'access_token' => $tokenResult->accessToken,
+            'message' => 'login successful',
+            'data' => $user,
+            // 'account' => $account
+        ]);
+    }
+    public function resendVerificationEmail($email)
+    {
+
+
+        $user = User::where('email', $email)->first();
+        if (!$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'No user with such email.'
+            ], 404);
+        }
+        $emailToken = Str::random(8) . date('dmyHis');
+        $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
+
+        $user->email_verified_at = null;
+        $user->email_token = $emailToken;
+        $user->save();
+
+        try {
+            Mail::to($email)->send(new RegistrationMail($user, $verifyEmailLink));
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Email verification link sent',
+
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email sending error'
+            ], 450);
+        }
     }
 
 
@@ -287,7 +336,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'user activated',
-            'data' => $user->load('wallet')
+            'data' => $user
         ]);
     }
 
@@ -313,12 +362,12 @@ class AuthController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'User updated',
-            'data' => $user->load('wallet'),
+            'data' => $user,
         ]);
-
     }
 
-    public function check_email($email){
+    public function check_email($email)
+    {
         $user = User::where('email', $email)->first();
 
         if ($user) {
@@ -332,7 +381,5 @@ class AuthController extends Controller
                 'message' => 'User doesnot exist.'
             ], 406);
         }
-
     }
-
 }

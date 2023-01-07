@@ -15,6 +15,7 @@
         "guzzlehttp/guzzle": "^7.3",
         "ixudra/curl": "^6.21",
         "laravel/framework": "^7.0",
+        "doctrine/dbal": "v2.4.2",
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
         "sentry/sentry-laravel": "^2.9",
@@ -56,12 +57,6 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
-    "repositories": [
-        {
-            "type": "path",
-            "url": "./nova"
-        }
-    ],
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
@@ -80,10 +75,10 @@
             "php artisan route:cache",
             "chmod -R 777 storage",
             "php artisan storage:link",
+            "php artisan migrate --force",
             "php artisan passport:install --force",
             "php artisan log-viewer:clear",
-            "php artisan log-viewer:publish --force",
-            "php artisan migrate --force"
+            "php artisan log-viewer:publish --force"
         ]
     }
 }

@@ -5,14 +5,15 @@ namespace App;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factory;
 
 class Product extends Model
 {
     use HasSlug;
 
     protected $fillable = [
-        'user_id','name','image','product_number','price','quantity','type','transaction_type','description','confirmed',
-        'delivery_status','payment_status','dispute','delivery_period','clients_email','description'
+        'user_id', 'name', 'image', 'product_number', 'referral_amount', 'slug', 'price', 'quantity', 'type', 'transaction_type',
+        'product_status', 'description'
     ];
 
     public function user()
@@ -23,7 +24,7 @@ class Product extends Model
     /**
      * Get the options for generating the slug.
      */
-    public function getSlugOptions() : SlugOptions
+    public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
             ->generateSlugsFrom('name')
@@ -42,14 +43,13 @@ class Product extends Model
     }
 
 
-    public function payment()
-    {
-        return $this->hasOne('App\Payment');
-    }
+    // public function secondary_user()
+    // {
+    //     return $this->belongsTo('App\User', 'user_id');
+    // }
 
-    public function secondary_user()
+    public function transaction()
     {
-        return $this->belongsTo('App\User', 'secondary_user_id');
+        return $this->hasMany('App\Transaction');
     }
-
 }

@@ -60,11 +60,10 @@
     <p style="font-size: 20px"><b>Welcome to Paylidate.</b></p>
     <p style="font-size: 20px"><b>We are excited to have you on paylidate.</b></p>
     <p>
-        For any questions, please send a reply to this mail, we are always happy to help out.
-        Meanwhile, follow this
-        <a href="https://paylidate.com/escrow-help">link</a> to view our
-        <a href="https://paylidate.com/escrow-help">escrow help page</a> to help you know your way around as
-        you get started.
+        For any questions, please send a reply to this mail or paylidate@gmail.com, we are always happy to help out.
+        Meanwhile, click this
+        <a href={{ $verifyEmailLink }}>link</a> or visit
+        <a href={{ $verifyEmailLink }}>{{ $verifyEmailLink }}</a> to verify your account
     </p>
     <p>
         Once again, welcome to Paylidate - where you can do 'commerce without barriers'.
