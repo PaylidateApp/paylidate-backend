@@ -60,7 +60,28 @@ class AdminController extends Controller
         $totalWalletAmount = Wallet::get()->sum('amount');
         $listOfUsers = User::get();
         $listOfTransactions = Transaction::get();
-        $listOfDisputes = Dispute::get();
+
+        $listOfDisputes = Dispute::with('user', 'transaction', 'dispute_chat')
+        ->orderBy('dispute_solved')
+        ->get();
+
+        $disputes = [];
+        if($listOfDisputes->user->id == $listOfDisputes->user_id){
+            $disputes['initiator'] = $listOfDisputes->user->name;
+            $disputes['receiver'] = $listOfDisputes->transacation->user->name;
+            $disputes['dispute'] = Dispute::get();
+            return $disputes;
+        }
+
+        // $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
+        // $filterTransaction = [];
+        // foreach ($transactions as $transaction) {
+        //     if ($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id) {
+        //         $transaction['referral'] = Referer::where('id', $transaction->referer_id)->first();
+        //         array_push($filterTransaction, $transaction);
+        //         continue;
+        //     }
+        // }
 
         return response()->json([
             'status' => 'success',
@@ -75,7 +96,7 @@ class AdminController extends Controller
                 'total_Wallet_Amount' => $totalWalletAmount,
                 'list_Of_Users' => $listOfUsers,
                 'list_Of_Transactions' => $listOfTransactions,
-                'list_Of_Disputes' => $listOfDisputes,
+                'list_Of_Disputes' => $disputes,
             ]
         ], 200);
     }
