@@ -59,7 +59,7 @@ class AdminController extends Controller
         $referralCount = Referer::count();
         $totalWalletAmount = Wallet::get()->sum('amount');
         $listOfUsers = User::get();
-        $listOfTransactions = Transaction::get();
+        $listOfTransactions = Transaction::with('product', 'payment', 'reffer')->orderBy('created_at', 'desc')->get();
 
         $disputes = Dispute::with('user', 'transaction', 'dispute_chat')->orderBy('dispute_solved')->get();
 
