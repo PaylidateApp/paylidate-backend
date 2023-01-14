@@ -8,12 +8,22 @@ use Ixudra\Curl\Facades\Curl;
 use App\Mail\DisputeMail;
 use Illuminate\Support\Facades\Mail;
 use App\Dispute;
+use App\Mail\SellerDisputeMail;
+use App\Services\DisputeCountdownService;
 use App\User;
 use App\Transaction;
 use Auth;
 
 class DisputeController extends Controller
 {
+    protected $disputeCountdownService;
+
+    public function __construct()
+    {
+
+        $this->disputeCountdownService = new DisputeCountdownService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -187,10 +197,13 @@ class DisputeController extends Controller
             
             $admin_email = 'hello@paylidate.com';
 
-
             Mail::to($user1->email)->send(new DisputeMail($request->subject, $request->description, $newTransaction, $user1->name));
-            Mail::to($user2->email)->send(new DisputeMail($request->subject, $request->description, $newTransaction,  $user2->name));
+            Mail::to($user2->email)->send(new SellerDisputeMail($request->subject, $request->description, $newTransaction,  $user2->name));
             Mail::to($admin_email)->send(new DisputeMail($request->subject, $request->description, $newTransaction, 'ADMIN'));
+
+            // if($request->transaction['status'] == 0){
+            //     $this->disputeCountdownService->countdown($request->transaction['dispute']);
+            // }
 
             return response()->json([
                 'status' => 'success',
