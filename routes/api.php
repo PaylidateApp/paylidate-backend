@@ -131,7 +131,7 @@ Route::group(['prefix' => 'api'], function () {
 
             Route::resource('card', 'CardController');
             //Route::post('payment/link', 'PaymentController@getPaymentLink');
-            Route::resource('transaction', 'TransactionController');
+            Route::resource('transaction', 'TransactionController@index');
             Route::resource('account', 'UserAccountController');
 
             Route::post('fund', 'CardController@fund');
