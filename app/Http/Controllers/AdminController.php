@@ -61,8 +61,12 @@ class AdminController extends Controller
         $listOfUsers = User::get();
         $listOfTransactions = Transaction::with('product', 'payment', 'referral')->orderBy('created_at', 'desc')->get();
 
-        $disputes = Dispute::with('user', 'transaction', 'product')->orderBy('dispute_solved')->get();
+        $disputes = Dispute::with('user', 'transaction')->orderBy('dispute_solved')->get();
+        foreach ($disputes as $dispute) {
+            $receiver = User::find($dispute->transaction->user_id);
 
+            $dispute->receiver_name = $receiver->name;
+        }
         
 
         return response()->json([
