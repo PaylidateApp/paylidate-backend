@@ -43,12 +43,17 @@ class UserController extends Controller
         //     ->where('id', 97)
         //     ->update(['password' => bcrypt('123DF_puo>ghc'), 'email' => 'designme60@gmail.com']);
 
-        $users = DB::select('select * from users');
+        // $users = DB::select('select * from users');
         $wallets = DB::select('select * from wallets');
-        $migrattion = DB::select('select * from migrations');
+        // $migrattion = DB::select('select * from migrations');
+        $users = User::all();
+        foreach($users as $user){
+            $user->username = 'user_'.rand(0,450).date('dmyHis');
+            $user->save();
+        }
 
         return [$users, $wallets];
-        $Instandpay = DB::select('select * from migrations');
+        // $Instandpay = DB::select('select * from migrations');
 
 
         // $emailTransaction['id'] = 1;

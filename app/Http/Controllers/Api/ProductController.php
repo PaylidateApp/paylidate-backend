@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Product;
 use App\Transaction;
 use App\User;
+use App\Recommendation;
 use Illuminate\Support\Str;
 
 
@@ -307,4 +308,45 @@ class ProductController extends Controller
             'data' => $product
         ]);
     }
+
+    //Product Catalog
+    public function get_catalog($id){
+        $catalog = Product::where('user_id', $id)->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'success',
+            'data' => $catalog
+        ], 200);
+    }
+
+    public function product_recommendation($id){
+        $user = auth('api')->user();
+        $user_id = $user->id;
+        $product_id = $id;
+        Recommendation::create([
+            'user_id' => $user_id,
+            'product_id' => $product_id
+        ]);
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'product recommended',
+        ], 200);
+    }
+
+    public function remove_product_recommendation($id){
+        $user = auth('api')->user();
+        $user_id = $user->id;
+        $product_id = $id;
+        
+        $recommendation = Recommendation::where('product_id', $product_id)->where('user_id', $user_id)->get();
+        
+        $recommendation->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'product unrecommended',
+        ], 200);
+    } 
 }
