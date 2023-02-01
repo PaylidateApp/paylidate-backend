@@ -316,7 +316,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'success',
-            'data' => $catalog
+            'data' => $catalog,
         ], 200);
     }
 
@@ -326,7 +326,7 @@ class ProductController extends Controller
         $product_id = $id;
         Recommendation::create([
             'user_id' => $user_id,
-            'product_id' => $product_id
+            'product_id' => $product_id,
         ]);
         
         return response()->json([

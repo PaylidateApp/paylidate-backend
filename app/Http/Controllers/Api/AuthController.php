@@ -84,14 +84,14 @@ class AuthController extends Controller
 
                 $emailToken = Str::random(8) . date('dmyHis');
                 $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
-                $username = 'user_'.rand(1,400).date('dmyHis');
+                $user_name = 'user_' . rand(1,400) . date('dmyHis');
                 //return $verifyEmailLink;
 
 
                 $input = $request->all();
                 $input['password'] = bcrypt($input['password']);
                 $input['email_token'] = $emailToken;
-                $input['username'] = $username;
+                $input['username'] = $user_name;
                 $input['referral_token'] = Str::random(10) . date('dmyHis');
                 $user = User::create($input);
 
