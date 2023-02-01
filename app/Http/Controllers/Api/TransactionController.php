@@ -161,7 +161,7 @@ class TransactionController extends Controller
         }
 
         $transaction['product_initiator'] = User::where('id', $transaction->product->user_id)->first();
-        $userID;
+        // $userID = NULL;
         if ($transaction->product->transaction_type == 'sell') {
             $userID = $transaction->product->user_id;
         } else {
