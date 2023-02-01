@@ -335,18 +335,18 @@ class ProductController extends Controller
         ], 200);
     }
 
-    public function remove_product_recommendation($id){
-        $user = auth('api')->user();
-        $user_id = $user->id;
-        $product_id = $id;
+    // public function remove_product_recommendation($id){
+    //     $user = auth('api')->user();
+    //     $user_id = $user->id;
+    //     $product_id = $id;
         
-        $recommendation = Recommendation::where('product_id', $product_id)->where('user_id', $user_id)->get();
+    //     $recommendation = Recommendation::where('product_id', $product_id)->where('user_id', $user_id)->get();
         
-        $recommendation->delete();
+    //     $recommendation->delete();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'product unrecommended',
-        ], 200);
-    } 
+    //     return response()->json([
+    //         'status' => 'success',
+    //         'message' => 'product unrecommended',
+    //     ], 200);
+    // } 
 }
