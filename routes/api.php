@@ -51,7 +51,7 @@ Route::group(['prefix' => 'api'], function () {
 
         Route::get('transaction/{T_ref}', 'TransactionController@get_transaction');
 
-        // Fulfilment Route
+        // Fulfillment Route
         Route::get('fulfillment/abcdef', 'FulfilmentController@static');
         Route::post('fulfillment/abcdef', 'FulfilmentController@static_post');
         Route::get('fulfillment/{hash}', 'FulfilmentController@get_transaction');
