@@ -198,7 +198,7 @@ class DisputeController extends Controller
             $admin_email = 'hello@paylidate.com';
 
             Mail::to($user1->email)->send(new DisputeMail($request->subject, $request->description, $newTransaction, $user1->name));
-            Mail::to($user2->email)->send(new SellerDisputeMail($request->subject, $request->description, $newTransaction,  $user2->name));
+            Mail::to($user2->email)->send(new DisputeMail($request->subject, $request->description, $newTransaction,  $user2->name));
             Mail::to($admin_email)->send(new DisputeMail($request->subject, $request->description, $newTransaction, 'ADMIN'));
 
             // if($request->transaction['status'] == 0){
