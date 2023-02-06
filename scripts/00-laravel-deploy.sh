@@ -2,7 +2,7 @@
 echo "Running composer"
 # composer update
 composer install
-composer install --no-dev --working-dir=/var/www/html/
+# composer install --no-dev --working-dir=/var/www/html/
 # composer global require hirak/prestissimo
 
 echo "Caching config..."
