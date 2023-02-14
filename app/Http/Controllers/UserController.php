@@ -46,7 +46,7 @@ class UserController extends Controller
         // $users = DB::select('select * from users');
         $wallets = DB::select('select * from wallets');
         $migrattion = DB::select('select * from migrations');
-        $users = User::all()->sortBy('created_at', 'desc');
+        $users = User::all();
         // foreach($users as $user){
         //     $user->username = 'user_'.rand(0,450).date('dmyHis');
         //     $user->save();
