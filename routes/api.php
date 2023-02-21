@@ -72,6 +72,8 @@ Route::group(['prefix' => 'api'], function () {
             Route::get('logout', 'AuthController@logout');
             Route::get('user', 'AuthController@user');
             Route::post('user/update', 'AuthController@update');
+            Route::post('rate-user/{id}', 'AuthController@rate_user');
+            Route::get('get-user-rate/{id}', 'AuthController@get_user_ratings');
 
             Route::post('resendVerificationEmail/{email}', 'AuthController@resendVerificationEmail');
             Route::post('verifyEmail/{token}', 'AuthController@verifyEmail');
