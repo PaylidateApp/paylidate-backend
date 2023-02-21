@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\RegistrationMail;
+use App\Rating;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\User;
@@ -382,6 +383,68 @@ class AuthController extends Controller
                 'status' => 'false',
                 'message' => 'User doesnot exist.'
             ], 406);
+        }
+    }
+
+    public function rate_user(Request $request, $id)
+    {
+        try {
+            
+            if($id == auth()->user()->id){
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Error user can rate self.'
+                ]);
+            }
+
+            $rating = new Rating;
+            $rating->rated_user_id = $id;
+            $rating->user_id = auth()->user()->id;
+            $rating->rating = $request->rating;
+            $rating->save();
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'User rated sousecfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+            // throw $th;
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'An Error Occured',
+                'data' => $th
+            ]);
+        }
+    }
+
+    public function get_user_ratings($id)
+    {
+        try {
+            $ratings = Rating::where('rated_user_id', $id)->get();
+            $totalScore = 0;
+            if(!$ratings){
+                return response()->json([
+                    'message' => 'no ratings found for user',
+                    'data' => 0
+                ]);
+            }
+            foreach ($ratings as $rating) {
+                $totalScore += $rating->rating;
+            }
+            $averageScore = $totalScore / count($ratings);
+            
+            return response()->json([
+                'status' => 'Success',
+                'message' => 'ratings found',
+                'data' => $averageScore
+            ]);
+
+        } catch(\Throwable $th) {
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'An Error Occured',
+                'data' => $th
+            ]);
         }
     }
 }
