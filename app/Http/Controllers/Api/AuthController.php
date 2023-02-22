@@ -173,6 +173,7 @@ class AuthController extends Controller
                 $emailToken = Str::random(8) . date('dmyHis');
                 $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
                 $user_name = 'user_' . rand(1,400) . date('dmyHis');
+                $reffer = User::where('referral_token', $ref)->get();
                 //return $verifyEmailLink;
 
 
@@ -180,9 +181,9 @@ class AuthController extends Controller
                 $input['password'] = bcrypt($input['password']);
                 $input['email_token'] = $emailToken;
                 $input['username'] = $user_name;
+                $input['referred_by'] = $reffer->id;
                 $input['referral_token'] = Str::random(10) . date('dmyHis');
                 $user = User::create($input);
-                //save the user_id in the refer database & the referred by id too
 
                 $tokenResult = $user->createToken('Personal Access Token');
                 $token = $tokenResult->token;
