@@ -118,6 +118,94 @@ class AuthController extends Controller
         }
     }
 
+    public function refferal_signup(Request $request, $ref)
+    {
+        try {
+            //return $request;
+            $request->validate([
+                'name' => 'required|string|min:3',
+                'email' => 'required|string|email|max:255',
+                'password' => 'required',
+                'password_confirmation' => 'required|same:password',
+                'phone' => 'required|unique:users',
+
+
+            ]);
+
+            // if(isset($request->phone)){
+            //     $request->validate([
+            //         'phone' => 'unique:users',        
+
+            //     ]);
+            // }       
+
+
+            $user = User::where('email', $request->get('email'))->first();
+
+
+            if ($user && ($user->active == false || strlen($user->password) < 8 || $user->password == '$2y$10$XuFENwoCWjr5NbqK1bmtKuGfQSY87WO785OC2rCoN1V471bsMcb9q')) {
+                $user->update([
+                    'name' => $request->name,
+                    'phone' => $request->phone,
+                    'password' => bcrypt($request->password),
+                    'active' => true,
+                    'referral_token' => Str::random(10) . date('dmyHis'),
+                ]);
+
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user,
+
+                ]);
+            } elseif ($user) {
+                return response()->json([
+                    'status' => 'exist',
+                    'message' => 'User already exist. please login',
+                ], 409);
+            } else {
+
+                $emailToken = Str::random(8) . date('dmyHis');
+                $verifyEmailLink = "https://paylidate.com/verify/" . $emailToken;
+                $user_name = 'user_' . rand(1,400) . date('dmyHis');
+                //return $verifyEmailLink;
+
+
+                $input = $request->all();
+                $input['password'] = bcrypt($input['password']);
+                $input['email_token'] = $emailToken;
+                $input['username'] = $user_name;
+                $input['referral_token'] = Str::random(10) . date('dmyHis');
+                $user = User::create($input);
+                //save the user_id in the refer database & the referred by id too
+
+                $tokenResult = $user->createToken('Personal Access Token');
+                $token = $tokenResult->token;
+                $token->save();
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'User created',
+                    'access_token' => $tokenResult->accessToken,
+                    'data' => $user,
+
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'Error',
+                'message' => $e,
+
+
+            ]);
+        }
+    }
+
     /**
      * Login user and create token
      *
