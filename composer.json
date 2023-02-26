@@ -76,11 +76,5 @@
             "php artisan log-viewer:clear",
             "php artisan log-viewer:publish --force"
         ]
-    },
-    "repositories": {
-        "nova": {
-            "type": "path",
-            "url": "./nova"
-        }
     }
 }
