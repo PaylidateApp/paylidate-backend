@@ -19,8 +19,7 @@
         "laravel/passport": "^9.3",
         "laravel/tinker": "^2.0",
         "sentry/sentry-laravel": "^2.9",
-        "spatie/laravel-sluggable": "^2.6",
-        "laravel/nova": "*"
+        "spatie/laravel-sluggable": "^2.6"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
