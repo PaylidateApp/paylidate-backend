@@ -52,7 +52,7 @@ class UserController extends Controller
         //     $user->save();
         // }
 
-        return [$users, $wallets];
+        return [$users, $wallets, 'server refreshed'];
         // $Instandpay = DB::select('select * from migrations');
 
 
