@@ -52,4 +52,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Transaction');
     }
+
+    public function recommendation()
+    {
+        return $this->hasMany('App\Recommendation');
+    }
 }

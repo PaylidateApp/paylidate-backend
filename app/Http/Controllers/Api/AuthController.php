@@ -244,7 +244,7 @@ class AuthController extends Controller
         if (!Auth::attempt($credentials))
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Wrong email and password'
+                'message' => 'Wrong email and or password'
             ], 401);
 
         // if (isset(Auth::user()->email_token) || !Auth::user()->email_verified_at)
