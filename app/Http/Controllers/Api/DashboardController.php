@@ -61,6 +61,7 @@ class DashboardController extends Controller
             $ba = empty($balance) ? 0 : $balance;
             $bonus = Wallet::where('user_id', $user->id)->first('bonus');
             $bo = empty($bonus) ? 0 : $bonus;
+            $wallet = Wallet::where('user_id', $user->id)->get();
 
             //Notification
             $active_disputes = Dispute::where('user_id', $user->id)->where('dispute_solved', false)->count();
@@ -80,7 +81,8 @@ class DashboardController extends Controller
                     'active_dsiputes' => $active_disputes,
                     'pending_withdrawals' => $pending_withdrawals,
                     'active_transaction' => $active_transaction,
-                    'pending_refunds' => $pending_refunds
+                    'pending_refunds' => $pending_refunds,
+                    'wallet' => $wallet
                 ]
             ], 200);
 
