@@ -61,13 +61,13 @@ class DashboardController extends Controller
             $ba = empty($balance) ? 0 : $balance;
             $bonus = Wallet::where('user_id', $user->id)->first('bonus');
             $bo = empty($bonus) ? 0 : $bonus;
-            $wallet = Wallet::where('user_id', $user->id)->get();
 
             //Notification
             $active_disputes = Dispute::where('user_id', $user->id)->where('dispute_solved', false)->count();
             $pending_withdrawals = Withdrawal::where('user_id', $user->id)->where('status', false)->count();
             $active_transaction = Transaction::where('user_id', $user->id)->where('status', 0)->count();
             $pending_refunds = Refund::where('user_id', $user->id)->where('status', false)->count();
+            $wallets = Wallet::where('user_id', $user->id)->get();
 
             return response()->json([
                 'status' => 'success',
@@ -82,7 +82,7 @@ class DashboardController extends Controller
                     'pending_withdrawals' => $pending_withdrawals,
                     'active_transaction' => $active_transaction,
                     'pending_refunds' => $pending_refunds,
-                    'wallet' => $wallet
+                    'wallet' => $wallets,
                 ]
             ], 200);
 
