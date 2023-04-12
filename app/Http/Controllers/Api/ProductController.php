@@ -39,7 +39,7 @@ class ProductController extends Controller
             ->get();
 
         //Test product
-        $products = Product::with('recommendation')->get();
+        $products = Product::with('recommendation', 'user')->get();
 
 
         return response()->json([

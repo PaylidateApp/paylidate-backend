@@ -50,7 +50,7 @@ class TransactionController extends Controller
         // \Artisan::call('migrate')
 
 
-        $transactions = Transaction::with('product', 'payment',)->orderBy('created_at', 'desc')->get();
+        $transactions = Transaction::with('product', 'payment', 'secondary_user')->orderBy('created_at', 'desc')->get();
         $filterTransaction = [];
         foreach ($transactions as $transaction) {
             if ($transaction->user_id == auth('api')->user()->id || $transaction->product->user_id == auth('api')->user()->id) {
