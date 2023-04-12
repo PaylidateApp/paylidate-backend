@@ -111,6 +111,9 @@ Route::group(['prefix' => 'api'], function () {
             Route::get('product/status/delivered/{id}', 'ProductController@delivered');
             Route::get('product/status/recieved/{id}', 'ProductController@recieved');
             Route::get('product/status/canceled/{id}', 'ProductController@canceled');
+            
+            //get catalogue
+            Route::get('get-catalog/{id}', 'ProductController@get_catalog');
 
             Route::post('instant-pay/tranfer', 'InstandpayController@transfer');
             Route::post('instant/tranfer', 'InstandpayController@transfer');
